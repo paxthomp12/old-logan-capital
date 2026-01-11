@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Logan Capital - Option 6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0c0c0c;
+            --bg-alt: #141414;
+            --text: #ffffff;
+            --text-muted: #777777;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-logo img {
+            height: 50px;
+            filter: invert(1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        /* Hero - Full screen with massive logo */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-logo {
+            position: absolute;
+            width: 80vw;
+            max-width: 800px;
+            opacity: 0.03;
+            filter: invert(1);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .hero-logo {
+            width: 250px;
+            filter: invert(1);
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-stat p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1rem 3rem;
+            border: 2px solid var(--text);
+            color: var(--text);
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--text-muted), transparent);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 8rem 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--bg-alt);
+            -webkit-text-stroke: 1px var(--text-muted);
+            line-height: 1;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Portfolio */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        .portfolio-card {
+            background: var(--bg-alt);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--text);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .portfolio-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .portfolio-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-photo {
+            width: 200px;
+            height: 200px;
+            background: var(--bg-alt);
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .team-photo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--text-muted);
+            z-index: -1;
+        }
+
+        .team-member h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-member p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Letters */
+        .letters-list {
+            max-width: 900px;
+        }
+
+        .letter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .letter-item:hover {
+            padding-left: 2rem;
+            border-color: var(--text);
+        }
+
+        .letter-item h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .letter-item span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Contact */
+        .contact-section {
+            background: var(--bg-alt);
+            display: flex;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-logo {
+            width: 200px;
+            filter: invert(1);
+            opacity: 0.2;
+        }
+
+        .contact-right h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-email {
+            display: block;
+            font-size: 1.25rem;
+            color: var(--text);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: opacity 0.2s;
+        }
+
+        .contact-email:hover {
+            opacity: 0.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .social-links a:hover {
+            color: var(--text);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-logo img {
+            height: 35px;
+            filter: invert(1);
+            opacity: 0.3;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-logo { width: 150px; }
+            .hero-stats { flex-direction: column; gap: 2rem; }
+            .portfolio-grid, .team-grid { grid-template-columns: 1fr; }
+            .contact-content { grid-template-columns: 1fr; text-align: center; }
+            .contact-left { display: none; }
+            .social-links { justify-content: center; }
+            nav { padding: 1.5rem 2rem; }
+            section { padding: 4rem 2rem; }
+            .section-header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="nav-logo">
+            <img src="./logo.png" alt="Old Logan Capital">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#letters">Letters</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <img src="./logo.png" alt="" class="hero-bg-logo">
+        <div class="hero-content">
+            <img src="./logo.png" alt="Old Logan Capital" class="hero-logo">
+            <h1>Investment Management</h1>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>$2M+</h3>
+                    <p>Assets</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>12</h3>
+                    <p>Investments</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>2024</h3>
+                    <p>Founded</p>
+                </div>
+            </div>
+            <a href="#contact" class="hero-cta">Get in Touch</a>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <section id="portfolio">
+        <div class="section-header">
+            <span class="section-number">01</span>
+            <h2 class="section-title">Portfolio</h2>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-card">
+                <h3>Company One</h3>
+                <p>Fintech / Series A</p>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Two</h3>
+                <p>Healthcare / Seed</p>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Three</h3>
+                <p>Consumer / Series B</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="section-header">
+            <span class="section-number">02</span>
+            <h2 class="section-title">Team</h2>
+        </div>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Team Member</h3>
+                <p>Analyst</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="letters">
+        <div class="section-header">
+            <span class="section-number">03</span>
+            <h2 class="section-title">Investor Letters</h2>
+        </div>
+        <div class="letters-list">
+            <a href="#" class="letter-item">
+                <h4>Q4 2024 Letter</h4>
+                <span>December 2024</span>
+            </a>
+            <a href="#" class="letter-item">
+                <h4>Q3 2024 Letter</h4>
+                <span>September 2024</span>
+            </a>
+            <a href="#" class="letter-item">
+                <h4>Q2 2024 Letter</h4>
+                <span>June 2024</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="contact-content">
+            <div class="contact-left">
+                <img src="./logo.png" alt="" class="contact-logo">
+            </div>
+            <div class="contact-right">
+                <h2>LET'S CONNECT</h2>
+                <a href="mailto:oldlogancapital@gmail.com" class="contact-email">oldlogancapital@gmail.com</a>
+                <div class="social-links">
+                    <a href="#">X / Twitter</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="./logo.png" alt="Old Logan Capital">
+        </div>
+        <p>&copy; 2024 Old Logan Capital</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Logan Capital - Option 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-secondary: #818cf8;
+            --border: rgba(148, 163, 184, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            background-attachment: fixed;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-cta {
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: var(--bg);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 4rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 30%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 70%, rgba(129, 140, 248, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: var(--bg);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Stats */
+        .stats-section {
+            padding: 4rem;
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem 3rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portfolio-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .portfolio-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-card .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .team-card:hover {
+            border-color: var(--accent-secondary);
+        }
+
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            opacity: 0.3;
+        }
+
+        .team-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Letters */
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .letter-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .letter-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .letter-card span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .letter-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Contact */
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 4rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .contact-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .contact-email {
+            display: inline-block;
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            padding: 0.75rem 1.5rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .social-links a:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 4rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 2.5rem; }
+            .portfolio-grid, .team-grid, .letters-grid { grid-template-columns: 1fr; }
+            .stats-section { flex-direction: column; align-items: center; }
+            nav { padding: 1.5rem 2rem; }
+            section { padding: 4rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Old Logan Capital</a>
+        <ul class="nav-links">
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#letters">Letters</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Get in Touch</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">Investment Management</span>
+            <h1>Building wealth through <span>strategic insight</span></h1>
+            <p>Old Logan Capital identifies exceptional investment opportunities with a disciplined, long-term approach to value creation.</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn-primary">Connect With Us</a>
+                <a href="#portfolio" class="btn-secondary">View Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-section">
+        <div class="stat-card">
+            <h3>$2M+</h3>
+            <p>Assets Managed</p>
+        </div>
+        <div class="stat-card">
+            <h3>12</h3>
+            <p>Portfolio Companies</p>
+        </div>
+        <div class="stat-card">
+            <h3>2024</h3>
+            <p>Founded</p>
+        </div>
+    </div>
+
+    <section id="portfolio">
+        <div class="section-header">
+            <h2>Our Portfolio</h2>
+            <p>Strategic investments across diverse sectors and stages.</p>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-card">
+                <h3>Company One</h3>
+                <span class="tag">Fintech / Series A</span>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Two</h3>
+                <span class="tag">Healthcare / Seed</span>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Three</h3>
+                <span class="tag">Consumer / Series B</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="section-header">
+            <h2>Our Team</h2>
+            <p>Experienced investors committed to your success.</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-card">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-card">
+                <div class="team-photo"></div>
+                <h3>Team Member</h3>
+                <p>Analyst</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="letters">
+        <div class="section-header">
+            <h2>Investor Letters</h2>
+            <p>Quarterly insights and market perspectives.</p>
+        </div>
+        <div class="letters-grid">
+            <a href="#" class="letter-card">
+                <span>December 2024</span>
+                <h4>Q4 2024 Letter</h4>
+            </a>
+            <a href="#" class="letter-card">
+                <span>September 2024</span>
+                <h4>Q3 2024 Letter</h4>
+            </a>
+            <a href="#" class="letter-card">
+                <span>June 2024</span>
+                <h4>Q2 2024 Letter</h4>
+            </a>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="contact-card">
+            <h2>Get in Touch</h2>
+            <p>Interested in learning more about Old Logan Capital? We'd love to connect.</p>
+            <a href="mailto:oldlogancapital@gmail.com" class="contact-email">oldlogancapital@gmail.com</a>
+            <div class="social-links">
+                <a href="#">Follow on X</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Old Logan Capital. All rights reserved.</p>
+    </footer>
+</body>
+</html>

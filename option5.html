@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Logan Capital - Option 5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-alt: #111111;
+            --text: #f5f5f5;
+            --text-muted: #888888;
+            --accent: #c9a962;
+            --border: rgba(201, 169, 98, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Invert logo for dark background */
+        .logo-invert {
+            filter: invert(1);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            filter: invert(1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(201, 169, 98, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            width: 200px;
+            filter: invert(1);
+            margin-bottom: 3rem;
+        }
+
+        .hero-tagline {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1rem 3rem;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+            padding: 5rem 4rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 0;
+        }
+
+        .divider img {
+            height: 60px;
+            filter: invert(1);
+            opacity: 0.15;
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        section h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portfolio-card {
+            background: var(--bg);
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .portfolio-card:hover {
+            background: var(--bg-alt);
+        }
+
+        .portfolio-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-photo {
+            width: 150px;
+            height: 150px;
+            background: var(--bg-alt);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--border);
+        }
+
+        .team-member h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-member p {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Letters */
+        .letters-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .letter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .letter-item:hover {
+            padding-left: 1rem;
+        }
+
+        .letter-item:hover h4 {
+            color: var(--accent);
+        }
+
+        .letter-item h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+
+        .letter-item span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Contact */
+        .contact-section {
+            background: var(--bg-alt);
+            text-align: center;
+        }
+
+        .contact-logo {
+            width: 100px;
+            filter: invert(1);
+            opacity: 0.3;
+            margin-bottom: 2rem;
+        }
+
+        .contact-email {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .contact-email:hover {
+            border-color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            transition: color 0.2s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-logo img {
+            height: 30px;
+            filter: invert(1);
+            opacity: 0.5;
+        }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 2.5rem; }
+            .portfolio-grid, .team-grid { grid-template-columns: 1fr; }
+            .stats-row { flex-direction: column; gap: 2rem; }
+            nav { padding: 1.5rem 2rem; }
+            section { padding: 4rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="nav-logo">
+            <img src="./logo.png" alt="Old Logan Capital">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#letters">Letters</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <img src="./logo.png" alt="Old Logan Capital" class="hero-logo">
+            <span class="hero-tagline">Investment Management</span>
+            <h1>Strength in Strategy.<br>Value in Vision.</h1>
+            <p>Disciplined investing with a long-term perspective. We seek exceptional opportunities that create lasting value.</p>
+            <a href="#contact" class="hero-cta">Connect With Us</a>
+        </div>
+    </section>
+
+    <div class="stats-row">
+        <div class="stat">
+            <h3>$2M+</h3>
+            <p>Assets Managed</p>
+        </div>
+        <div class="stat">
+            <h3>12</h3>
+            <p>Investments</p>
+        </div>
+        <div class="stat">
+            <h3>2024</h3>
+            <p>Founded</p>
+        </div>
+    </div>
+
+    <div class="divider">
+        <img src="./logo.png" alt="">
+    </div>
+
+    <section id="portfolio">
+        <div class="section-header">
+            <span class="section-label">Investments</span>
+            <h2>Our Portfolio</h2>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-card">
+                <h3>Company One</h3>
+                <p>Fintech / Series A</p>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Two</h3>
+                <p>Healthcare / Seed</p>
+            </div>
+            <div class="portfolio-card">
+                <h3>Company Three</h3>
+                <p>Consumer / Series B</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <img src="./logo.png" alt="">
+    </div>
+
+    <section id="team">
+        <div class="section-header">
+            <span class="section-label">Leadership</span>
+            <h2>Our Team</h2>
+        </div>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Partner Name</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div class="team-member">
+                <div class="team-photo"></div>
+                <h3>Team Member</h3>
+                <p>Analyst</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <img src="./logo.png" alt="">
+    </div>
+
+    <section id="letters">
+        <div class="section-header">
+            <span class="section-label">Insights</span>
+            <h2>Investor Letters</h2>
+        </div>
+        <div class="letters-list">
+            <a href="#" class="letter-item">
+                <h4>Q4 2024 Letter</h4>
+                <span>December 2024</span>
+            </a>
+            <a href="#" class="letter-item">
+                <h4>Q3 2024 Letter</h4>
+                <span>September 2024</span>
+            </a>
+            <a href="#" class="letter-item">
+                <h4>Q2 2024 Letter</h4>
+                <span>June 2024</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <img src="./logo.png" alt="" class="contact-logo">
+        <div class="section-header">
+            <span class="section-label">Connect</span>
+            <h2>Get in Touch</h2>
+        </div>
+        <a href="mailto:oldlogancapital@gmail.com" class="contact-email">oldlogancapital@gmail.com</a>
+        <div class="social-links">
+            <a href="#">Follow on X</a>
+            <a href="#">LinkedIn</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="./logo.png" alt="Old Logan Capital">
+        </div>
+        <p>&copy; 2024 Old Logan Capital. All rights reserved.</p>
+    </footer>
+</body>
+</html>
