@@ -800,5 +800,20 @@
         </a>
         <p>&copy; 2024 Old Logan Capital. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Scroll to top on page load/refresh
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        window.addEventListener('beforeunload', function() {
+            window.scrollTo(0, 0);
+        });
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 0);
+        });
+    </script>
 </body>
 </html>
