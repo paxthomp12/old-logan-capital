@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Old Logan Capital</title>
 
     <!-- Favicon -->
@@ -13,8 +13,10 @@
 
     <!-- iOS Safari Integration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Old Logan Capital">
+    <meta name="theme-color" content="#F5F1E8">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
 
     <!-- Open Graph / Social Media Preview Tags -->
     <meta property="og:title" content="Old Logan Capital">
@@ -67,6 +69,7 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -76,6 +79,29 @@
             line-height: 1.7;
             position: relative;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* iOS Safe Area Support */
+        @supports (padding: max(0px)) {
+            nav {
+                padding-left: max(5%, env(safe-area-inset-left));
+                padding-right: max(5%, env(safe-area-inset-right));
+                padding-top: env(safe-area-inset-top);
+            }
+
+            .hero,
+            section,
+            .contact-section,
+            footer {
+                padding-left: max(5%, env(safe-area-inset-left));
+                padding-right: max(5%, env(safe-area-inset-right));
+            }
+
+            footer {
+                padding-bottom: max(4rem, env(safe-area-inset-bottom));
+            }
         }
 
         body::after {
@@ -215,6 +241,8 @@
             position: relative;
             overflow: hidden;
             clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .nav-cta::before {
@@ -414,6 +442,7 @@
             border: 1px solid var(--border);
             transition: all 0.3s ease;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .portfolio-card:hover {
@@ -449,6 +478,8 @@
 
         .team-member {
             text-align: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .team-photo {
@@ -511,6 +542,8 @@
             color: var(--text);
             transition: all 0.2s ease;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .letter-item:hover {
@@ -597,6 +630,8 @@
             padding-bottom: 5px;
             transition: all 0.2s ease;
             letter-spacing: -0.3px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .contact-email:hover {
@@ -618,6 +653,8 @@
             font-family: 'IBM Plex Mono', monospace;
             text-transform: uppercase;
             letter-spacing: 1px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .social-links a:hover {
@@ -666,9 +703,33 @@
             font-weight: 400;
         }
 
+        /* iOS-style mobile improvements */
         @media (max-width: 1024px) {
+            body::after {
+                width: 800px;
+                height: 800px;
+                opacity: 0.02;
+            }
+
+            .hero-overlay {
+                background: linear-gradient(
+                    135deg,
+                    rgba(26, 26, 26, 0.75) 0%,
+                    rgba(26, 26, 26, 0.6) 50%,
+                    rgba(26, 26, 26, 0.4) 100%
+                );
+            }
+
             nav {
-                padding: 1.5rem 4%;
+                padding: 1rem 5%;
+            }
+
+            .logo-text {
+                font-size: 1.1rem;
+            }
+
+            .logo-icon {
+                height: 26px;
             }
 
             .nav-links {
@@ -680,72 +741,299 @@
             }
 
             .nav-cta {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.75rem;
+                padding: 0.65rem 1rem;
+                font-size: 0.7rem;
             }
 
             .hero {
-                padding: 8rem 4% 4rem;
+                padding: 6rem 5% 3rem;
+                min-height: 80vh;
+            }
+
+            .hero-content {
+                margin-left: 0;
             }
 
             .hero h1 {
-                font-size: 3.5rem;
+                font-size: 2.8rem;
                 letter-spacing: -1.5px;
+                margin-bottom: 1.5rem;
             }
 
             .hero p {
-                font-size: 1.2rem;
+                font-size: 1.05rem;
+                margin-bottom: 2.5rem;
+                line-height: 1.6;
             }
 
             .hero-stats {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                padding-top: 2rem;
+            }
+
+            .stat h3 {
+                font-size: 2.2rem;
+            }
+
+            .stat p {
+                font-size: 0.65rem;
             }
 
             section {
-                padding: 6rem 4%;
+                padding: 4rem 5%;
             }
 
-            section h2 {
-                font-size: 2.5rem;
-            }
-
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .contact-info h2 {
-                font-size: 3rem;
-            }
-
-            .contact-section {
-                padding: 6rem 4%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+            .section-label {
+                font-size: 0.65rem;
+                margin-bottom: 1rem;
             }
 
             section h2 {
                 font-size: 2rem;
+                margin-bottom: 2.5rem;
+                letter-spacing: -1px;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .portfolio-card {
+                padding: 1.75rem;
+            }
+
+            .portfolio-card h3 {
+                font-size: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .portfolio-card p {
+                font-size: 0.7rem;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .team-photo {
+                width: 140px;
+                height: 140px;
+                margin-bottom: 1rem;
+            }
+
+            .team-member h3 {
+                font-size: 1.1rem;
+            }
+
+            .team-member p {
+                font-size: 0.65rem;
+            }
+
+            .letter-item {
+                padding: 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .letter-item h4 {
+                font-size: 1.1rem;
+            }
+
+            .letter-item span {
+                font-size: 0.65rem;
+            }
+
+            .contact-section {
+                padding: 4rem 5%;
+            }
+
+            .contact-section::before {
+                width: 300px;
+                height: 300px;
+                opacity: 0.02;
+            }
+
+            .contact-info h2 {
+                font-size: 2.2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .contact-info p {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .contact-email {
+                font-size: 1.1rem;
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+                margin-top: 2rem;
+            }
+
+            .social-links a {
+                font-size: 0.75rem;
+            }
+
+            footer {
+                padding: 2.5rem 5%;
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            footer p {
+                font-size: 0.7rem;
+            }
+
+            .corner-decoration {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.9rem 5%;
+            }
+
+            .nav-cta {
+                padding: 0.6rem 0.85rem;
+                font-size: 0.65rem;
+            }
+
+            .hero {
+                padding: 5rem 5% 2.5rem;
+                min-height: 75vh;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+                letter-spacing: -1px;
+                margin-bottom: 1.25rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-stats {
+                gap: 1.25rem;
+                padding-top: 1.75rem;
             }
 
             .stat h3 {
-                font-size: 2.5rem;
+                font-size: 1.8rem;
+            }
+
+            section {
+                padding: 3.5rem 5%;
+            }
+
+            section h2 {
+                font-size: 1.75rem;
+                margin-bottom: 2rem;
+            }
+
+            .portfolio-card {
+                padding: 1.5rem;
             }
 
             .team-grid {
                 grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .team-photo {
+                width: 160px;
+                height: 160px;
             }
 
             .contact-info h2 {
-                font-size: 2.5rem;
+                font-size: 1.9rem;
+            }
+
+            .contact-info p {
+                font-size: 0.95rem;
+            }
+
+            .contact-email {
+                font-size: 1rem;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            nav {
+                padding: 0.85rem 5%;
+            }
+
+            .logo-text {
+                font-size: 1rem;
+            }
+
+            .nav-buttons {
+                gap: 0.4rem;
+            }
+
+            .nav-cta {
+                padding: 0.55rem 0.75rem;
+                font-size: 0.6rem;
+            }
+
+            .hero {
+                padding: 4.5rem 5% 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .hero-stats {
+                gap: 1rem;
+            }
+
+            .stat h3 {
+                font-size: 1.6rem;
+            }
+
+            .stat p {
+                font-size: 0.6rem;
+            }
+
+            section {
+                padding: 3rem 5%;
+            }
+
+            section h2 {
+                font-size: 1.6rem;
+            }
+
+            .portfolio-card {
+                padding: 1.25rem;
+            }
+
+            .portfolio-card h3 {
+                font-size: 1.1rem;
+            }
+
+            .contact-info h2 {
+                font-size: 1.7rem;
+            }
+
+            .social-links {
+                gap: 1.25rem;
             }
         }
     </style>
