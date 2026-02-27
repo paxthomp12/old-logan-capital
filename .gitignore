@@ -1,2 +1,30 @@
+# Dependencies
 node_modules/
+
+# Build files
+dist/
+build/
+
+# Temp files
+*.tmp
+*.log
 .DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.backup
+*.backup.*
+*backup*
+
+# Archive folder
+archive/
+
+# Environment files
+.env
+.env.local
