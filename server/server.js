@@ -165,8 +165,8 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
         `, [
             ticker.toUpperCase(),
             companyName,
-            req.session.userId,
-            req.session.fullName,
+            1,
+            "Team Member",
             confidenceLevel,
             reasoning,
             priceTarget || null,
@@ -261,7 +261,7 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
         // Check if user already reviewed this
         const existing = db.query(
             'SELECT * FROM reviews WHERE submission_id = ? AND reviewer_id = ?',
-            [submissionId, req.session.userId]
+            [submissionId, 1]
         );
 
         if (existing.length > 0) {
@@ -270,7 +270,7 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
 
         // Check if user is the submitter
         const submission = db.query('SELECT * FROM submissions WHERE id = ?', [submissionId]);
-        if (submission[0].submitter_id === req.session.userId) {
+        if (submission[0].submitter_id === 1) {
             return res.status(400).json({ error: 'Cannot review your own submission' });
         }
 
@@ -282,8 +282,8 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [
             submissionId,
-            req.session.userId,
-            req.session.fullName,
+            1,
+            "Team Member",
             confidenceLevel,
             reasoning,
             priceTarget || null,
@@ -349,7 +349,7 @@ app.get('/api/pending-reviews', (req, res) => {
                 SELECT submission_id FROM reviews WHERE reviewer_id = ?
             )
             ORDER BY s.created_at DESC
-        `, [req.session.userId, req.session.userId]);
+        `, [1, 1]);
 
         res.json(pending);
     } catch (error) {
