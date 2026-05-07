@@ -32,12 +32,12 @@ async function checkAuth() {
             currentUser = await response.json();
             showApp();
         } else {
-            // Redirect to employee portal for login
-            window.location.href = 'employee.html';
+            // Redirect to employee portal for login with return path
+            window.location.href = 'employee.html?redirect=watchlist';
         }
     } catch (error) {
         console.error('Auth check failed:', error);
-        window.location.href = 'employee.html';
+        window.location.href = 'employee.html?redirect=watchlist';
     }
 }
 

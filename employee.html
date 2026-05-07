@@ -315,7 +315,16 @@
 
                 if (response.ok) {
                     currentUser = await response.json();
-                    showPortal();
+
+                    // Check if we should redirect after auth
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+
+                    if (redirect === 'watchlist') {
+                        window.location.href = 'watchlist.html';
+                    } else {
+                        showPortal();
+                    }
                 } else {
                     showLogin();
                 }
@@ -341,7 +350,16 @@
 
                 if (response.ok) {
                     currentUser = await response.json();
-                    showPortal();
+
+                    // Check if we should redirect after login
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+
+                    if (redirect === 'watchlist') {
+                        window.location.href = 'watchlist.html';
+                    } else {
+                        showPortal();
+                    }
                 } else {
                     const error = await response.json();
                     document.getElementById('loginError').textContent = error.error || 'Login failed';
