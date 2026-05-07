@@ -3,12 +3,13 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
     ? 'http://localhost:3000/api'
     : 'https://api.oldlogancapital.com/api';
 
-let currentUser = null;
 let currentSubmissionId = null;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
+    loadSubmissions();
+    loadPendingReviews();
+    loadWatchlist();
     setupEventListeners();
 });
 
@@ -20,50 +21,6 @@ function setupEventListeners() {
     document.getElementById('attachments').addEventListener('change', displayFileList);
 }
 
-// ===== AUTHENTICATION =====
-
-async function checkAuth() {
-    try {
-        const response = await fetch(`${API_URL}/me`, {
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            currentUser = await response.json();
-            showApp();
-        } else {
-            // Redirect to employee portal for login with return path
-            window.location.href = 'employee.html?redirect=watchlist';
-        }
-    } catch (error) {
-        console.error('Auth check failed:', error);
-        window.location.href = 'employee.html?redirect=watchlist';
-    }
-}
-
-async function logout() {
-    try {
-        await fetch(`${API_URL}/logout`, {
-            method: 'POST',
-            credentials: 'include'
-        });
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
-
-    currentUser = null;
-    window.location.href = 'employee.html';
-}
-
-function showApp() {
-    document.getElementById('app').classList.remove('hidden');
-    document.getElementById('currentUser').textContent = currentUser.fullName;
-
-    // Load dashboard data
-    loadSubmissions();
-    loadPendingReviews();
-    loadWatchlist();
-}
 
 // ===== TAB SWITCHING =====
 
@@ -87,7 +44,7 @@ function switchTab(tabName) {
 async function loadSubmissions() {
     try {
         const response = await fetch(`${API_URL}/submissions`, {
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Failed to load submissions');
@@ -149,7 +106,7 @@ function sortSubmissions(submissions, sortBy) {
 async function viewSubmission(id) {
     try {
         const response = await fetch(`${API_URL}/submissions/${id}`, {
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Failed to load submission details');
@@ -301,7 +258,7 @@ async function handleSubmit(e) {
     try {
         const response = await fetch(`${API_URL}/submissions`, {
             method: 'POST',
-            credentials: 'include',
+            
             body: formData
         });
 
@@ -349,7 +306,7 @@ function displayFileList() {
 async function loadPendingReviews() {
     try {
         const response = await fetch(`${API_URL}/pending-reviews`, {
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Failed to load pending reviews');
@@ -381,7 +338,7 @@ async function loadPendingReviews() {
 async function startReview(submissionId) {
     try {
         const response = await fetch(`${API_URL}/submissions/${submissionId}`, {
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Failed to load submission');
@@ -505,7 +462,7 @@ async function submitReview(e, submissionId) {
     try {
         const response = await fetch(`${API_URL}/reviews`, {
             method: 'POST',
-            credentials: 'include',
+            
             body: formData
         });
 
@@ -532,7 +489,7 @@ function closeReviewModal() {
 async function loadWatchlist() {
     try {
         const response = await fetch(`${API_URL}/watchlist`, {
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Failed to load watchlist');
@@ -578,7 +535,7 @@ async function approveForWatchlist(submissionId) {
     try {
         const response = await fetch(`${API_URL}/watchlist/approve/${submissionId}`, {
             method: 'POST',
-            credentials: 'include'
+            
         });
 
         if (!response.ok) throw new Error('Approval failed');

@@ -55,16 +55,6 @@
             text-decoration: none;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .user-name {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
 
         .container {
             max-width: 1400px;
@@ -459,13 +449,9 @@
 </head>
 <body>
     <!-- Main Application -->
-    <div id="app" class="hidden">
+    <div id="app">
         <nav>
             <a href="index.html" class="logo-text">Old Logan Capital</a>
-            <div class="user-info">
-                <span class="user-name" id="currentUser"></span>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
-            </div>
         </nav>
 
         <div class="container">

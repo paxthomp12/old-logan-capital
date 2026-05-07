@@ -30,65 +30,8 @@
             line-height: 1.7;
         }
 
-        /* Login Page Styles */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid var(--border);
-            padding: 3rem;
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .login-box h1 {
-            font-family: 'Fraunces', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-box .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.8);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--dark);
-        }
-
         .btn {
             display: inline-block;
-            width: 100%;
             padding: 1rem 2rem;
             background: var(--dark);
             color: var(--cream);
@@ -105,19 +48,6 @@
             background: var(--forest);
         }
 
-        .error-message {
-            background: #ffe6e6;
-            color: #c94949;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #c94949;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Portal Styles */
         nav {
             position: fixed;
             top: 0;
@@ -139,35 +69,6 @@
             color: var(--dark);
             letter-spacing: -0.5px;
             text-decoration: none;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .user-name {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .nav-cta {
-            padding: 0.7rem 1.8rem;
-            background: var(--dark);
-            color: var(--cream);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            border: 1px solid var(--dark);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-cta:hover {
-            background: var(--cream);
-            color: var(--dark);
         }
 
         .container {
@@ -225,38 +126,10 @@
     </style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
-        <div class="login-box">
-            <h1>Employee Portal</h1>
-            <p class="subtitle">Old Logan Capital</p>
-
-            <div id="loginError" class="error-message hidden"></div>
-
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-
-                <button type="submit" class="btn">Login</button>
-            </form>
-        </div>
-    </div>
-
     <!-- Portal Dashboard -->
-    <div id="portalPage" class="hidden">
+    <div id="portalPage">
         <nav>
             <a href="index.html" class="logo-text">Old Logan Capital</a>
-            <div class="user-info">
-                <span class="user-name" id="currentUser"></span>
-                <button class="nav-cta" onclick="logout()">Logout</button>
-            </div>
         </nav>
 
         <div class="container">
@@ -288,113 +161,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Auto-detect API URL based on environment
-        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3000/api'
-            : 'https://api.oldlogancapital.com/api';
-
-        let currentUser = null;
-
-        // Check auth on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        }
-
-        async function checkAuth() {
-            try {
-                const response = await fetch(`${API_URL}/me`, {
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    currentUser = await response.json();
-
-                    // Check if we should redirect after auth
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const redirect = urlParams.get('redirect');
-
-                    if (redirect === 'watchlist') {
-                        window.location.href = 'watchlist.html';
-                    } else {
-                        showPortal();
-                    }
-                } else {
-                    showLogin();
-                }
-            } catch (error) {
-                console.error('Auth check failed:', error);
-                showLogin();
-            }
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ username, password })
-                });
-
-                if (response.ok) {
-                    currentUser = await response.json();
-
-                    // Check if we should redirect after login
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const redirect = urlParams.get('redirect');
-
-                    if (redirect === 'watchlist') {
-                        window.location.href = 'watchlist.html';
-                    } else {
-                        showPortal();
-                    }
-                } else {
-                    const error = await response.json();
-                    document.getElementById('loginError').textContent = error.error || 'Login failed';
-                    document.getElementById('loginError').classList.remove('hidden');
-                }
-            } catch (error) {
-                document.getElementById('loginError').textContent = 'Connection error. Please try again.';
-                document.getElementById('loginError').classList.remove('hidden');
-            }
-        }
-
-        async function logout() {
-            try {
-                await fetch(`${API_URL}/logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-
-            currentUser = null;
-            showLogin();
-        }
-
-        function showLogin() {
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('portalPage').classList.add('hidden');
-        }
-
-        function showPortal() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('portalPage').classList.remove('hidden');
-            document.getElementById('currentUser').textContent = currentUser.fullName;
-        }
-    </script>
 </body>
 </html>
