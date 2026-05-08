@@ -197,10 +197,8 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
             });
         }
 
-        console.log('[Server] Submission saved successfully. Sending Discord notification...');
         // Send Discord notification
         await discord.sendNewSubmissionNotification(ticker.toUpperCase(), submitterName);
-        console.log('[Server] Discord notification call completed (check Discord logs for status)');
 
         res.json({ success: true, submissionId });
     } catch (error) {
@@ -349,17 +347,14 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
         const reviews = db.query('SELECT * FROM reviews WHERE submission_id = ?', [submissionId]);
         const reviewsNeeded = 3; // All 3 other team members
 
-        console.log('[Server] Review saved successfully. Sending Discord notification...');
         // Send Discord notification
         await discord.sendReviewCompleteNotification(submission[0].ticker, reviewerName,
             reviews.length,
             reviewsNeeded
         );
-        console.log('[Server] Discord notification call completed (check Discord logs for status)');
 
         // If all reviews complete, send final notification
         if (reviews.length >= reviewsNeeded) {
-            console.log('[Server] All reviews complete! Sending final notification...');
             const avgConfidence = reviews.reduce((sum, r) => sum + r.confidence_level, 0) / reviews.length;
 
             // Update submission status
@@ -369,10 +364,8 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
                 submission[0].ticker,
                 avgConfidence
             );
-            console.log('[Server] Final Discord notification call completed');
         }
 
-        console.log('[Server] Sending success response to client');
         res.json({ success: true, reviewId });
     } catch (error) {
         res.status(500).json({ error: error.message });
