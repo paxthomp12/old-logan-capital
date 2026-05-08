@@ -185,7 +185,6 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
                     VALUES (?, ?, ?, ?, ?)
                 `, [
                     submissionId,
-            reviewerName,
                     file.originalname,
                     file.filename,
                     file.mimetype,
