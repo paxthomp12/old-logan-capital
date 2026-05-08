@@ -264,9 +264,13 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
             sector
         } = req.body;
 
+        console.log('\n=== REVIEW SUBMISSION DEBUG ===');
+        console.log('Received reviewerName:', JSON.stringify(reviewerName));
+        console.log('Received submissionId:', submissionId);
+
         // Get submission to check reviewer constraints
         const submission = db.query('SELECT * FROM submissions WHERE id = ?', [submissionId]);
-        
+
         if (submission.length === 0) {
             return res.status(404).json({ error: 'Submission not found' });
         }
@@ -287,8 +291,22 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
         }
 
         // Get reviewer user ID from the database
-        const reviewer = db.query('SELECT id FROM users WHERE full_name = ?', [reviewerName]);
+        console.log('Looking up user with full_name:', JSON.stringify(reviewerName));
+        const reviewer = db.query('SELECT id, full_name FROM users WHERE full_name = ?', [reviewerName]);
+        console.log('Query result:', reviewer);
+
         const reviewerId = reviewer.length > 0 ? reviewer[0].id : 1;
+        console.log('Assigned reviewerId:', reviewerId);
+
+        // DEBUG: Show all users in database
+        const allUsers = db.query('SELECT id, full_name FROM users');
+        console.log('All users in database:', allUsers);
+
+        console.log('About to INSERT review with:');
+        console.log('  - submission_id:', submissionId);
+        console.log('  - reviewer_id:', reviewerId);
+        console.log('  - reviewer_name:', reviewerName);
+        console.log('================================\n');
 
         // Insert review
         db.run(`
