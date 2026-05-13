@@ -150,6 +150,18 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
             ticker,
             companyName,
             confidenceLevel,
+            technicalScore,
+            fundamentalsScore,
+            themeScore,
+            sectorScore,
+            canslim_c,
+            canslim_a,
+            canslim_n,
+            canslim_s,
+            canslim_l,
+            canslim_i,
+            canslim_m,
+            finalScore,
             reasoning,
             priceTarget,
             timeHorizon,
@@ -161,18 +173,32 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
         const submitter = db.query('SELECT id FROM users WHERE full_name = ?', [submitterName]);
         const submitterId = submitter.length > 0 ? submitter[0].id : 1;
 
-        // Insert submission
+        // Insert submission with all scoring fields
         db.run(`
             INSERT INTO submissions (
                 ticker, company_name, submitter_id, submitter_name,
-                confidence_level, reasoning, price_target, time_horizon, sector, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted')
+                confidence_level, technical_score, fundamentals_score, theme_score, sector_score,
+                canslim_c, canslim_a, canslim_n, canslim_s, canslim_l, canslim_i, canslim_m,
+                final_score, reasoning, price_target, time_horizon, sector, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted')
         `, [
             ticker.toUpperCase(),
             companyName,
             submitterId,
             submitterName,
             confidenceLevel,
+            technicalScore,
+            fundamentalsScore,
+            themeScore,
+            sectorScore,
+            canslim_c,
+            canslim_a,
+            canslim_n,
+            canslim_s,
+            canslim_l,
+            canslim_i,
+            canslim_m,
+            finalScore,
             reasoning,
             priceTarget || null,
             timeHorizon,
@@ -212,7 +238,8 @@ app.get('/api/submissions', (req, res) => {
             SELECT
                 s.*,
                 (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count,
-                (SELECT AVG(confidence_level) FROM reviews WHERE submission_id = s.id) as avg_confidence
+                (SELECT AVG(confidence_level) FROM reviews WHERE submission_id = s.id) as avg_confidence,
+                (SELECT AVG(final_score) FROM reviews WHERE submission_id = s.id) as avg_final_score
             FROM submissions s
             ORDER BY s.created_at DESC
         `);
@@ -258,10 +285,21 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
             submissionId,
             reviewerName,
             confidenceLevel,
+            technicalScore,
+            fundamentalsScore,
+            themeScore,
+            sectorScore,
+            canslim_c,
+            canslim_a,
+            canslim_n,
+            canslim_s,
+            canslim_l,
+            canslim_i,
+            canslim_m,
+            finalScore,
             reasoning,
             priceTarget,
-            timeHorizon,
-            sector
+            timeHorizon
         } = req.body;
 
         console.log('\n=== REVIEW SUBMISSION DEBUG ===');
@@ -308,21 +346,34 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
         console.log('  - reviewer_name:', reviewerName);
         console.log('================================\n');
 
-        // Insert review
+        // Insert review with all scoring fields
         db.run(`
             INSERT INTO reviews (
                 submission_id, reviewer_id, reviewer_name,
-                confidence_level, reasoning, price_target, time_horizon, sector
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                confidence_level, technical_score, fundamentals_score, theme_score, sector_score,
+                canslim_c, canslim_a, canslim_n, canslim_s, canslim_l, canslim_i, canslim_m,
+                final_score, reasoning, price_target, time_horizon
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [
             submissionId,
             reviewerId,
             reviewerName,
             confidenceLevel,
+            technicalScore,
+            fundamentalsScore,
+            themeScore,
+            sectorScore,
+            canslim_c,
+            canslim_a,
+            canslim_n,
+            canslim_s,
+            canslim_l,
+            canslim_i,
+            canslim_m,
+            finalScore,
             reasoning,
             priceTarget || null,
-            timeHorizon,
-            sector || null
+            timeHorizon
         ]);
 
         const reviewId = db.getLastInsertId();
@@ -433,13 +484,36 @@ app.get('/api/watchlist', (req, res) => {
                 s.submitter_name,
                 s.sector,
                 s.time_horizon,
-                s.created_at
+                s.created_at,
+                s.final_score,
+                (
+                    SELECT AVG(r.final_score)
+                    FROM reviews r
+                    WHERE r.submission_id = s.id
+                ) as avg_review_score
             FROM watchlist w
             JOIN submissions s ON w.submission_id = s.id
             ORDER BY w.avg_confidence DESC, w.added_at DESC
         `);
 
-        res.json(watchlist);
+        // Calculate combined average (submission + reviews)
+        const watchlistWithScores = watchlist.map(item => {
+            const submissionScore = parseFloat(item.final_score) || 0;
+            const avgReviewScore = parseFloat(item.avg_review_score) || 0;
+            const reviewCount = db.query('SELECT COUNT(*) as count FROM reviews WHERE submission_id = ?', [item.submission_id])[0].count;
+
+            // Average of submission score and all review scores
+            const avg_final_score = reviewCount > 0
+                ? (submissionScore + (avgReviewScore * reviewCount)) / (reviewCount + 1)
+                : submissionScore;
+
+            return {
+                ...item,
+                avg_final_score: avg_final_score.toFixed(2)
+            };
+        });
+
+        res.json(watchlistWithScores);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -48,7 +48,7 @@ async function sendNewSubmissionNotification(ticker, submitterName) {
     const payload = {
         embeds: [{
             title: '📊 New Watchlist Submission',
-            description: `**${submitterName}** has submitted **${ticker}** for review`,
+            description: `**Team Member** has submitted **${ticker}** for review`,
             color: 0x1A3A2E, // Forest green
             timestamp: new Date().toISOString(),
             footer: {
@@ -63,7 +63,7 @@ async function sendReviewCompleteNotification(ticker, reviewerName, reviewsCompl
     const payload = {
         embeds: [{
             title: '✅ Review Completed',
-            description: `**${reviewerName}** has completed their review of **${ticker}**\n\nProgress: ${reviewsCompleted}/${totalReviews} reviews complete`,
+            description: `**Team Member** has completed their review of **${ticker}**\n\nProgress: ${reviewsCompleted}/${totalReviews} reviews complete`,
             color: 0x2D5A4A, // Forest light
             timestamp: new Date().toISOString(),
             footer: {
