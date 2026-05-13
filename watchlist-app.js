@@ -19,6 +19,28 @@ function setupEventListeners() {
 
     // File input display
     document.getElementById('attachments').addEventListener('change', displayFileList);
+
+    // Ticker input for sector auto-population
+    document.getElementById('ticker').addEventListener('blur', autoPopulateSector);
+    document.getElementById('ticker').addEventListener('input', debounce(() => {
+        const ticker = document.getElementById('ticker').value.trim();
+        if (ticker.length >= 1) {
+            autoPopulateSector();
+        }
+    }, 500));
+}
+
+// Debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 
@@ -68,15 +90,15 @@ async function loadSubmissions() {
             row.className = 'clickable-row';
             row.onclick = () => viewSubmission(sub.id);
 
-            const avgConf = sub.avg_confidence ? parseFloat(sub.avg_confidence).toFixed(1) : '-';
-            const stars = sub.avg_confidence ? '⭐'.repeat(Math.round(sub.avg_confidence)) : '-';
+            const avgScore = sub.avg_final_score ? parseFloat(sub.avg_final_score).toFixed(2) : '-';
+            const scoreDisplay = sub.avg_final_score ? `${avgScore}/10` : 'Pending';
 
             row.innerHTML = `
                 <td><strong>${sub.ticker}</strong></td>
                 <td>${sub.company_name}</td>
                 <td>${sub.submitter_name}</td>
                 <td>${sub.review_count}/3</td>
-                <td>${avgConf} ${sub.avg_confidence ? stars : ''}</td>
+                <td><strong>${scoreDisplay}</strong></td>
                 <td><span class="status-badge status-${sub.status}">${sub.status.replace('_', ' ')}</span></td>
                 <td>${new Date(sub.created_at).toLocaleDateString()}</td>
             `;
@@ -90,8 +112,8 @@ async function loadSubmissions() {
 
 function sortSubmissions(submissions, sortBy) {
     switch (sortBy) {
-        case 'confidence':
-            return submissions.sort((a, b) => (b.avg_confidence || 0) - (a.avg_confidence || 0));
+        case 'score':
+            return submissions.sort((a, b) => (b.avg_final_score || 0) - (a.avg_final_score || 0));
         case 'date':
             return submissions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         case 'status':
@@ -123,8 +145,8 @@ async function viewSubmission(id) {
             </div>
 
             <div class="detail-row">
-                <span class="detail-label">Confidence Level:</span>
-                <span>${submission.confidence_level}/5 ${'⭐'.repeat(submission.confidence_level)}</span>
+                <span class="detail-label">Final Score:</span>
+                <span><strong>${submission.final_score ? parseFloat(submission.final_score).toFixed(2) : 'Pending'}/10</strong></span>
             </div>
 
             <div class="detail-row">
@@ -169,22 +191,162 @@ async function viewSubmission(id) {
 
         // Show reviews if complete
         if (submission.reviewsComplete && submission.reviews.length > 0) {
-            const allConfidences = [submission.confidence_level, ...submission.reviews.map(r => r.confidence_level)];
-            const avgConf = allConfidences.reduce((sum, c) => sum + c, 0) / allConfidences.length;
+            // Calculate team averages for all scores
+            const allScores = [
+                {
+                    name: submission.submitter_name,
+                    confidence: submission.confidence_level,
+                    technical: submission.technical_score,
+                    fundamentals: submission.fundamentals_score,
+                    theme: submission.theme_score,
+                    sector: submission.sector_score,
+                    canslim_c: submission.canslim_c,
+                    canslim_a: submission.canslim_a,
+                    canslim_n: submission.canslim_n,
+                    canslim_s: submission.canslim_s,
+                    canslim_l: submission.canslim_l,
+                    canslim_i: submission.canslim_i,
+                    canslim_m: submission.canslim_m,
+                    final_score: submission.final_score
+                },
+                ...submission.reviews.map(r => ({
+                    name: r.reviewer_name,
+                    confidence: r.confidence_level,
+                    technical: r.technical_score,
+                    fundamentals: r.fundamentals_score,
+                    theme: r.theme_score,
+                    sector: r.sector_score,
+                    canslim_c: r.canslim_c,
+                    canslim_a: r.canslim_a,
+                    canslim_n: r.canslim_n,
+                    canslim_s: r.canslim_s,
+                    canslim_l: r.canslim_l,
+                    canslim_i: r.canslim_i,
+                    canslim_m: r.canslim_m,
+                    final_score: r.final_score
+                }))
+            ];
+
+            const avgScores = {
+                confidence: (allScores.reduce((sum, s) => sum + parseFloat(s.confidence || 0), 0) / allScores.length).toFixed(2),
+                technical: (allScores.reduce((sum, s) => sum + parseFloat(s.technical || 0), 0) / allScores.length).toFixed(2),
+                fundamentals: (allScores.reduce((sum, s) => sum + parseFloat(s.fundamentals || 0), 0) / allScores.length).toFixed(2),
+                theme: (allScores.reduce((sum, s) => sum + parseFloat(s.theme || 0), 0) / allScores.length).toFixed(2),
+                sector: (allScores.reduce((sum, s) => sum + parseFloat(s.sector || 0), 0) / allScores.length).toFixed(2),
+                canslim_c: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_c || 0), 0) / allScores.length).toFixed(2),
+                canslim_a: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_a || 0), 0) / allScores.length).toFixed(2),
+                canslim_n: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_n || 0), 0) / allScores.length).toFixed(2),
+                canslim_s: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_s || 0), 0) / allScores.length).toFixed(2),
+                canslim_l: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_l || 0), 0) / allScores.length).toFixed(2),
+                canslim_i: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_i || 0), 0) / allScores.length).toFixed(2),
+                canslim_m: (allScores.reduce((sum, s) => sum + parseFloat(s.canslim_m || 0), 0) / allScores.length).toFixed(2),
+                final: (allScores.reduce((sum, s) => sum + parseFloat(s.final_score || 0), 0) / allScores.length).toFixed(2)
+            };
 
             html += `
                 <div style="margin-top: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Team Reviews (Average: ${avgConf.toFixed(2)}/5 ${'⭐'.repeat(Math.round(avgConf))})</h3>
+                    <h3 style="margin-bottom: 1rem;">Team Scores Summary</h3>
+
+                    <!-- Team Averages Card -->
+                    <div style="background: rgba(42, 90, 74, 0.1); border: 2px solid var(--forest); padding: 1.5rem; margin-bottom: 2rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--forest);">Team Average Scores</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                            <div><strong>Final Score:</strong> ${avgScores.final}/10</div>
+                            <div><strong>Confidence:</strong> ${avgScores.confidence}/10</div>
+                            <div><strong>Technical:</strong> ${avgScores.technical}/10</div>
+                            <div><strong>Fundamentals:</strong> ${avgScores.fundamentals}/10</div>
+                            <div><strong>Theme:</strong> ${avgScores.theme}/5 (×2 = ${(avgScores.theme * 2).toFixed(2)})</div>
+                            <div><strong>Sector:</strong> ${avgScores.sector}/5 (×2 = ${(avgScores.sector * 2).toFixed(2)})</div>
+                        </div>
+                        <h5 style="margin: 1.5rem 0 0.5rem 0; font-size: 0.95rem;">CANSLIM Averages:</h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; font-size: 0.9rem;">
+                            <div>C: ${avgScores.canslim_c}/10</div>
+                            <div>A: ${avgScores.canslim_a}/10</div>
+                            <div>N: ${avgScores.canslim_n}/10</div>
+                            <div>S: ${avgScores.canslim_s}/10</div>
+                            <div>L: ${avgScores.canslim_l}/10</div>
+                            <div>I: ${avgScores.canslim_i}/10</div>
+                            <div>M: ${avgScores.canslim_m}/10</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem;">Individual Reviews</h3>
                     <div class="review-grid">
             `;
 
+            // Show submitter's scores first
+            html += `
+                <div class="review-card">
+                    <h4>${submission.submitter_name} <span style="color: var(--gold); font-size: 0.8rem;">(Submitter)</span></h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Final Score:</span>
+                        <span><strong>${submission.final_score ? parseFloat(submission.final_score).toFixed(2) : 'N/A'}/10</strong></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Confidence:</span>
+                        <span>${submission.confidence_level}/10</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Technical:</span>
+                        <span>${submission.technical_score}/10</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fundamentals:</span>
+                        <span>${submission.fundamentals_score}/10</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Theme:</span>
+                        <span>${submission.theme_score}/5 (×2)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Sector:</span>
+                        <span>${submission.sector_score}/5 (×2)</span>
+                    </div>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.85rem;">
+                        <strong>CANSLIM:</strong> C:${submission.canslim_c} A:${submission.canslim_a} N:${submission.canslim_n} S:${submission.canslim_s} L:${submission.canslim_l} I:${submission.canslim_i} M:${submission.canslim_m}
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Price Target:</span>
+                        <span>${submission.price_target || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Time Horizon:</span>
+                        <span>${submission.time_horizon}</span>
+                    </div>
+                </div>
+            `;
+
+            // Show reviewer scores
             submission.reviews.forEach(review => {
                 html += `
                     <div class="review-card">
                         <h4>${review.reviewer_name}</h4>
                         <div class="detail-row">
+                            <span class="detail-label">Final Score:</span>
+                            <span><strong>${review.final_score ? parseFloat(review.final_score).toFixed(2) : 'N/A'}/10</strong></span>
+                        </div>
+                        <div class="detail-row">
                             <span class="detail-label">Confidence:</span>
-                            <span>${review.confidence_level}/5 ${'⭐'.repeat(review.confidence_level)}</span>
+                            <span>${review.confidence_level}/10</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Technical:</span>
+                            <span>${review.technical_score}/10</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Fundamentals:</span>
+                            <span>${review.fundamentals_score}/10</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Theme:</span>
+                            <span>${review.theme_score}/5 (×2)</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Sector:</span>
+                            <span>${review.sector_score}/5 (×2)</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.85rem;">
+                            <strong>CANSLIM:</strong> C:${review.canslim_c} A:${review.canslim_a} N:${review.canslim_n} S:${review.canslim_s} L:${review.canslim_l} I:${review.canslim_i} M:${review.canslim_m}
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Price Target:</span>
@@ -237,6 +399,51 @@ function closeSubmissionModal() {
     document.getElementById('submissionModal').classList.remove('active');
 }
 
+// Auto-populate sector based on ticker
+async function autoPopulateSector() {
+    const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+    const sectorInput = document.getElementById('sector');
+
+    if (!ticker) {
+        sectorInput.value = '';
+        sectorInput.placeholder = 'Enter ticker first';
+        return;
+    }
+
+    try {
+        sectorInput.value = 'Loading...';
+        const response = await fetch(`${API_URL}/ticker-info/${ticker}`);
+
+        if (!response.ok) throw new Error('Ticker not found');
+
+        const data = await response.json();
+        sectorInput.value = data.sector || 'N/A';
+        sectorInput.readOnly = false;
+        sectorInput.style.background = 'rgba(255, 255, 255, 0.8)';
+    } catch (error) {
+        console.error('Error fetching sector:', error);
+        sectorInput.value = '';
+        sectorInput.placeholder = 'Unable to auto-populate, enter manually';
+        sectorInput.readOnly = false;
+        sectorInput.style.background = 'rgba(255, 255, 255, 0.8)';
+    }
+}
+
+// Calculate final score from all scoring inputs
+function calculateFinalScore(scores) {
+    // scores object should contain: confidence, technical, fundamentals, theme, sector, canslim (array of 7)
+    const canslimAvg = scores.canslim.reduce((sum, val) => sum + parseInt(val), 0) / 7;
+    const finalScore = (
+        parseInt(scores.confidence) +
+        parseInt(scores.technical) +
+        parseInt(scores.fundamentals) +
+        (parseInt(scores.theme) * 2) +
+        (parseInt(scores.sector) * 2) +
+        canslimAvg
+    ) / 6;
+    return finalScore.toFixed(2);
+}
+
 async function handleSubmit(e) {
     e.preventDefault();
 
@@ -244,11 +451,43 @@ async function handleSubmit(e) {
     formData.append('ticker', document.getElementById('ticker').value);
     formData.append('submitterName', document.getElementById('submitterName').value);
     formData.append('companyName', document.getElementById('companyName').value);
-    formData.append('confidenceLevel', document.getElementById('confidenceLevel').value);
     formData.append('reasoning', document.getElementById('reasoning').value);
     formData.append('priceTarget', document.getElementById('priceTarget').value);
     formData.append('timeHorizon', document.getElementById('timeHorizon').value);
     formData.append('sector', document.getElementById('sector').value);
+
+    // Add all scoring fields
+    formData.append('confidenceLevel', document.getElementById('confidenceLevel').value);
+    formData.append('technicalScore', document.getElementById('technicalScore').value);
+    formData.append('fundamentalsScore', document.getElementById('fundamentalsScore').value);
+    formData.append('themeScore', document.getElementById('themeScore').value);
+    formData.append('sectorScore', document.getElementById('sectorScore').value);
+    formData.append('canslim_c', document.getElementById('canslim_c').value);
+    formData.append('canslim_a', document.getElementById('canslim_a').value);
+    formData.append('canslim_n', document.getElementById('canslim_n').value);
+    formData.append('canslim_s', document.getElementById('canslim_s').value);
+    formData.append('canslim_l', document.getElementById('canslim_l').value);
+    formData.append('canslim_i', document.getElementById('canslim_i').value);
+    formData.append('canslim_m', document.getElementById('canslim_m').value);
+
+    // Calculate and append final score
+    const finalScore = calculateFinalScore({
+        confidence: document.getElementById('confidenceLevel').value,
+        technical: document.getElementById('technicalScore').value,
+        fundamentals: document.getElementById('fundamentalsScore').value,
+        theme: document.getElementById('themeScore').value,
+        sector: document.getElementById('sectorScore').value,
+        canslim: [
+            document.getElementById('canslim_c').value,
+            document.getElementById('canslim_a').value,
+            document.getElementById('canslim_n').value,
+            document.getElementById('canslim_s').value,
+            document.getElementById('canslim_l').value,
+            document.getElementById('canslim_i').value,
+            document.getElementById('canslim_m').value
+        ]
+    });
+    formData.append('finalScore', finalScore);
 
     // Add files
     const files = document.getElementById('attachments').files;
@@ -376,20 +615,8 @@ async function startReview(submissionId) {
                         <option value="">Select your name</option>
                         <option value="Paxton Thompson">Paxton</option>
                         <option value="Alex Evenson">Alex</option>
-                        <option value="Garett Lake">Garret</option>
+                        <option value="Garett Lake">Garett</option>
                         <option value="Sam Thoresen">Sam</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="reviewConfidence">Your Confidence Level (1-5) *</label>
-                    <select id="reviewConfidence" required>
-                        <option value="">Select confidence level</option>
-                        <option value="1">1 - Very Low</option>
-                        <option value="2">2 - Low</option>
-                        <option value="3">3 - Medium</option>
-                        <option value="4">4 - High</option>
-                        <option value="5">5 - Very High</option>
                     </select>
                 </div>
 
@@ -413,9 +640,207 @@ async function startReview(submissionId) {
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="reviewSector">Sector Classification (Optional)</label>
-                    <input type="text" id="reviewSector" placeholder="e.g., Technology, Healthcare, Finance">
+                <h3 style="margin: 2rem 0 1rem 0; font-size: 1.3rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">Your Scoring (All scores required)</h3>
+
+                <!-- Core Scores -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label for="reviewConfidence">Confidence Level (1-10) *</label>
+                        <select id="reviewConfidence" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewTechnical">Technical Analysis (1-10) *</label>
+                        <select id="reviewTechnical" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewFundamentals">Fundamentals (1-10) *</label>
+                        <select id="reviewFundamentals" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewTheme">Theme (1-5) * <small style="color: var(--text-muted);">×2 weight</small></label>
+                        <select id="reviewTheme" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewSectorScore">Sector (1-5) * <small style="color: var(--text-muted);">×2 weight</small></label>
+                        <select id="reviewSectorScore" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CANSLIM Scores -->
+                <h4 style="margin: 1.5rem 0 1rem 0; font-size: 1.1rem; font-weight: 600;">CANSLIM Analysis (1-10 each) *</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label for="review_canslim_c">C - Current Earnings (1-10) *</label>
+                        <select id="review_canslim_c" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_a">A - Annual Earnings (1-10) *</label>
+                        <select id="review_canslim_a" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_n">N - New (1-10) *</label>
+                        <select id="review_canslim_n" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_s">S - Supply & Demand (1-10) *</label>
+                        <select id="review_canslim_s" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_l">L - Leader/Laggard (1-10) *</label>
+                        <select id="review_canslim_l" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_i">I - Institutional (1-10) *</label>
+                        <select id="review_canslim_i" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review_canslim_m">M - Market Direction (1-10) *</label>
+                        <select id="review_canslim_m" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -459,13 +884,44 @@ async function submitReview(e, submissionId) {
 
     const formData = new FormData();
     formData.append('submissionId', submissionId);
-    formData.append('confidenceLevel', document.getElementById('reviewConfidence').value);
+    formData.append('reviewerName', document.getElementById('reviewerName').value);
     formData.append('reasoning', document.getElementById('reviewReasoning').value);
     formData.append('priceTarget', document.getElementById('reviewPriceTarget').value);
     formData.append('timeHorizon', document.getElementById('reviewTimeHorizon').value);
-    formData.append('sector', document.getElementById('reviewSector').value);
 
-    formData.append('reviewerName', document.getElementById('reviewerName').value);
+    // Add all scoring fields
+    formData.append('confidenceLevel', document.getElementById('reviewConfidence').value);
+    formData.append('technicalScore', document.getElementById('reviewTechnical').value);
+    formData.append('fundamentalsScore', document.getElementById('reviewFundamentals').value);
+    formData.append('themeScore', document.getElementById('reviewTheme').value);
+    formData.append('sectorScore', document.getElementById('reviewSectorScore').value);
+    formData.append('canslim_c', document.getElementById('review_canslim_c').value);
+    formData.append('canslim_a', document.getElementById('review_canslim_a').value);
+    formData.append('canslim_n', document.getElementById('review_canslim_n').value);
+    formData.append('canslim_s', document.getElementById('review_canslim_s').value);
+    formData.append('canslim_l', document.getElementById('review_canslim_l').value);
+    formData.append('canslim_i', document.getElementById('review_canslim_i').value);
+    formData.append('canslim_m', document.getElementById('review_canslim_m').value);
+
+    // Calculate and append final score
+    const finalScore = calculateFinalScore({
+        confidence: document.getElementById('reviewConfidence').value,
+        technical: document.getElementById('reviewTechnical').value,
+        fundamentals: document.getElementById('reviewFundamentals').value,
+        theme: document.getElementById('reviewTheme').value,
+        sector: document.getElementById('reviewSectorScore').value,
+        canslim: [
+            document.getElementById('review_canslim_c').value,
+            document.getElementById('review_canslim_a').value,
+            document.getElementById('review_canslim_n').value,
+            document.getElementById('review_canslim_s').value,
+            document.getElementById('review_canslim_l').value,
+            document.getElementById('review_canslim_i').value,
+            document.getElementById('review_canslim_m').value
+        ]
+    });
+    formData.append('finalScore', finalScore);
+
     // Add files
     const files = document.getElementById('reviewAttachments').files;
     for (let i = 0; i < files.length; i++) {
@@ -521,13 +977,13 @@ async function loadWatchlist() {
             row.className = 'clickable-row';
             row.onclick = () => viewSubmission(item.submission_id);
 
-            const stars = '⭐'.repeat(Math.round(item.avg_confidence));
+            const finalScore = item.avg_final_score ? parseFloat(item.avg_final_score).toFixed(2) : 'N/A';
 
             row.innerHTML = `
                 <td><strong>${item.ticker}</strong></td>
                 <td>${item.company_name}</td>
                 <td>${item.submitter_name}</td>
-                <td>${item.avg_confidence.toFixed(2)}/5 ${stars}</td>
+                <td><strong>${finalScore}/10</strong></td>
                 <td>${item.sector || 'N/A'}</td>
                 <td>${item.time_horizon}</td>
                 <td>${new Date(item.added_at).toLocaleDateString()}</td>

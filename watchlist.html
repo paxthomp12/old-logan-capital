@@ -470,7 +470,7 @@
                 <div class="sort-controls">
                     <label>Sort by:</label>
                     <select id="sortSelect" onchange="loadSubmissions()">
-                        <option value="confidence">Avg Confidence (High to Low)</option>
+                        <option value="score">Avg Score (High to Low)</option>
                         <option value="date">Date (Newest First)</option>
                         <option value="status">Status</option>
                         <option value="ticker">Ticker (A-Z)</option>
@@ -487,7 +487,7 @@
                                     <th>Company</th>
                                     <th>Submitted By</th>
                                     <th>Reviews</th>
-                                    <th>Avg Confidence</th>
+                                    <th>Avg Score</th>
                                     <th>Status</th>
                                     <th>Date</th>
                                 </tr>
@@ -530,20 +530,211 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="confidenceLevel">Confidence Level (1-5) *</label>
-                            <select id="confidenceLevel" name="confidenceLevel" required>
-                                <option value="">Select confidence level</option>
-                                <option value="1">1 - Very Low</option>
-                                <option value="2">2 - Low</option>
-                                <option value="3">3 - Medium</option>
-                                <option value="4">4 - High</option>
-                                <option value="5">5 - Very High</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
                             <label for="reasoning">Investment Thesis / Reasoning *</label>
                             <textarea id="reasoning" name="reasoning" required placeholder="Provide a detailed analysis of why this ticker should be on the watchlist..."></textarea>
+                        </div>
+
+                        <h3 style="margin: 2rem 0 1rem 0; font-family: 'Fraunces', serif; font-size: 1.4rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">Scoring (All scores required)</h3>
+
+                        <!-- Core Scores -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="form-group">
+                                <label for="confidenceLevel">Confidence Level (1-10) *</label>
+                                <select id="confidenceLevel" name="confidenceLevel" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="technicalScore">Technical Analysis (1-10) *</label>
+                                <select id="technicalScore" name="technicalScore" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fundamentalsScore">Fundamentals (1-10) *</label>
+                                <select id="fundamentalsScore" name="fundamentalsScore" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="themeScore">Theme (1-5) * <small style="color: var(--text-muted);">×2 weight</small></label>
+                                <select id="themeScore" name="themeScore" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sectorScore">Sector (1-5) * <small style="color: var(--text-muted);">×2 weight</small></label>
+                                <select id="sectorScore" name="sectorScore" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- CANSLIM Scores -->
+                        <h4 style="margin: 1.5rem 0 1rem 0; font-size: 1.1rem; font-weight: 600;">CANSLIM Analysis (1-10 each) *</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="form-group">
+                                <label for="canslim_c">C - Current Earnings (1-10) *</label>
+                                <select id="canslim_c" name="canslim_c" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_a">A - Annual Earnings (1-10) *</label>
+                                <select id="canslim_a" name="canslim_a" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_n">N - New (1-10) *</label>
+                                <select id="canslim_n" name="canslim_n" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_s">S - Supply & Demand (1-10) *</label>
+                                <select id="canslim_s" name="canslim_s" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_l">L - Leader/Laggard (1-10) *</label>
+                                <select id="canslim_l" name="canslim_l" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_i">I - Institutional (1-10) *</label>
+                                <select id="canslim_i" name="canslim_i" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canslim_m">M - Market Direction (1-10) *</label>
+                                <select id="canslim_m" name="canslim_m" required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -562,8 +753,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="sector">Sector (Optional)</label>
-                            <input type="text" id="sector" name="sector" placeholder="e.g., Technology, Healthcare, Finance">
+                            <label for="sector">Sector <small style="color: var(--text-muted);">(Auto-populated, can be edited)</small></label>
+                            <input type="text" id="sector" name="sector" placeholder="Auto-populating..." readonly style="background: rgba(201, 169, 98, 0.1);">
                         </div>
 
                         <div class="form-group">
@@ -602,7 +793,7 @@
                                     <th>Ticker</th>
                                     <th>Company</th>
                                     <th>Submitted By</th>
-                                    <th>Avg Confidence</th>
+                                    <th>Final Score</th>
                                     <th>Sector</th>
                                     <th>Time Horizon</th>
                                     <th>Added Date</th>
