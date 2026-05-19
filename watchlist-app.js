@@ -229,6 +229,15 @@ async function viewSubmission(id) {
             `;
         }
 
+        // Add delete button
+        html += `
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border);">
+                <button class="btn btn-danger" onclick="deleteSubmission(${id})" style="background: var(--danger); border-color: var(--danger);">
+                    🗑️ Delete Submission
+                </button>
+            </div>
+        `;
+
         // Show reviews if complete
         if (submission.reviewsComplete && submission.reviews.length > 0) {
             // Calculate team averages for all scores using safe getters
@@ -594,11 +603,14 @@ async function loadPendingReviews() {
         container.innerHTML = pending.map(sub => `
             <div class="card" style="margin-bottom: 1rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
+                    <div style="flex: 1;">
                         <h3 style="margin-bottom: 0.5rem;">${sub.ticker} - ${sub.company_name}</h3>
                         <p style="color: var(--text-muted); font-size: 0.9rem;">Submitted on ${new Date(sub.created_at).toLocaleDateString()}</p>
                     </div>
-                    <button class="btn" onclick="startReview(${sub.id})">Start Review</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="startReview(${sub.id})">Start Review</button>
+                        <button class="btn btn-secondary" onclick="viewSubmission(${sub.id})">View Details</button>
+                    </div>
                 </div>
             </div>
         `).join('');
@@ -903,7 +915,7 @@ async function approveForWatchlist(submissionId) {
     try {
         const response = await fetch(`${API_URL}/watchlist/approve/${submissionId}`, {
             method: 'POST',
-            
+
         });
 
         if (!response.ok) throw new Error('Approval failed');
@@ -914,5 +926,28 @@ async function approveForWatchlist(submissionId) {
         loadWatchlist();
     } catch (error) {
         alert('Failed to approve ticker: ' + error.message);
+    }
+}
+
+async function deleteSubmission(submissionId) {
+    if (!confirm('Are you sure you want to permanently delete this submission? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/submissions/${submissionId}`, {
+            method: 'DELETE',
+
+        });
+
+        if (!response.ok) throw new Error('Delete failed');
+
+        alert('Submission deleted successfully!');
+        closeSubmissionModal();
+        loadSubmissions();
+        loadPendingReviews();
+        loadWatchlist();
+    } catch (error) {
+        alert('Failed to delete submission: ' + error.message);
     }
 }
