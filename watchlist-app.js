@@ -94,7 +94,7 @@ async function loadSubmissions() {
         tbody.innerHTML = '';
 
         if (submissions.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No submissions yet</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No submissions yet</td></tr>';
             return;
         }
 
@@ -109,7 +109,6 @@ async function loadSubmissions() {
             row.innerHTML = `
                 <td><strong>${sub.ticker}</strong></td>
                 <td>${sub.company_name}</td>
-                <td>${sub.submitter_name}</td>
                 <td>${sub.review_count}/3</td>
                 <td><strong>${scoreDisplay}</strong></td>
                 <td><span class="status-badge status-${sub.status}">${sub.status.replace('_', ' ')}</span></td>
@@ -173,10 +172,12 @@ async function viewSubmission(id) {
         let html = `
             <h2>${submission.ticker} - ${submission.company_name}</h2>
 
+            ${submission.reviewsComplete ? `
             <div class="detail-row">
                 <span class="detail-label">Submitted by:</span>
                 <span>${submission.submitter_name}</span>
             </div>
+            ` : ''}
 
             <div class="detail-row">
                 <span class="detail-label">Final Score:</span>
@@ -595,7 +596,7 @@ async function loadPendingReviews() {
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h3 style="margin-bottom: 0.5rem;">${sub.ticker} - ${sub.company_name}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Submitted by ${sub.submitter_name} on ${new Date(sub.created_at).toLocaleDateString()}</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Submitted on ${new Date(sub.created_at).toLocaleDateString()}</p>
                     </div>
                     <button class="btn" onclick="startReview(${sub.id})">Start Review</button>
                 </div>
@@ -623,7 +624,7 @@ async function startReview(submissionId) {
             </p>
 
             <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--border); margin-bottom: 2rem;">
-                <h3 style="margin-bottom: 1rem;">Original Submission (by ${submission.submitter_name})</h3>
+                <h3 style="margin-bottom: 1rem;">Original Submission</h3>
                 <div class="detail-row">
                     <span class="detail-label">Ticker:</span>
                     <span><strong>${submission.ticker}</strong></span>
@@ -636,7 +637,7 @@ async function startReview(submissionId) {
                     <span class="detail-label">Sector:</span>
                     <span>${submission.sector || 'N/A'}</span>
                 </div>
-                <p style="margin-top: 1rem;"><strong>Note:</strong> Original confidence level and full analysis are hidden to prevent bias.</p>
+                <p style="margin-top: 1rem;"><strong>Note:</strong> Submitter identity and full analysis are hidden to prevent bias.</p>
             </div>
 
             <form id="reviewForm" onsubmit="submitReview(event, ${submissionId})">
