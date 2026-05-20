@@ -28,6 +28,19 @@ function setupEventListeners() {
             autoPopulateSector();
         }
     }, 500));
+
+    // Close modals when clicking outside
+    document.getElementById('submissionModal').addEventListener('click', (e) => {
+        if (e.target.id === 'submissionModal') {
+            closeSubmissionModal();
+        }
+    });
+
+    document.getElementById('reviewModal').addEventListener('click', (e) => {
+        if (e.target.id === 'reviewModal') {
+            closeReviewModal();
+        }
+    });
 }
 
 // Debounce function to limit API calls
@@ -187,36 +200,6 @@ async function viewSubmission(id) {
                     <span>${submission.submitter_name}</span>
                 </div>
                 ` : ''}
-
-                <div class="detail-row">
-                    <span class="detail-label">Final Score:</span>
-                    <span><strong>${submission.final_score ? parseFloat(submission.final_score).toFixed(2) : 'Pending'}/10</strong></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Entry Range:</span>
-                    <span>${submission.entry_range || 'N/A'}</span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Sell Range:</span>
-                    <span>${submission.sell_range || 'N/A'}</span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Time Horizon:</span>
-                    <span>${submission.time_horizon}</span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Sector:</span>
-                    <span>${submission.sector || 'N/A'}</span>
-                </div>
-
-                <div style="margin-top: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Investment Thesis</h3>
-                    <p style="line-height: 1.8; white-space: pre-wrap;">${submission.reasoning}</p>
-                </div>
             `;
 
             // Show attachments if any
@@ -337,6 +320,14 @@ async function viewSubmission(id) {
                     <div class="detail-row">
                         <span class="detail-label">Time Horizon:</span>
                         <span>${submission.time_horizon}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Sector:</span>
+                        <span>${submission.sector || 'N/A'}</span>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <strong>Investment Thesis:</strong>
+                        <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${submission.reasoning}</p>
                     </div>
                 </div>
             `;
@@ -592,12 +583,16 @@ function displayFileList() {
 async function loadPendingReviews() {
     try {
         const response = await fetch(`${API_URL}/pending-reviews`, {
-            
+
         });
 
         if (!response.ok) throw new Error('Failed to load pending reviews');
 
-        const pending = await response.json();
+        let pending = await response.json();
+
+        // Filter out submissions where all 3 reviews are complete
+        pending = pending.filter(sub => (sub.review_count || 0) < 3);
+
         const container = document.getElementById('pendingReviewsList');
 
         if (pending.length === 0) {
