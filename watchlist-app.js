@@ -183,24 +183,26 @@ async function viewSubmission(id) {
         currentSubmissionId = id;
 
         let html = `
-            <h2>${submission.ticker} - ${submission.company_name}</h2>
-
-            <div class="detail-row">
-                <span class="detail-label">Status:</span>
-                <span><span class="status-badge status-${submission.status}">${submission.status.replace('_', ' ')}</span></span>
+            <div style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--dark);">${submission.ticker} - ${submission.company_name}</h2>
+                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 0.5rem;">Status</span>
+                        <span class="status-badge status-${submission.status}">${submission.status.replace('_', ' ')}</span>
+                    </div>
+                    ${submission.reviewsComplete && submission.status !== 'submitted' ? `
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 0.5rem;">Submitted By</span>
+                        <span style="font-weight: 600;">${submission.submitter_name}</span>
+                    </div>
+                    ` : ''}
+                </div>
             </div>
         `;
 
         // Only show details if status is NOT "submitted"
         if (submission.status !== 'submitted') {
-            html += `
-                ${submission.reviewsComplete ? `
-                <div class="detail-row">
-                    <span class="detail-label">Submitted by:</span>
-                    <span>${submission.submitter_name}</span>
-                </div>
-                ` : ''}
-            `;
+            html += ``;
 
             // Show attachments if any
             if (submission.attachments && submission.attachments.length > 0) {
@@ -219,8 +221,8 @@ async function viewSubmission(id) {
 
         // Add delete button
         html += `
-            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border);">
-                <button class="btn btn-danger" onclick="deleteSubmission(${id})" style="background: var(--danger); border-color: var(--danger);">
+            <div style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+                <button class="btn btn-danger" onclick="deleteSubmission(${id})">
                     🗑️ Delete Submission
                 </button>
             </div>
@@ -260,23 +262,41 @@ async function viewSubmission(id) {
             };
 
             html += `
-                <div style="margin-top: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Team Scores Summary</h3>
+                <div style="margin-top: 3rem;">
+                    <h3 style="font-size: 1.6rem; margin-bottom: 2rem; color: var(--dark);">Team Analysis</h3>
 
                     <!-- Team Averages Card -->
-                    <div style="background: rgba(42, 90, 74, 0.1); border: 2px solid var(--forest); padding: 1.5rem; margin-bottom: 2rem;">
-                        <h4 style="margin-bottom: 1rem; color: var(--forest);">Team Average Scores</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-                            <div><strong>Final Score:</strong> ${avgScores.final}/10</div>
-                            <div><strong>Confidence:</strong> ${avgScores.confidence}/10</div>
-                            <div><strong>Technical:</strong> ${avgScores.technical}/10</div>
-                            <div><strong>Fundamentals:</strong> ${avgScores.fundamentals}/10</div>
-                            <div><strong>Theme:</strong> ${avgScores.theme}/5</div>
-                            <div><strong>Sector:</strong> ${avgScores.sector}/5</div>
+                    <div style="background: linear-gradient(135deg, rgba(26, 58, 46, 0.08) 0%, rgba(26, 58, 46, 0.04) 100%); border: 1px solid rgba(26, 58, 46, 0.2); padding: 2rem; margin-bottom: 3rem; border-radius: 8px; border-left: 4px solid var(--forest);">
+                        <h4 style="margin-bottom: 1.5rem; color: var(--forest); font-size: 1.2rem;">Team Average Scores</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem;">
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Final Score</div>
+                                <div style="font-size: 1.8rem; font-weight: 700; color: var(--forest);">${avgScores.final}<span style="font-size: 1rem; color: var(--text-muted);">/10</span></div>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Confidence</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark);">${avgScores.confidence}<span style="font-size: 0.9rem; color: var(--text-muted);">/10</span></div>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Technical</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark);">${avgScores.technical}<span style="font-size: 0.9rem; color: var(--text-muted);">/10</span></div>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Fundamentals</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark);">${avgScores.fundamentals}<span style="font-size: 0.9rem; color: var(--text-muted);">/10</span></div>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Theme</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark);">${avgScores.theme}<span style="font-size: 0.9rem; color: var(--text-muted);">/5</span></div>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Sector</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark);">${avgScores.sector}<span style="font-size: 0.9rem; color: var(--text-muted);">/5</span></div>
+                            </div>
                         </div>
                     </div>
 
-                    <h3 style="margin-bottom: 1rem;">Individual Reviews</h3>
+                    <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--dark);">Individual Reviews</h3>
                     <div class="review-grid">
             `;
 
@@ -387,7 +407,8 @@ async function viewSubmission(id) {
             // Add approve button if all reviews complete and not yet approved
             if (submission.status === 'under_review') {
                 html += `
-                    <div style="margin-top: 2rem;">
+                    <div style="margin-top: 2.5rem; padding: 2rem; background: rgba(45, 90, 74, 0.05); border-radius: 8px; border: 1px solid rgba(45, 90, 74, 0.15);">
+                        <p style="margin-bottom: 1.5rem; color: var(--text); font-size: 0.95rem;">All reviews are complete. Ready to approve this ticker for the watchlist?</p>
                         <button class="btn btn-success" onclick="approveForWatchlist(${id})">
                             ✓ Approve for Watchlist
                         </button>
@@ -396,11 +417,16 @@ async function viewSubmission(id) {
             }
         } else {
             html += `
-                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(201, 169, 98, 0.1); border: 1px solid var(--warning);">
-                    <p style="color: var(--text-muted);">
-                        <strong>Reviews in Progress:</strong> ${submission.review_count || 0}/3 reviews completed.
-                        Results will be visible to everyone once all reviews are finished.
-                    </p>
+                <div style="margin-top: 2.5rem; padding: 2rem; background: rgba(201, 169, 98, 0.08); border-radius: 8px; border-left: 4px solid var(--warning);">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">⏳</div>
+                        <div>
+                            <strong style="color: var(--dark); font-size: 1.05rem;">Reviews in Progress</strong>
+                            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.95rem;">
+                                ${submission.review_count || 0}/3 reviews completed. Results will be visible to everyone once all reviews are finished.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             `;
         }

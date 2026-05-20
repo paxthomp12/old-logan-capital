@@ -38,20 +38,24 @@
 
         .btn {
             display: inline-block;
-            padding: 1rem 2rem;
+            padding: 0.9rem 2rem;
             background: var(--dark);
-            color: var(--cream);
+            color: white;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             border: none;
             cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.15);
         }
 
         .btn:hover {
             background: var(--forest);
+            box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+            transform: translateY(-1px);
         }
 
         nav {
@@ -105,15 +109,17 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid var(--border);
+            background: white;
+            border: none;
             padding: 3rem;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
+            border-radius: 8px;
         }
 
         .card:hover {
-            border-color: var(--dark);
-            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 6px 20px rgba(26, 26, 26, 0.12);
+            transform: translateY(-4px);
         }
 
         .card h2 {
