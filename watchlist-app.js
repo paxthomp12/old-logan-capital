@@ -116,8 +116,12 @@ async function loadSubmissions() {
             row.className = 'clickable-row';
             row.onclick = () => viewSubmission(sub.id);
 
-            const avgScore = sub.avg_final_score ? parseFloat(sub.avg_final_score).toFixed(2) : '-';
-            const scoreDisplay = sub.avg_final_score ? `${avgScore}/10` : 'Pending';
+            // Show "Pending" for submitted status, show avg score for under_review and approved
+            let scoreDisplay = 'Pending';
+            if (sub.status !== 'submitted' && sub.avg_final_score) {
+                const avgScore = parseFloat(sub.avg_final_score).toFixed(2);
+                scoreDisplay = `${avgScore}/10`;
+            }
 
             row.innerHTML = `
                 <td><strong>${sub.ticker}</strong></td>
