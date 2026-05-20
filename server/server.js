@@ -226,7 +226,10 @@ app.get('/api/submissions', (req, res) => {
                 s.*,
                 (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count,
                 (SELECT AVG(confidence_level) FROM reviews WHERE submission_id = s.id) as avg_confidence,
-                (SELECT AVG(final_score) FROM reviews WHERE submission_id = s.id) as avg_final_score
+                (
+                    SELECT (s.final_score + COALESCE((SELECT SUM(final_score) FROM reviews WHERE submission_id = s.id), 0)) /
+                           (1 + (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id))
+                ) as avg_final_score
             FROM submissions s
             ORDER BY s.created_at DESC
         `);
