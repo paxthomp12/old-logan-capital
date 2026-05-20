@@ -946,8 +946,14 @@ async function loadWatchlist() {
 
             const finalScore = item.avg_final_score ? parseFloat(item.avg_final_score).toFixed(2) : 'N/A';
 
+            // Check if item is 30+ days old
+            const daysOld = item.days_old || 0;
+            const ageBadge = daysOld >= 30
+                ? `<span style="display: inline-block; margin-left: 0.5rem; padding: 0.25rem 0.6rem; background: rgba(230, 126, 34, 0.15); color: #d97520; border: 1px solid rgba(230, 126, 34, 0.3); border-radius: 12px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;">⏰ ${daysOld}d</span>`
+                : '';
+
             row.innerHTML = `
-                <td><strong>${item.ticker}</strong></td>
+                <td><strong>${item.ticker}</strong>${ageBadge}</td>
                 <td>${item.company_name}</td>
                 <td>${item.submitter_name}</td>
                 <td><strong>${finalScore}/10</strong></td>

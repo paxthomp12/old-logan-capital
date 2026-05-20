@@ -91,8 +91,28 @@ async function sendAllReviewsCompleteNotification(ticker, avgConfidence) {
     await sendWebhookWithRetry(payload);
 }
 
+async function send30DayWatchlistNotification(items) {
+    if (items.length === 0) return;
+
+    const tickerList = items.map(item => `• **${item.ticker}** (${item.company_name}) - Added ${item.days_old} days ago`).join('\n');
+
+    const payload = {
+        embeds: [{
+            title: '⏰ 30-Day Watchlist Review',
+            description: `The following items have been on the watchlist for 30+ days and may need review:\n\n${tickerList}\n\nConsider reassessing these positions or removing them from the active watchlist.`,
+            color: 0xE67E22, // Orange warning color
+            timestamp: new Date().toISOString(),
+            footer: {
+                text: 'Old Logan Capital Watchlist System'
+            }
+        }]
+    };
+    await sendWebhookWithRetry(payload);
+}
+
 module.exports = {
     sendNewSubmissionNotification,
     sendReviewCompleteNotification,
-    sendAllReviewsCompleteNotification
+    sendAllReviewsCompleteNotification,
+    send30DayWatchlistNotification
 };

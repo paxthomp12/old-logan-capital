@@ -518,6 +518,7 @@ app.get('/api/watchlist', (req, res) => {
                 s.time_horizon,
                 s.created_at,
                 s.final_score,
+                CAST((julianday('now') - julianday(w.added_at)) AS INTEGER) as days_old,
                 (
                     SELECT AVG(r.final_score)
                     FROM reviews r
@@ -564,6 +565,34 @@ app.get('/api/files/:filename', (req, res) => {
     }
 });
 
+// ===== 30-DAY WATCHLIST CHECKER =====
+
+async function check30DayWatchlistItems() {
+    try {
+        console.log('[30-Day Check] Running watchlist age check...');
+
+        const watchlist = db.query(`
+            SELECT
+                w.*,
+                s.ticker,
+                s.company_name,
+                CAST((julianday('now') - julianday(w.added_at)) AS INTEGER) as days_old
+            FROM watchlist w
+            JOIN submissions s ON w.submission_id = s.id
+            WHERE days_old >= 30
+        `);
+
+        if (watchlist.length > 0) {
+            console.log(`[30-Day Check] Found ${watchlist.length} item(s) that are 30+ days old`);
+            await discord.send30DayWatchlistNotification(watchlist);
+        } else {
+            console.log('[30-Day Check] No items are 30+ days old');
+        }
+    } catch (error) {
+        console.error('[30-Day Check] Error checking watchlist:', error);
+    }
+}
+
 // ===== START SERVER =====
 
 async function startServer() {
@@ -577,6 +606,13 @@ async function startServer() {
             console.log(`   Username: paxton | sam | alex | garett`);
             console.log(`   Password: OLCTeam2025\n`);
         });
+
+        // Run 30-day check once on startup
+        setTimeout(() => check30DayWatchlistItems(), 5000); // 5 seconds after startup
+
+        // Run 30-day check daily at 9:00 AM (in milliseconds: 24 hours)
+        setInterval(() => check30DayWatchlistItems(), 24 * 60 * 60 * 1000);
+        console.log('✅ 30-day watchlist checker scheduled (runs daily)');
     } catch (error) {
         console.error('Failed to start server:', error);
         process.exit(1);
