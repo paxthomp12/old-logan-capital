@@ -311,15 +311,15 @@ async function viewSubmission(id) {
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Entry Range:</span>
-                        <span>${submission.entry_range || 'N/A'}</span>
+                        <span>${formatPriceRange(submission.entry_range)}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Sell Range:</span>
-                        <span>${submission.sell_range || 'N/A'}</span>
+                        <span>${formatPriceRange(submission.sell_range)}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Time Horizon:</span>
-                        <span>${submission.time_horizon}</span>
+                        <span>${formatTimeHorizon(submission.time_horizon)}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Sector:</span>
@@ -364,15 +364,15 @@ async function viewSubmission(id) {
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Entry Range:</span>
-                            <span>${review.entry_range || 'N/A'}</span>
+                            <span>${formatPriceRange(review.entry_range)}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Sell Range:</span>
-                            <span>${review.sell_range || 'N/A'}</span>
+                            <span>${formatPriceRange(review.sell_range)}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Time Horizon:</span>
-                            <span>${review.time_horizon}</span>
+                            <span>${formatTimeHorizon(review.time_horizon)}</span>
                         </div>
                         <div style="margin-top: 1rem;">
                             <strong>Analysis:</strong>
@@ -483,6 +483,26 @@ function getSafeScore(value, defaultValue = 0) {
     return isNaN(parsed) ? defaultValue : parsed;
 }
 
+// Helper function to format price range with dollar signs
+function formatPriceRange(range) {
+    if (!range || range === 'N/A') return 'N/A';
+    // If it already has a dollar sign, return as is
+    if (range.includes('$')) return range;
+    // Otherwise, add dollar sign to numbers
+    return range.replace(/(\d+)/g, '$$$1');
+}
+
+// Helper function to format time horizon with full text
+function formatTimeHorizon(horizon) {
+    if (!horizon) return 'N/A';
+    const horizonMap = {
+        'Short': 'Short Term (0-6 months)',
+        'Medium': 'Medium Term (6-12 months)',
+        'Long': 'Long Term (12+ months)'
+    };
+    return horizonMap[horizon] || horizon;
+}
+
 // Calculate final score from all scoring inputs
 function calculateFinalScore(scores) {
     // scores object should contain: confidence, technical, fundamentals, theme, sector
@@ -591,7 +611,13 @@ async function loadPendingReviews() {
         let pending = await response.json();
 
         // Filter out submissions where all 3 reviews are complete
-        pending = pending.filter(sub => (sub.review_count || 0) < 3);
+        pending = pending.filter(sub => {
+            // Use reviewsComplete field if available, otherwise check review_count
+            if (sub.reviewsComplete !== undefined) {
+                return !sub.reviewsComplete;
+            }
+            return (sub.review_count || 0) < 3;
+        });
 
         const container = document.getElementById('pendingReviewsList');
 
