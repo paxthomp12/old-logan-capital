@@ -275,6 +275,7 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
+            justify-content: center;
             padding: 10rem 5% 6rem;
             max-width: 100%;
             margin: 0 auto;
@@ -312,17 +313,17 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(
-                135deg,
-                rgba(26, 26, 26, 0.85) 0%,
-                rgba(26, 26, 26, 0.7) 40%,
-                rgba(26, 26, 26, 0.5) 100%
+                to bottom,
+                rgba(26, 26, 26, 0.75) 0%,
+                rgba(26, 26, 26, 0.65) 50%,
+                rgba(26, 26, 26, 0.8) 100%
             );
             z-index: 1;
         }
 
         .hero-content {
-            max-width: 900px;
-            margin-left: 5%;
+            max-width: 1000px;
+            text-align: center;
             animation: fadeInUp 1s ease 0.2s both;
             position: relative;
             z-index: 2;
@@ -330,19 +331,21 @@
 
         .hero h1 {
             font-family: 'Fraunces', serif;
-            font-size: 6rem;
+            font-size: 6.5rem;
             font-weight: 700;
-            line-height: 1.05;
+            line-height: 1.1;
             letter-spacing: -3px;
-            margin-bottom: 2.5rem;
+            margin-bottom: 4rem;
             color: var(--cream);
             font-optical-sizing: auto;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
         }
 
         .hero h1 .highlight {
-            color: rgba(245, 241, 232, 0.7);
+            display: block;
+            color: rgba(245, 241, 232, 0.75);
             font-style: italic;
+            margin-top: 0.5rem;
         }
 
         .hero p {
@@ -356,12 +359,12 @@
         }
 
         .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3rem;
-            padding-top: 3.5rem;
-            border-top: 2px solid rgba(245, 241, 232, 0.2);
-            max-width: 500px;
+            display: inline-block;
+            padding: 2.5rem 4rem;
+            background: rgba(245, 241, 232, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 241, 232, 0.15);
+            border-radius: 12px;
         }
 
         .stat {
@@ -373,20 +376,20 @@
 
         .stat h3 {
             font-family: 'Fraunces', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             color: var(--cream);
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
             text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
         }
 
         .stat p {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.7rem;
-            color: rgba(245, 241, 232, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+            color: rgba(245, 241, 232, 0.8);
+            letter-spacing: 0.5px;
             margin: 0;
             font-weight: 400;
         }
@@ -749,14 +752,14 @@
                 min-height: 80vh;
             }
 
-            .hero-content {
-                margin-left: 0;
+            .hero h1 {
+                font-size: 3rem;
+                letter-spacing: -1.5px;
+                margin-bottom: 2.5rem;
             }
 
-            .hero h1 {
-                font-size: 2.8rem;
-                letter-spacing: -1.5px;
-                margin-bottom: 1.5rem;
+            .hero h1 .highlight {
+                margin-top: 0.3rem;
             }
 
             .hero p {
@@ -766,17 +769,15 @@
             }
 
             .hero-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                padding-top: 2rem;
+                padding: 2rem 2.5rem;
             }
 
             .stat h3 {
-                font-size: 2.2rem;
+                font-size: 1.1rem;
             }
 
             .stat p {
-                font-size: 0.65rem;
+                font-size: 0.75rem;
             }
 
             section {
@@ -936,9 +937,9 @@
             }
 
             .hero h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
                 letter-spacing: -1px;
-                margin-bottom: 1.25rem;
+                margin-bottom: 2rem;
             }
 
             .hero p {
@@ -947,12 +948,11 @@
             }
 
             .hero-stats {
-                gap: 1.25rem;
-                padding-top: 1.75rem;
+                padding: 1.75rem 2rem;
             }
 
             .stat h3 {
-                font-size: 1.8rem;
+                font-size: 1rem;
             }
 
             section {
@@ -1053,7 +1053,7 @@
             }
 
             .hero h1 {
-                font-size: 1.9rem;
+                font-size: 2rem;
             }
 
             .hero p {
@@ -1061,15 +1061,15 @@
             }
 
             .hero-stats {
-                gap: 1rem;
+                padding: 1.5rem 1.5rem;
             }
 
             .stat h3 {
-                font-size: 1.6rem;
+                font-size: 0.9rem;
             }
 
             .stat p {
-                font-size: 0.6rem;
+                font-size: 0.7rem;
             }
 
             section {
@@ -1300,7 +1300,7 @@
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Built to endure. <span class="highlight">Positioned to prosper.</span></h1>
+            <h1>Built to endure.<span class="highlight">Positioned to prosper.</span></h1>
             <div class="hero-stats">
                 <div class="stat">
                     <h3>Equity Ownership</h3>
@@ -1374,7 +1374,7 @@
 
             <div style="max-width: 900px; line-height: 1.9; font-size: 1.05rem; color: var(--text);">
                 <p style="margin-bottom: 2rem;">
-                    Old Logan Capital was built from a unique mix of experiences. We're former professional athletes who competed in the Texas Rangers, Philadelphia Phillies, and Chicago Cubs organizations. We're financial analysts who worked at firms like Deepwater Asset Management. We're operational leaders who managed over $150M budgets at UnitedHealth Group. We're CPAs who know financial statements inside and out. And we're entrepreneurs who built profitable businesses from scratch.
+                    Old Logan Capital was built on an unusual foundation. Professional baseball, Wall Street research, operational finance at UnitedHealth Group, CPA-level accounting, and entrepreneurship. This combination of experiences shapes how we analyze companies, manage risk, and make decisions. We understand competitive pressure, financial fundamentals, how businesses actually operate, and what it takes to build something from nothing.
                 </p>
 
                 <p style="margin-bottom: 2rem;">
