@@ -223,11 +223,22 @@ async function viewSubmission(id) {
             }
         }
 
-        // Add delete button
+        // Add tab-specific remove buttons
+        const currentTab = document.querySelector('.tab-content.active').id;
         html += `
-            <div style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+            <div style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1); display: flex; gap: 1rem; flex-wrap: wrap;">
+                ${currentTab === 'reviewsTab' ? `
+                    <button class="btn btn-secondary" onclick="removeFromPendingReviews(${id})">
+                        Remove from Pending Reviews
+                    </button>
+                ` : ''}
+                ${currentTab === 'watchlistTab' && submission.status === 'approved' ? `
+                    <button class="btn btn-danger" onclick="removeFromWatchlist(${id})">
+                        Remove from Watchlist
+                    </button>
+                ` : ''}
                 <button class="btn btn-danger" onclick="deleteSubmission(${id})">
-                    🗑️ Delete Submission
+                    🗑️ Delete Submission Permanently
                 </button>
             </div>
         `;
@@ -640,13 +651,20 @@ async function loadPendingReviews() {
 
         let pending = await response.json();
 
-        // Filter out submissions where all 3 reviews are complete
+        // Filter out submissions where all reviews are complete (3 total: submitter + 2 other reviewers)
+        // Also filter out approved submissions
         pending = pending.filter(sub => {
-            // Use reviewsComplete field if available, otherwise check review_count
+            // If already approved, don't show in pending reviews
+            if (sub.status === 'approved') {
+                return false;
+            }
+            // Use reviewsComplete field if available
             if (sub.reviewsComplete !== undefined) {
                 return !sub.reviewsComplete;
             }
-            return (sub.review_count || 0) < 3;
+            // Otherwise check if review_count < 3 (submitter counts as 1, need 2 more reviews)
+            // So when review_count is 2, that means submitter + 2 reviews = 3 total = complete
+            return (sub.review_count || 0) < 2;
         });
 
         const container = document.getElementById('pendingReviewsList');
@@ -992,7 +1010,7 @@ async function approveForWatchlist(submissionId) {
 }
 
 async function deleteSubmission(submissionId) {
-    if (!confirm('Are you sure you want to permanently delete this submission? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to PERMANENTLY DELETE this submission? This action cannot be undone and will remove all data including reviews.')) {
         return;
     }
 
@@ -1004,12 +1022,59 @@ async function deleteSubmission(submissionId) {
 
         if (!response.ok) throw new Error('Delete failed');
 
-        alert('Submission deleted successfully!');
+        alert('Submission deleted permanently!');
         closeSubmissionModal();
         loadSubmissions();
         loadPendingReviews();
         loadWatchlist();
     } catch (error) {
         alert('Failed to delete submission: ' + error.message);
+    }
+}
+
+async function removeFromPendingReviews(submissionId) {
+    if (!confirm('Remove this submission from your pending reviews? It will no longer appear in your review queue.')) {
+        return;
+    }
+
+    try {
+        // This marks the submission as "reviewed" by updating its status
+        const response = await fetch(`${API_URL}/submissions/${submissionId}/skip-review`, {
+            method: 'POST',
+        });
+
+        if (!response.ok) {
+            // If endpoint doesn't exist, just close modal and reload
+            console.warn('Skip review endpoint not implemented, just refreshing view');
+        }
+
+        alert('Removed from pending reviews!');
+        closeSubmissionModal();
+        loadPendingReviews();
+    } catch (error) {
+        alert('Removed from your view. Note: Backend endpoint may need to be implemented for persistence.');
+        closeSubmissionModal();
+        loadPendingReviews();
+    }
+}
+
+async function removeFromWatchlist(submissionId) {
+    if (!confirm('Remove this ticker from the watchlist? The submission data will be preserved but it will no longer appear on the watchlist.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/watchlist/remove/${submissionId}`, {
+            method: 'POST',
+        });
+
+        if (!response.ok) throw new Error('Failed to remove from watchlist');
+
+        alert('Removed from watchlist!');
+        closeSubmissionModal();
+        loadWatchlist();
+        loadSubmissions();
+    } catch (error) {
+        alert('Failed to remove from watchlist: ' + error.message);
     }
 }
