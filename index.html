@@ -392,13 +392,13 @@
             width: auto;
             max-width: 120px;
             object-fit: contain;
-            filter: grayscale(100%) brightness(2) invert(1);
-            opacity: 0.75;
+            filter: grayscale(100%) brightness(0.9) contrast(1.2);
+            opacity: 0.7;
             transition: all 0.4s ease;
         }
 
         .holding-logo:hover {
-            filter: grayscale(0%) brightness(1) invert(0);
+            filter: grayscale(0%) brightness(1) contrast(1);
             opacity: 1;
             transform: translateY(-2px);
         }
@@ -1371,9 +1371,9 @@
                 <div class="stat-label">Equity Ownership</div>
                 <div class="holdings-logos">
                     <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
-                    <img src="https://financialmodelingprep.com/image-stock/ATEX.png" alt="ATEX" class="holding-logo" onerror="this.parentElement.innerHTML += '<span class=\'holding-ticker\'>ATEX</span>'; this.remove();">
+                    <img src="./assets/images/anterior-logo.png" alt="Anterior (ATEX)" class="holding-logo">
                     <img src="./assets/images/data443-logo.png" alt="Data443 (DFTX)" class="holding-logo">
-                    <img src="https://financialmodelingprep.com/image-stock/AROC.png" alt="AROC" class="holding-logo" onerror="this.parentElement.innerHTML += '<span class=\'holding-ticker\'>AROC</span>'; this.remove();">
+                    <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
                 </div>
             </div>
         </div>
