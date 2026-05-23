@@ -382,10 +382,28 @@
 
         .holdings-logos {
             display: flex;
-            gap: 5rem;
+            gap: 3rem;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+        }
+
+        .logo-wrapper {
+            padding: 2rem 2.5rem;
+            background: rgba(245, 241, 232, 0.95);
+            border-radius: 12px;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+        }
+
+        .logo-wrapper:hover {
+            background: rgba(245, 241, 232, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
         }
 
         .holding-logo {
@@ -393,16 +411,16 @@
             width: auto;
             max-width: 260px;
             object-fit: contain;
-            filter: grayscale(100%) brightness(0.9) contrast(1.2);
-            opacity: 0.7;
+            filter: grayscale(100%) brightness(0.5) contrast(1.3);
+            opacity: 0.8;
             transition: all 0.4s ease;
             cursor: pointer;
         }
 
-        .holding-logo:hover {
+        .logo-wrapper:hover .holding-logo {
             filter: grayscale(0%) brightness(1) contrast(1);
             opacity: 1;
-            transform: translateY(-4px) scale(1.05);
+            transform: scale(1.05);
         }
 
         .holding-ticker {
@@ -809,7 +827,12 @@
             }
 
             .holdings-logos {
-                gap: 4rem;
+                gap: 2rem;
+            }
+
+            .logo-wrapper {
+                padding: 1.5rem 2rem;
+                min-width: 150px;
             }
 
             .holding-logo {
@@ -999,12 +1022,21 @@
             }
 
             .holdings-logos {
-                gap: 3rem;
+                gap: 1.5rem;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .logo-wrapper {
+                padding: 1.25rem 1.5rem;
+                min-width: 130px;
+                flex: 1 1 calc(50% - 1.5rem);
+                max-width: calc(50% - 1.5rem);
             }
 
             .holding-logo {
-                height: 70px;
-                max-width: 170px;
+                height: 60px;
+                max-width: 150px;
             }
 
             .holding-ticker {
@@ -1127,12 +1159,20 @@
             }
 
             .holdings-logos {
-                gap: 2.5rem;
+                gap: 1.25rem;
+                max-width: 500px;
+            }
+
+            .logo-wrapper {
+                padding: 1rem 1.25rem;
+                min-width: 110px;
+                flex: 1 1 calc(50% - 1.25rem);
+                max-width: calc(50% - 1.25rem);
             }
 
             .holding-logo {
-                height: 60px;
-                max-width: 140px;
+                height: 50px;
+                max-width: 120px;
             }
 
             .holding-ticker {
@@ -1372,10 +1412,18 @@
             <div class="hero-stats">
                 <div class="stat-label">Equity Ownership</div>
                 <div class="holdings-logos">
-                    <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
-                    <img src="./assets/images/anterior-logo.png" alt="Anterior (ATEX)" class="holding-logo">
-                    <img src="./assets/images/data443-logo.png" alt="Data443 (DFTX)" class="holding-logo">
-                    <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
+                    <div class="logo-wrapper">
+                        <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
+                    </div>
+                    <div class="logo-wrapper">
+                        <img src="./assets/images/anterior-logo.png" alt="Anterior (ATEX)" class="holding-logo">
+                    </div>
+                    <div class="logo-wrapper">
+                        <img src="./assets/images/data443-logo.png" alt="Data443 (DFTX)" class="holding-logo">
+                    </div>
+                    <div class="logo-wrapper">
+                        <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
+                    </div>
                 </div>
             </div>
         </div>
