@@ -431,6 +431,9 @@ async function viewSubmission(id) {
                 `;
             }
         } else {
+            // Count actual completed reviews (submitter + reviewers)
+            const completedReviews = 1 + (submission.reviews ? submission.reviews.length : 0);
+
             html += `
                 <div style="margin-top: 2.5rem; padding: 2rem; background: rgba(201, 169, 98, 0.08); border-radius: 8px; border-left: 4px solid var(--warning);">
                     <div style="display: flex; align-items: center; gap: 1rem;">
@@ -438,7 +441,7 @@ async function viewSubmission(id) {
                         <div>
                             <strong style="color: var(--dark); font-size: 1.05rem;">Reviews in Progress</strong>
                             <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.95rem;">
-                                ${submission.review_count || 0}/3 reviews completed. Results will be visible to everyone once all reviews are finished.
+                                ${completedReviews}/3 reviews completed. Results will be visible to everyone once all reviews are finished.
                             </p>
                         </div>
                     </div>
