@@ -571,7 +571,7 @@ async function handleSubmit(e) {
     formData.append('companyName', document.getElementById('companyName').value);
     formData.append('reasoning', document.getElementById('reasoning').value);
     formData.append('entryRange', document.getElementById('entryRange').value);
-    formData.append('sellRange', document.getElementById('sellRange').value);
+    formData.append('sellRange', document.getElementById('sellRange').value || 'N/A');
     formData.append('timeHorizon', document.getElementById('timeHorizon').value);
     formData.append('sector', document.getElementById('sector').value);
 
@@ -900,7 +900,7 @@ async function submitReview(e, submissionId) {
     formData.append('reasoning', notes || 'Review based on submitter\'s thesis and independent analysis.');
 
     formData.append('entryRange', document.getElementById('reviewEntryRange').value);
-    formData.append('sellRange', document.getElementById('reviewSellRange').value);
+    formData.append('sellRange', document.getElementById('reviewSellRange').value || 'N/A');
     formData.append('timeHorizon', document.getElementById('reviewTimeHorizon').value);
 
     // Add all scoring fields
@@ -934,8 +934,9 @@ async function submitReview(e, submissionId) {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Review submission failed');
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+            console.error('Review submission error:', errorData);
+            throw new Error(errorData.error || 'Review submission failed');
         }
 
         alert('Review submitted successfully! Notification sent to team.');
@@ -943,7 +944,8 @@ async function submitReview(e, submissionId) {
         loadPendingReviews();
         loadSubmissions();
     } catch (error) {
-        alert(error.message);
+        console.error('Full error details:', error);
+        alert('Review submission failed: ' + error.message);
     }
 }
 
