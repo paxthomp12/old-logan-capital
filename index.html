@@ -390,11 +390,18 @@
             transition: all 0.4s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-width: 140px;
             text-decoration: none;
-            cursor: pointer;
+        }
+
+        .logo-wrapper a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logo-wrapper:hover {
@@ -418,6 +425,41 @@
             filter: grayscale(0%) brightness(1) contrast(1);
             opacity: 1;
             transform: scale(1.08);
+        }
+
+        .stock-info {
+            margin-top: 1rem;
+            text-align: center;
+            font-family: 'IBM Plex Mono', monospace;
+            width: 100%;
+        }
+
+        .stock-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stock-change {
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .stock-change.positive {
+            color: #16a34a;
+        }
+
+        .stock-change.negative {
+            color: #dc2626;
+        }
+
+        .stock-change.neutral {
+            color: var(--text-muted);
         }
 
         .holding-ticker {
@@ -837,6 +879,14 @@
                 max-width: 170px;
             }
 
+            .stock-price {
+                font-size: 1rem;
+            }
+
+            .stock-change {
+                font-size: 0.8rem;
+            }
+
             .holding-ticker {
                 font-size: 0.8rem;
                 padding: 0.65rem 1rem;
@@ -1041,6 +1091,14 @@
                 padding: 0.6rem 0.9rem;
             }
 
+            .stock-price {
+                font-size: 0.95rem;
+            }
+
+            .stock-change {
+                font-size: 0.75rem;
+            }
+
             section {
                 padding: 3.5rem 5%;
             }
@@ -1175,6 +1233,14 @@
             .holding-ticker {
                 font-size: 0.7rem;
                 padding: 0.5rem 0.8rem;
+            }
+
+            .stock-price {
+                font-size: 0.9rem;
+            }
+
+            .stock-change {
+                font-size: 0.7rem;
             }
 
             section {
@@ -1499,18 +1565,42 @@
             <div class="hero-stats">
                 <div class="stat-label">Equity Ownership</div>
                 <div class="holdings-logos">
-                    <a href="https://www.planet.com/" target="_blank" rel="noopener noreferrer" class="logo-wrapper">
-                        <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
-                    </a>
-                    <a href="https://www.anterix.com/" target="_blank" rel="noopener noreferrer" class="logo-wrapper">
-                        <img src="./assets/images/anterior-logo.png" alt="Anterix (ATEX)" class="holding-logo">
-                    </a>
-                    <a href="https://www.definiumtherapeutics.com/" target="_blank" rel="noopener noreferrer" class="logo-wrapper">
-                        <img src="./assets/images/data443-logo.png" alt="Definium Therapeutics (DFTX)" class="holding-logo">
-                    </a>
-                    <a href="https://www.archrock.com/" target="_blank" rel="noopener noreferrer" class="logo-wrapper">
-                        <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
-                    </a>
+                    <div class="logo-wrapper" data-ticker="PL">
+                        <a href="https://www.planet.com/" target="_blank" rel="noopener noreferrer">
+                            <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
+                        </a>
+                        <div class="stock-info">
+                            <div class="stock-price">--</div>
+                            <div class="stock-change">--</div>
+                        </div>
+                    </div>
+                    <div class="logo-wrapper" data-ticker="ATEX">
+                        <a href="https://www.anterix.com/" target="_blank" rel="noopener noreferrer">
+                            <img src="./assets/images/anterior-logo.png" alt="Anterix (ATEX)" class="holding-logo">
+                        </a>
+                        <div class="stock-info">
+                            <div class="stock-price">--</div>
+                            <div class="stock-change">--</div>
+                        </div>
+                    </div>
+                    <div class="logo-wrapper" data-ticker="DFTX">
+                        <a href="https://www.definiumtherapeutics.com/" target="_blank" rel="noopener noreferrer">
+                            <img src="./assets/images/data443-logo.png" alt="Definium Therapeutics (DFTX)" class="holding-logo">
+                        </a>
+                        <div class="stock-info">
+                            <div class="stock-price">--</div>
+                            <div class="stock-change">--</div>
+                        </div>
+                    </div>
+                    <div class="logo-wrapper" data-ticker="AROC">
+                        <a href="https://www.archrock.com/" target="_blank" rel="noopener noreferrer">
+                            <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
+                        </a>
+                        <div class="stock-info">
+                            <div class="stock-price">--</div>
+                            <div class="stock-change">--</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1778,6 +1868,76 @@
             setTimeout(function() {
                 window.scrollTo(0, 0);
             }, 0);
+        });
+
+        // Stock price fetching
+        async function fetchStockData(ticker) {
+            try {
+                // Determine API base URL based on environment
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiBase = isLocal ? 'http://localhost:3000' : 'https://api.oldlogancapital.com';
+
+                const url = `${apiBase}/api/stock/${ticker}`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                return {
+                    price: data.price,
+                    change: data.change,
+                    changePercent: data.changePercent
+                };
+            } catch (error) {
+                console.error(`Error fetching data for ${ticker}:`, error);
+                return null;
+            }
+        }
+
+        function updateStockDisplay(ticker, data) {
+            const wrapper = document.querySelector(`[data-ticker="${ticker}"]`);
+            if (!wrapper || !data) return;
+
+            const priceEl = wrapper.querySelector('.stock-price');
+            const changeEl = wrapper.querySelector('.stock-change');
+
+            // Update price
+            priceEl.textContent = `$${data.price.toFixed(2)}`;
+
+            // Update change with color
+            const changeSign = data.change >= 0 ? '+' : '';
+            const changeClass = data.change > 0 ? 'positive' : data.change < 0 ? 'negative' : 'neutral';
+
+            changeEl.textContent = `${changeSign}$${data.change.toFixed(2)} (${changeSign}${data.changePercent.toFixed(2)}%)`;
+            changeEl.className = `stock-change ${changeClass}`;
+
+            // Add arrow indicator
+            if (data.change !== 0) {
+                const arrow = data.change > 0 ? '▲' : '▼';
+                changeEl.textContent = `${arrow} ${changeSign}$${Math.abs(data.change).toFixed(2)} (${changeSign}${data.changePercent.toFixed(2)}%)`;
+            }
+        }
+
+        async function loadAllStockPrices() {
+            const tickers = ['PL', 'ATEX', 'DFTX', 'AROC'];
+
+            for (const ticker of tickers) {
+                const data = await fetchStockData(ticker);
+                if (data) {
+                    updateStockDisplay(ticker, data);
+                }
+            }
+        }
+
+        // Load stock prices when page loads
+        window.addEventListener('load', function() {
+            loadAllStockPrices();
+
+            // Refresh every 5 minutes
+            setInterval(loadAllStockPrices, 5 * 60 * 1000);
         });
     </script>
 </body>

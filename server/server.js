@@ -594,6 +594,43 @@ async function check30DayWatchlistItems() {
     }
 }
 
+// ===== STOCK PRICE API =====
+
+const axios = require('axios');
+
+app.get('/api/stock/:ticker', async (req, res) => {
+    try {
+        const ticker = req.params.ticker;
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+
+        if (response.data && response.data.chart && response.data.chart.result && response.data.chart.result[0]) {
+            const result = response.data.chart.result[0];
+            const quote = result.meta;
+
+            const stockData = {
+                ticker: ticker,
+                price: quote.regularMarketPrice,
+                change: quote.regularMarketPrice - quote.previousClose,
+                changePercent: ((quote.regularMarketPrice - quote.previousClose) / quote.previousClose) * 100,
+                previousClose: quote.previousClose
+            };
+
+            res.json(stockData);
+        } else {
+            res.status(404).json({ error: 'Stock data not found' });
+        }
+    } catch (error) {
+        console.error(`Error fetching stock data for ${req.params.ticker}:`, error.message);
+        res.status(500).json({ error: 'Failed to fetch stock data' });
+    }
+});
+
 // ===== START SERVER =====
 
 async function startServer() {
