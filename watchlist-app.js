@@ -409,10 +409,10 @@ async function viewSubmission(id) {
                             <span class="detail-label">Time Horizon:</span>
                             <span>${formatTimeHorizon(review.time_horizon)}</span>
                         </div>
-                        ${review.notes ? `
+                        ${review.reasoning && review.reasoning !== 'Review based on submitter\'s thesis and independent analysis.' ? `
                         <div style="margin-top: 1rem;">
                             <strong>Notes:</strong>
-                            <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${review.notes}</p>
+                            <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${review.reasoning}</p>
                         </div>
                         ` : ''}
                     </div>
@@ -893,10 +893,15 @@ async function submitReview(e, submissionId) {
     const formData = new FormData();
     formData.append('submissionId', submissionId);
     formData.append('reviewerName', document.getElementById('reviewerName').value);
+
+    // Send notes as reasoning to maintain backend compatibility
+    // If notes are empty, send a default message
+    const notes = document.getElementById('reviewNotes').value.trim();
+    formData.append('reasoning', notes || 'Review based on submitter\'s thesis and independent analysis.');
+
     formData.append('entryRange', document.getElementById('reviewEntryRange').value);
     formData.append('sellRange', document.getElementById('reviewSellRange').value);
     formData.append('timeHorizon', document.getElementById('reviewTimeHorizon').value);
-    formData.append('notes', document.getElementById('reviewNotes').value);
 
     // Add all scoring fields
     formData.append('confidenceLevel', document.getElementById('reviewConfidence').value);
