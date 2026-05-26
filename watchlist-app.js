@@ -434,7 +434,9 @@ async function viewSubmission(id) {
             }
         } else {
             // Count actual completed reviews (submitter + reviewers)
-            const completedReviews = 1 + (submission.reviews ? submission.reviews.length : 0);
+            // Use review_count from backend if available, otherwise count reviews array
+            const actualReviewCount = submission.review_count || (submission.reviews ? submission.reviews.length : 0);
+            const completedReviews = 1 + actualReviewCount;
 
             html += `
                 <div style="margin-top: 2.5rem; padding: 2rem; background: rgba(201, 169, 98, 0.08); border-radius: 8px; border-left: 4px solid var(--warning);">

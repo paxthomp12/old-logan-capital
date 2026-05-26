@@ -260,7 +260,8 @@ app.get('/api/submissions/:id', (req, res) => {
             ...submission[0],
             attachments,
             reviews: reviewsComplete ? reviews : [],
-            reviewsComplete
+            reviewsComplete,
+            review_count: reviews.length  // Always include the actual count
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
