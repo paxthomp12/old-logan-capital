@@ -726,7 +726,10 @@ async function startReview(submissionId) {
                     <span class="detail-label">Sector:</span>
                     <span>${submission.sector || 'N/A'}</span>
                 </div>
-                <p style="margin-top: 1rem;"><strong>Note:</strong> Submitter identity and full analysis are hidden to prevent bias.</p>
+                <div style="margin-top: 1.5rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Investment Thesis:</strong>
+                    <p style="line-height: 1.6; white-space: pre-wrap; color: var(--text);">${submission.reasoning}</p>
+                </div>
             </div>
 
             <form id="reviewForm" onsubmit="submitReview(event, ${submissionId})">
@@ -742,18 +745,13 @@ async function startReview(submissionId) {
                 </div>
 
                 <div class="form-group">
-                    <label for="reviewReasoning">Your Analysis / Reasoning *</label>
-                    <textarea id="reviewReasoning" required placeholder="Provide your independent analysis of this investment opportunity..."></textarea>
-                </div>
-
-                <div class="form-group">
                     <label for="reviewEntryRange">Entry Range *</label>
                     <input type="text" id="reviewEntryRange" required placeholder="e.g., $45-50">
                 </div>
 
                 <div class="form-group">
-                    <label for="reviewSellRange">Sell Range *</label>
-                    <input type="text" id="reviewSellRange" required placeholder="e.g., $75-85">
+                    <label for="reviewSellRange">Sell Range <small style="color: var(--text-muted);">(Optional)</small></label>
+                    <input type="text" id="reviewSellRange" placeholder="e.g., $75-85">
                 </div>
 
                 <div class="form-group">
@@ -888,7 +886,6 @@ async function submitReview(e, submissionId) {
     const formData = new FormData();
     formData.append('submissionId', submissionId);
     formData.append('reviewerName', document.getElementById('reviewerName').value);
-    formData.append('reasoning', document.getElementById('reviewReasoning').value);
     formData.append('entryRange', document.getElementById('reviewEntryRange').value);
     formData.append('sellRange', document.getElementById('reviewSellRange').value);
     formData.append('timeHorizon', document.getElementById('reviewTimeHorizon').value);
