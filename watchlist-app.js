@@ -409,10 +409,12 @@ async function viewSubmission(id) {
                             <span class="detail-label">Time Horizon:</span>
                             <span>${formatTimeHorizon(review.time_horizon)}</span>
                         </div>
+                        ${review.notes ? `
                         <div style="margin-top: 1rem;">
-                            <strong>Analysis:</strong>
-                            <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${review.reasoning}</p>
+                            <strong>Notes:</strong>
+                            <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${review.notes}</p>
                         </div>
+                        ` : ''}
                     </div>
                 `;
             });
@@ -845,6 +847,11 @@ async function startReview(submissionId) {
                 </div>
 
                 <div class="form-group">
+                    <label for="reviewNotes">Notes / Additional Thoughts (Optional)</label>
+                    <textarea id="reviewNotes" placeholder="Add any additional notes, thoughts, or observations about this opportunity..."></textarea>
+                </div>
+
+                <div class="form-group">
                     <label for="reviewAttachments">Supporting Documents (Optional)</label>
                     <div class="file-input-wrapper">
                         <input type="file" id="reviewAttachments" multiple accept=".pdf,.png,.jpg,.jpeg,.xlsx,.xls,.doc,.docx,.csv">
@@ -889,6 +896,7 @@ async function submitReview(e, submissionId) {
     formData.append('entryRange', document.getElementById('reviewEntryRange').value);
     formData.append('sellRange', document.getElementById('reviewSellRange').value);
     formData.append('timeHorizon', document.getElementById('reviewTimeHorizon').value);
+    formData.append('notes', document.getElementById('reviewNotes').value);
 
     // Add all scoring fields
     formData.append('confidenceLevel', document.getElementById('reviewConfidence').value);
