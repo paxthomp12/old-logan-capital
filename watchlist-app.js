@@ -927,15 +927,33 @@ async function submitReview(e, submissionId) {
     }
 
     try {
+        console.log('=== SUBMITTING REVIEW ===');
+        console.log('FormData contents:');
+        for (let [key, value] of formData.entries()) {
+            console.log(`  ${key}:`, value);
+        }
+
         const response = await fetch(`${API_URL}/reviews`, {
             method: 'POST',
-            
+
             body: formData
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            console.error('Review submission error:', errorData);
+            const responseText = await response.text();
+            console.error('Error response body:', responseText);
+
+            let errorData;
+            try {
+                errorData = JSON.parse(responseText);
+            } catch (e) {
+                errorData = { error: responseText || 'Unknown error' };
+            }
+
+            console.error('Parsed error data:', errorData);
             throw new Error(errorData.error || 'Review submission failed');
         }
 
