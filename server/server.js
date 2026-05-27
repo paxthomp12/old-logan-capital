@@ -439,14 +439,18 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
 
         // If all reviews complete, send final notification
         if (reviews.length >= reviewsNeeded) {
-            const avgConfidence = reviews.reduce((sum, r) => sum + r.confidence_level, 0) / reviews.length;
+            // Calculate team average final score (including submitter + all reviewers)
+            const submitterFinalScore = submission[0].final_score;
+            const reviewerFinalScores = reviews.map(r => r.final_score);
+            const allFinalScores = [submitterFinalScore, ...reviewerFinalScores];
+            const avgFinalScore = allFinalScores.reduce((sum, score) => sum + score, 0) / allFinalScores.length;
 
             // Update submission status
             db.run('UPDATE submissions SET status = ? WHERE id = ?', ['under_review', submissionId]);
 
             await discord.sendAllReviewsCompleteNotification(
                 submission[0].ticker,
-                avgConfidence
+                avgFinalScore
             );
         }
 

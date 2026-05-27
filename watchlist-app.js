@@ -535,8 +535,8 @@ function formatPriceRange(range) {
     if (!range || range === 'N/A') return 'N/A';
     // If it already has a dollar sign, return as is
     if (range.includes('$')) return range;
-    // Otherwise, add dollar sign to numbers
-    return range.replace(/(\d+)/g, '$$$1');
+    // Otherwise, add dollar sign to numbers (including decimals)
+    return range.replace(/(\d+(?:\.\d+)?)/g, '$$$1');
 }
 
 // Helper function to format time horizon with full text

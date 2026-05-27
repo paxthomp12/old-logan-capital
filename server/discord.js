@@ -74,13 +74,11 @@ async function sendReviewCompleteNotification(ticker, reviewerName, reviewsCompl
     await sendWebhookWithRetry(payload);
 }
 
-async function sendAllReviewsCompleteNotification(ticker, avgConfidence) {
-    const confidenceStars = '⭐'.repeat(Math.round(avgConfidence));
-
+async function sendAllReviewsCompleteNotification(ticker, avgFinalScore) {
     const payload = {
         embeds: [{
             title: '🎯 Ready for Review',
-            description: `All reviews for **${ticker}** are complete!\n\n**Average Confidence:** ${avgConfidence.toFixed(2)}/5 ${confidenceStars}\n\nResults are now visible to the team.`,
+            description: `All reviews for **${ticker}** are complete!\n\n**Team Avg Final Score:** ${avgFinalScore.toFixed(2)}/10\n\nResults are now visible to the team.`,
             color: 0xC9A962, // Gold
             timestamp: new Date().toISOString(),
             footer: {
