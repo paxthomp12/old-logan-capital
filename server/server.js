@@ -268,6 +268,29 @@ app.get('/api/submissions/:id', (req, res) => {
     }
 });
 
+app.post('/api/submissions/:id/deny', (req, res) => {
+    try {
+        const submissionId = req.params.id;
+
+        // Check if submission exists
+        const submission = db.query('SELECT * FROM submissions WHERE id = ?', [submissionId]);
+        if (submission.length === 0) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        // Update submission status to denied
+        db.run(`
+            UPDATE submissions SET status = 'denied'
+            WHERE id = ?
+        `, [submissionId]);
+
+        res.json({ success: true, message: 'Submission denied successfully' });
+    } catch (error) {
+        console.error('Deny error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.delete('/api/submissions/:id', (req, res) => {
     try {
         const submissionId = req.params.id;
@@ -507,6 +530,26 @@ app.post('/api/watchlist/approve/:id', (req, res) => {
 
         res.json({ success: true });
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/watchlist/remove/:id', (req, res) => {
+    try {
+        const submissionId = req.params.id;
+
+        // Remove from watchlist
+        db.run('DELETE FROM watchlist WHERE submission_id = ?', [submissionId]);
+
+        // Update submission status back to under_review
+        db.run(`
+            UPDATE submissions SET status = 'under_review'
+            WHERE id = ?
+        `, [submissionId]);
+
+        res.json({ success: true, message: 'Removed from watchlist successfully' });
+    } catch (error) {
+        console.error('Remove from watchlist error:', error);
         res.status(500).json({ error: error.message });
     }
 });

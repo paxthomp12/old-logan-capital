@@ -438,12 +438,12 @@ async function viewSubmission(id) {
                     </div>
                 `;
             }
-            // Add remove from pending reviews button for submitted status
-            else if (submission.status === 'submitted' && currentTab === 'reviewsTab') {
+            // Add delete button for other statuses
+            else {
                 html += `
                     <div style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
-                        <button class="btn btn-secondary" onclick="removeFromPendingReviews(${id})">
-                            Remove from Pending Reviews
+                        <button class="btn btn-danger" onclick="deleteSubmission(${id})">
+                            🗑️ Delete Submission Permanently
                         </button>
                     </div>
                 `;
@@ -673,7 +673,7 @@ async function loadPendingReviews() {
 
         let pending = await response.json();
 
-        // Filter out submissions where all reviews are complete (3 total: submitter + 2 other reviewers)
+        // Filter out submissions where all reviews are complete (3 reviews from other team members)
         // Also filter out approved and denied submissions
         pending = pending.filter(sub => {
             // If already approved or denied, don't show in pending reviews
@@ -684,9 +684,9 @@ async function loadPendingReviews() {
             if (sub.reviewsComplete !== undefined) {
                 return !sub.reviewsComplete;
             }
-            // Otherwise check if review_count < 3 (submitter counts as 1, need 2 more reviews)
-            // So when review_count is 2, that means submitter + 2 reviews = 3 total = complete
-            return (sub.review_count || 0) < 2;
+            // Otherwise check if review_count < 3 (need 3 reviews from other team members)
+            // So when review_count is 3, that means all 3 reviews are complete
+            return (sub.review_count || 0) < 3;
         });
 
         const container = document.getElementById('pendingReviewsList');
