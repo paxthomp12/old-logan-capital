@@ -223,25 +223,8 @@ async function viewSubmission(id) {
             }
         }
 
-        // Add tab-specific remove buttons
+        // Add tab-specific remove buttons - moved to after approve/deny section
         const currentTab = document.querySelector('.tab-content.active').id;
-        html += `
-            <div style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1); display: flex; gap: 1rem; flex-wrap: wrap;">
-                ${currentTab === 'reviewsTab' ? `
-                    <button class="btn btn-secondary" onclick="removeFromPendingReviews(${id})">
-                        Remove from Pending Reviews
-                    </button>
-                ` : ''}
-                ${currentTab === 'watchlistTab' && submission.status === 'approved' ? `
-                    <button class="btn btn-danger" onclick="removeFromWatchlist(${id})">
-                        Remove from Watchlist
-                    </button>
-                ` : ''}
-                <button class="btn btn-danger" onclick="deleteSubmission(${id})">
-                    🗑️ Delete Submission Permanently
-                </button>
-            </div>
-        `;
 
         // Show reviews if complete
         if (submission.reviewsComplete && submission.reviews.length > 0) {
@@ -421,13 +404,46 @@ async function viewSubmission(id) {
 
             html += `</div></div>`;
 
-            // Add approve button if all reviews complete and not yet approved
+            // Add approve/deny buttons if all reviews complete and not yet approved or denied
             if (submission.status === 'under_review') {
                 html += `
                     <div style="margin-top: 2.5rem; padding: 2rem; background: rgba(45, 90, 74, 0.05); border-radius: 8px; border: 1px solid rgba(45, 90, 74, 0.15);">
-                        <p style="margin-bottom: 1.5rem; color: var(--text); font-size: 0.95rem;">All reviews are complete. Ready to approve this ticker for the watchlist?</p>
-                        <button class="btn btn-success" onclick="approveForWatchlist(${id})">
-                            ✓ Approve for Watchlist
+                        <p style="margin-bottom: 1.5rem; color: var(--text); font-size: 0.95rem;">All reviews are complete. Ready to make a decision on this ticker?</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="approveForWatchlist(${id})">
+                                ✓ Approve for Watchlist
+                            </button>
+                            <button class="btn btn-secondary" onclick="denySubmission(${id})" style="background: rgba(201, 73, 73, 0.9); color: white; border: none;">
+                                ✗ Deny
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteSubmission(${id})">
+                                🗑️ Delete Submission Permanently
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            // Add delete button for approved/denied submissions
+            else if (submission.status === 'approved' || submission.status === 'denied') {
+                html += `
+                    <div style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+                        ${currentTab === 'watchlistTab' && submission.status === 'approved' ? `
+                            <button class="btn btn-secondary" onclick="removeFromWatchlist(${id})" style="margin-right: 1rem;">
+                                Remove from Watchlist
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-danger" onclick="deleteSubmission(${id})">
+                            🗑️ Delete Submission Permanently
+                        </button>
+                    </div>
+                `;
+            }
+            // Add remove from pending reviews button for submitted status
+            else if (submission.status === 'submitted' && currentTab === 'reviewsTab') {
+                html += `
+                    <div style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+                        <button class="btn btn-secondary" onclick="removeFromPendingReviews(${id})">
+                            Remove from Pending Reviews
                         </button>
                     </div>
                 `;
@@ -658,10 +674,10 @@ async function loadPendingReviews() {
         let pending = await response.json();
 
         // Filter out submissions where all reviews are complete (3 total: submitter + 2 other reviewers)
-        // Also filter out approved submissions
+        // Also filter out approved and denied submissions
         pending = pending.filter(sub => {
-            // If already approved, don't show in pending reviews
-            if (sub.status === 'approved') {
+            // If already approved or denied, don't show in pending reviews
+            if (sub.status === 'approved' || sub.status === 'denied') {
                 return false;
             }
             // Use reviewsComplete field if available
@@ -1043,6 +1059,27 @@ async function approveForWatchlist(submissionId) {
     }
 }
 
+async function denySubmission(submissionId) {
+    if (!confirm('Are you sure you want to deny this submission? It will remain in the dashboard but will not be added to the watchlist.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/submissions/${submissionId}/deny`, {
+            method: 'POST',
+
+        });
+
+        if (!response.ok) throw new Error('Denial failed');
+
+        alert('Submission denied. It will remain visible in the dashboard.');
+        closeSubmissionModal();
+        loadSubmissions();
+    } catch (error) {
+        alert('Failed to deny submission: ' + error.message);
+    }
+}
+
 async function deleteSubmission(submissionId) {
     if (!confirm('Are you sure you want to PERMANENTLY DELETE this submission? This action cannot be undone and will remove all data including reviews.')) {
         return;
@@ -1067,29 +1104,9 @@ async function deleteSubmission(submissionId) {
 }
 
 async function removeFromPendingReviews(submissionId) {
-    if (!confirm('Remove this submission from your pending reviews? It will no longer appear in your review queue.')) {
-        return;
-    }
-
-    try {
-        // This marks the submission as "reviewed" by updating its status
-        const response = await fetch(`${API_URL}/submissions/${submissionId}/skip-review`, {
-            method: 'POST',
-        });
-
-        if (!response.ok) {
-            // If endpoint doesn't exist, just close modal and reload
-            console.warn('Skip review endpoint not implemented, just refreshing view');
-        }
-
-        alert('Removed from pending reviews!');
-        closeSubmissionModal();
-        loadPendingReviews();
-    } catch (error) {
-        alert('Removed from your view. Note: Backend endpoint may need to be implemented for persistence.');
-        closeSubmissionModal();
-        loadPendingReviews();
-    }
+    // Simply close the modal and reload - the pending reviews list filters based on reviewsComplete status
+    closeSubmissionModal();
+    loadPendingReviews();
 }
 
 async function removeFromWatchlist(submissionId) {

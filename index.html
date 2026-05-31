@@ -377,10 +377,10 @@
 
         .holdings-logos {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             justify-items: center;
-            max-width: 1100px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -1548,8 +1548,8 @@
             <span class="logo-text">Old Logan Capital</span>
         </a>
         <div class="nav-buttons">
-            <a href="investorportal.html" class="nav-cta secondary">Investor Portal</a>
-            <a href="employee.html" class="nav-cta secondary">Employee Login</a>
+            <a href="investorportal" class="nav-cta secondary">Investor Portal</a>
+            <a href="employee" class="nav-cta secondary">Employee Login</a>
             <a href="#contact" class="nav-cta">Get in Touch</a>
         </div>
     </nav>
@@ -1587,15 +1587,6 @@
                     <div class="logo-wrapper" data-ticker="DFTX">
                         <a href="https://www.definiumtherapeutics.com/" target="_blank" rel="noopener noreferrer">
                             <img src="./assets/images/data443-logo.png" alt="Definium Therapeutics (DFTX)" class="holding-logo">
-                        </a>
-                        <div class="stock-info">
-                            <div class="stock-price">--</div>
-                            <div class="stock-change">--</div>
-                        </div>
-                    </div>
-                    <div class="logo-wrapper" data-ticker="AROC">
-                        <a href="https://www.archrock.com/" target="_blank" rel="noopener noreferrer">
-                            <img src="./assets/images/archrock-logo.png" alt="Archrock (AROC)" class="holding-logo">
                         </a>
                         <div class="stock-info">
                             <div class="stock-price">--</div>
@@ -1734,8 +1725,8 @@
                 <div class="social-links">
                     <a href="https://x.com/OldLoganCapital" target="_blank">Follow on X</a>
                     <a href="https://www.linkedin.com/company/oldlogancapital" target="_blank">LinkedIn</a>
-                    <a href="investorportal.html">Investor Portal</a>
-                    <a href="employee.html">Employee Login</a>
+                    <a href="investorportal">Investor Portal</a>
+                    <a href="employee">Employee Login</a>
                 </div>
             </div>
         </div>
@@ -1923,7 +1914,7 @@
         }
 
         async function loadAllStockPrices() {
-            const tickers = ['PL', 'ATEX', 'DFTX', 'AROC'];
+            const tickers = ['PL', 'ATEX', 'DFTX'];
 
             for (const ticker of tickers) {
                 const data = await fetchStockData(ticker);
