@@ -569,13 +569,15 @@ function formatTimeHorizon(horizon) {
 // Calculate final score from all scoring inputs
 function calculateFinalScore(scores) {
     // scores object should contain: confidence, technical, fundamentals, theme, sector
+    // Total possible: 10 + 10 + 10 + 5 + 5 = 40
+    // Normalize to /10 scale by dividing by 4
     const finalScore = (
         parseInt(scores.confidence) +
         parseInt(scores.technical) +
         parseInt(scores.fundamentals) +
         parseInt(scores.theme) +
         parseInt(scores.sector)
-    ) / 5;
+    ) / 4;
     return finalScore.toFixed(2);
 }
 
