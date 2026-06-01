@@ -485,9 +485,10 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
 
 app.get('/api/pending-reviews', (req, res) => {
     try {
-        // Get all submissions (no auth filtering - Option A approach)
+        // Get all submissions with review count
         const pending = db.query(`
-            SELECT s.*
+            SELECT s.*,
+                   (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count
             FROM submissions s
             ORDER BY s.created_at DESC
         `);
