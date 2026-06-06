@@ -289,6 +289,82 @@
             color: var(--dark);
         }
 
+        /* Blog Article */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 5% 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .article {
+            background: white;
+            border-radius: 12px;
+            padding: 4rem;
+            box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+        }
+
+        .article-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .article h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 3rem 0 1.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .article p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .article strong {
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        .article ul {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article li {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -399,6 +475,33 @@
                 font-size: 1.5rem;
             }
 
+            .article-container {
+                padding: 0 5% 6rem;
+            }
+
+            .article {
+                padding: 2.5rem 2rem;
+            }
+
+            .article h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .article h2 {
+                font-size: 1.6rem;
+                margin: 2.5rem 0 1.25rem;
+            }
+
+            .article p {
+                font-size: 1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .article li {
+                font-size: 1rem;
+            }
+
             footer {
                 flex-direction: column;
                 gap: 1.5rem;
@@ -422,28 +525,54 @@
         <p>Insights, research, and philosophy from the team at Old Logan Capital. Follow along as we document our journey through markets, ideas, and continuous learning.</p>
     </div>
 
-    <div class="blog-container">
-        <div class="empty-state">
-            <h2>Coming Soon</h2>
-            <p>We're preparing our first insights to share. Check back soon for articles on investment research, market philosophy, and lessons from the trail.</p>
-        </div>
+    <div class="article-container">
+        <article class="article">
+            <div class="article-meta">June 6, 2026</div>
+            <div class="article-author">Written by Sam Thoresen</div>
 
-        <!-- Future blog posts will go here -->
-        <!-- <div class="blog-grid">
-            <a href="trail/post-slug" class="blog-card">
-                <div class="blog-card-image"></div>
-                <div class="blog-card-content">
-                    <div class="blog-meta">
-                        <span>Jan 15, 2026</span>
-                        <span>•</span>
-                        <span>Paxton Thompson</span>
-                    </div>
-                    <h2>Post Title Here</h2>
-                    <p>Brief excerpt or description of the blog post content goes here...</p>
-                    <span class="blog-read-more">Read More →</span>
-                </div>
-            </a>
-        </div> -->
+            <h1>The Tokenization of Assets</h1>
+
+            <p>Recently, there has been news circulating from the US government about the "Tokenization of Assets". What does that convoluted mess of words even mean?? What's the point? How does that impact me (you) even a little??</p>
+
+            <p>First, allow me to explain "tokenizing" or "tokenization". This has nothing to do with AI "tokens" you have been hearing about and is another fun buzzword to confuse you more than anything. In this context, <strong>token=share or fraction of a share</strong>. Simply put, you're taking a traditional asset, like shares of a stock, bond, or even a piece of commercial real estate, and chopping it up into digital pieces and putting it onto the blockchain. (2026 now… probably time to know what that means, people)</p>
+
+            <h2>What's the point?</h2>
+
+            <p>Why are the US Treasury, the SEC, and Wall Street so interested in this now? The traditional financial system is slowwww. Like still using MySpace circa mid to late 2000s behind. Tokenization fixes the plumbing of global finance by bringing three massive upgrades.</p>
+
+            <p><strong>Instant Settlement</strong><br>
+            Right now, when you buy a stock, it doesn't actually become yours the second you click "buy". It takes a few days for money to be moved around and the trade to settle. This process involves banks, clearinghouses, and brokers to shift paperwork around and clear the trade. Tokenization allows the trade to happen instantly. Meaning the trade and the settlement happen at the same time. If you have USDC (the digital dollar) and exchange it for a tokenized share, that share is now yours, instantly. No waiting, no counterparty risk.</p>
+
+            <p><strong>24/7 Trading</strong><br>
+            The world doesn't sleep, but stock exchanges do. In America, they close at 4 pm EST. Pretty outdated concept given the current context of technology and the fact that we live in a globally connected economy.</p>
+
+            <p>When you look at how crypto bros trade at 3 AM on a Sunday or how global events occur on the weekend that are outside the standard operating time for stock exchanges, it really becomes clear this concept is archaic. A recent example, the Iran War broke out on February 28th, a Saturday. Investors were locked out for the weekend while markets re-rated and went lower. Tokenization removes the concept of "market hours" entirely, shifting equities to the same continuous, high-liquidity posture as the foreign exchange and crypto markets.</p>
+
+            <p><strong>True Fractionalization</strong><br>
+            Historically, high-value assets have been gated behind massive financial barriers. If a hot new tech startup is raising a private funding round, the minimum investment ticket required by the VC firm might be $250,000 or even $1 million. Because of that steep entry barrier, everyday retail investors are completely locked out, leaving early-stage wealth generation exclusively to institutional funds and ultra-wealthy angel investors.</p>
+
+            <p>Tokenization completely democratizes this landscape. By chopping that large investment allocation into digital tokens, the barrier to entry is lowered by a nearly infinite multiple. A platform can take a $1 million stake in a promising start-up and issue 100,000 digital tokens worth $10 each. Now, a regular investor can buy a small slice of a private, high-growth company that isn't available in the public markets yet. Added exposure to venture capital and other premium asset classes is only an added benefit for the retail investor.</p>
+
+            <h2>How Equities will be tokenized</h2>
+
+            <p>You may be asking how equities will be tokenized. There are four steps to the process:</p>
+
+            <p><strong>Step 1: Custody Wrapper</strong><br>
+            A financial institution or an issuer buys actual, traditional shares of a stock and places them into a secure, legally protected vault. These shares then act as the physical collateral backing the operation.</p>
+
+            <p><strong>Step 2: Minting via Smart Contract</strong><br>
+            For every share that sits in the legally protected vault, a digital token is generated on a blockchain via a smart contract. Think of a smart contract as an unbreakable digital ledger. If the vault has 10,000 shares, the code ensures there are exactly 10,000 tokens out in the wild. No exceptions.</p>
+
+            <p><strong>Step 3: Baked in Compliance</strong><br>
+            Unlike standard crypto, tokenized stocks have to play by the rules. Regulators like the SEC demand strict compliance, so requirements like KYC (Know Your Customer) and AML (Anti-Money Laundering) checks are literally coded into the token itself. If someone tries to send a tokenized share to an unverified wallet, the smart contract steps in and automatically blocks the transfer.</p>
+
+            <p><strong>Step 4: Getting Paid (Dividends and Perks)</strong><br>
+            Going digital doesn't mean you lose out on the perks; you still get the same economic rights as a traditional stockholder. When the company pays out a dividend, the custodian takes the cash, and the smart contract automatically goes to work. It converts those funds into a stablecoin (like USDC) and drops it directly into the wallets of whoever holds the tokens (institutions).</p>
+
+            <h2>Why should you care?</h2>
+
+            <p>Ultimately, tokenization strips out the middleman, slashes transaction fees, and unlocks potentially trillions (yes, with a T) of dollars in illiquid assets. But more importantly, it completely rewrites the rules of market participation. By tearing down the historical barriers of entry, tokenization grants everyday retail investors direct access to the kind of high-yield, institutional-grade investments that were once reserved exclusively for the elites. While it sounds like high-tech jargon today, it is quietly becoming the invisible backbone of how you will buy, sell, and own everything in the very near future.</p>
+        </article>
     </div>
 
     <footer>
