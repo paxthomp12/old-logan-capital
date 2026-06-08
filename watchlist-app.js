@@ -733,12 +733,20 @@ async function loadPendingReviews() {
 async function startReview(submissionId) {
     try {
         const response = await fetch(`${API_URL}/submissions/${submissionId}`, {
-            
+
         });
 
         if (!response.ok) throw new Error('Failed to load submission');
 
         const submission = await response.json();
+
+        // DEBUG: Check if attachments are being returned
+        console.log('=== START REVIEW DEBUG ===');
+        console.log('Submission ID:', submissionId);
+        console.log('Full submission object:', submission);
+        console.log('Attachments:', submission.attachments);
+        console.log('Attachment count:', submission.attachment_count);
+        console.log('========================');
 
         const html = `
             <h2>Review: ${submission.ticker} - ${submission.company_name}</h2>
