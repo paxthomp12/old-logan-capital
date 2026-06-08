@@ -226,6 +226,7 @@ app.get('/api/submissions', (req, res) => {
                 s.*,
                 (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count,
                 (SELECT AVG(confidence_level) FROM reviews WHERE submission_id = s.id) as avg_confidence,
+                (SELECT COUNT(*) FROM attachments WHERE submission_id = s.id) as attachment_count,
                 (
                     SELECT (s.final_score + COALESCE((SELECT SUM(final_score) FROM reviews WHERE submission_id = s.id), 0)) /
                            (1 + (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id))
@@ -485,10 +486,11 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
 
 app.get('/api/pending-reviews', (req, res) => {
     try {
-        // Get all submissions with review count
+        // Get all submissions with review count and attachment count
         const pending = db.query(`
             SELECT s.*,
-                   (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count
+                   (SELECT COUNT(*) FROM reviews WHERE submission_id = s.id) as review_count,
+                   (SELECT COUNT(*) FROM attachments WHERE submission_id = s.id) as attachment_count
             FROM submissions s
             ORDER BY s.created_at DESC
         `);
