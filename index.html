@@ -363,6 +363,18 @@
             width: 0.5em;
         }
 
+        .animated-title .mobile-break {
+            display: none;
+            width: 100%;
+            height: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .animated-title .mobile-break {
+                display: block;
+            }
+        }
+
         .hero h1 {
             font-family: 'Fraunces', serif;
             font-size: 4.5rem;
@@ -1958,6 +1970,13 @@
                 }
 
                 titleContainer.appendChild(span);
+
+                // Add mobile line break after "LOGAN" (position 9)
+                if (i === 9) {
+                    const breakSpan = document.createElement('span');
+                    breakSpan.className = 'mobile-break';
+                    titleContainer.appendChild(breakSpan);
+                }
             }
 
             // Animate letters one by one
