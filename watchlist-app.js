@@ -123,8 +123,14 @@ async function loadSubmissions() {
                 scoreDisplay = `${avgScore}/10`;
             }
 
+            // Check if submission has attachments
+            const hasAttachments = sub.attachment_count && sub.attachment_count > 0;
+            const attachmentIcon = hasAttachments
+                ? `<span style="margin-left: 0.5rem; color: var(--gold);" title="${sub.attachment_count} attachment(s)">📎</span>`
+                : '';
+
             row.innerHTML = `
-                <td><strong>${sub.ticker}</strong></td>
+                <td><strong>${sub.ticker}</strong>${attachmentIcon}</td>
                 <td>${sub.company_name}</td>
                 <td>${sub.review_count}/3</td>
                 <td><strong>${scoreDisplay}</strong></td>
@@ -698,20 +704,27 @@ async function loadPendingReviews() {
             return;
         }
 
-        container.innerHTML = pending.map(sub => `
-            <div class="card" style="margin-bottom: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="flex: 1;">
-                        <h3 style="margin-bottom: 0.5rem;">${sub.ticker} - ${sub.company_name}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Submitted on ${new Date(sub.created_at).toLocaleDateString()}</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn" onclick="startReview(${sub.id})">Start Review</button>
-                        <button class="btn btn-secondary" onclick="viewSubmission(${sub.id})">View Details</button>
+        container.innerHTML = pending.map(sub => {
+            const hasAttachments = sub.attachment_count && sub.attachment_count > 0;
+            const attachmentIcon = hasAttachments
+                ? `<span style="margin-left: 0.5rem; color: var(--gold);" title="${sub.attachment_count} attachment(s)">📎</span>`
+                : '';
+
+            return `
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 0.5rem;">${sub.ticker} - ${sub.company_name}${attachmentIcon}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Submitted on ${new Date(sub.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn" onclick="startReview(${sub.id})">Start Review</button>
+                            <button class="btn btn-secondary" onclick="viewSubmission(${sub.id})">View Details</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     } catch (error) {
         console.error('Error loading pending reviews:', error);
     }
@@ -751,6 +764,16 @@ async function startReview(submissionId) {
                     <strong style="display: block; margin-bottom: 0.5rem;">Investment Thesis:</strong>
                     <p style="line-height: 1.6; white-space: pre-wrap; color: var(--text);">${submission.reasoning}</p>
                 </div>
+                ${submission.attachments && submission.attachments.length > 0 ? `
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    <strong style="display: block; margin-bottom: 0.75rem;">Attachments:</strong>
+                    <ul class="attachment-list" style="list-style: none; padding: 0;">
+                        ${submission.attachments.map(att => `
+                            <li style="padding: 0.5rem 0;"><a href="${API_URL}/files/${att.filepath}" target="_blank" style="color: var(--forest); text-decoration: none;">📎 ${att.filename}</a></li>
+                        `).join('')}
+                    </ul>
+                </div>
+                ` : ''}
             </div>
 
             <form id="reviewForm" onsubmit="submitReview(event, ${submissionId})">
