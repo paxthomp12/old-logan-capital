@@ -303,22 +303,27 @@
         /* Mobile: Extend hero to full screen including safe areas */
         @media (max-width: 1024px) {
             .hero {
-                margin-top: 0;
-                margin-bottom: 0;
+                /* Extend hero into safe areas */
+                margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+                margin-bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+                padding-top: calc(env(safe-area-inset-top, 0px));
+                padding-bottom: calc(env(safe-area-inset-bottom, 0px));
+                height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+                height: calc(100dvh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
             }
 
             .hero-video-container {
-                /* Extend video beyond safe areas for edge-to-edge effect */
-                top: calc(-1 * env(safe-area-inset-top, 0px));
-                bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
-                height: calc(100% + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+                /* Extend video to cover entire hero including safe areas */
+                top: 0;
+                bottom: 0;
+                height: 100%;
             }
 
             .hero-overlay {
-                /* Match video container extension */
-                top: calc(-1 * env(safe-area-inset-top, 0px));
-                bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
-                height: calc(100% + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+                /* Match video container */
+                top: 0;
+                bottom: 0;
+                height: 100%;
             }
         }
 
