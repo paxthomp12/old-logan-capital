@@ -662,6 +662,69 @@ async function check30DayWatchlistItems() {
     }
 }
 
+// ===== ADMIN ENDPOINTS =====
+
+app.delete('/api/admin/delete-test-submissions', (req, res) => {
+    try {
+        console.log('[Admin] Deleting test submissions...');
+
+        // Find all test submissions
+        const testSubmissions = db.query(`
+            SELECT id, ticker, company_name, submitter_name
+            FROM submissions
+            WHERE company_name LIKE '%calamair%' OR ticker = 'SHIT' OR ticker = 'TEST'
+        `);
+
+        if (testSubmissions.length === 0) {
+            return res.json({
+                success: true,
+                message: 'No test submissions found',
+                deleted: 0
+            });
+        }
+
+        console.log(`[Admin] Found ${testSubmissions.length} test submission(s) to delete`);
+
+        let deletedCount = 0;
+        const deletedItems = [];
+
+        testSubmissions.forEach(sub => {
+            const submissionId = sub.id;
+
+            // Delete related reviews
+            db.run('DELETE FROM reviews WHERE submission_id = ?', [submissionId]);
+
+            // Delete related attachments
+            db.run('DELETE FROM attachments WHERE submission_id = ?', [submissionId]);
+
+            // Delete from watchlist
+            db.run('DELETE FROM watchlist WHERE submission_id = ?', [submissionId]);
+
+            // Delete the submission
+            db.run('DELETE FROM submissions WHERE id = ?', [submissionId]);
+
+            deletedItems.push(`${sub.ticker} (${sub.company_name})`);
+            deletedCount++;
+            console.log(`[Admin] ✓ Deleted: ${sub.ticker} (${sub.company_name})`);
+        });
+
+        console.log(`[Admin] Successfully deleted ${deletedCount} test submission(s)`);
+
+        res.json({
+            success: true,
+            message: `Deleted ${deletedCount} test submission(s)`,
+            deleted: deletedCount,
+            items: deletedItems
+        });
+    } catch (error) {
+        console.error('[Admin] Error deleting test submissions:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
 // ===== DISCORD TEST ENDPOINT =====
 
 app.get('/api/test-discord', async (req, res) => {
