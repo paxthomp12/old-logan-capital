@@ -20,10 +20,8 @@ async function sendWebhookWithRetry(payload, maxRetries = 3) {
                 timeout: 10000
             });
 
-            // Success - log only on retry attempts to reduce noise
-            if (attempt > 1) {
-                console.log(`[Discord] ✓ Webhook sent successfully after ${attempt} attempts`);
-            }
+            // Success - always log successful webhook sends
+            console.log(`[Discord] ✓ Webhook sent successfully${attempt > 1 ? ` after ${attempt} attempts` : ''}`);
             return true;
         } catch (error) {
             const status = error.response?.status;
@@ -54,6 +52,7 @@ async function sendWebhookWithRetry(payload, maxRetries = 3) {
 }
 
 async function sendNewSubmissionNotification(ticker, submitterName) {
+    console.log(`[Discord] Preparing to send new submission notification for ${ticker}`);
     const payload = {
         embeds: [{
             title: '📊 New Watchlist Submission',
@@ -65,7 +64,7 @@ async function sendNewSubmissionNotification(ticker, submitterName) {
             }
         }]
     };
-    await sendWebhookWithRetry(payload);
+    return await sendWebhookWithRetry(payload);
 }
 
 async function sendReviewCompleteNotification(ticker, reviewerName, reviewsCompleted, totalReviews) {
