@@ -213,11 +213,18 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
             });
         }
 
-        // Send Discord notification
-        await discord.sendNewSubmissionNotification(ticker.toUpperCase(), submitterName);
+        // Send Discord notification (don't let it block the response)
+        discord.sendNewSubmissionNotification(ticker.toUpperCase(), submitterName)
+            .then(() => {
+                console.log(`[Server] Discord notification sent for ${ticker.toUpperCase()}`);
+            })
+            .catch(error => {
+                console.error(`[Server] Failed to send Discord notification:`, error);
+            });
 
         res.json({ success: true, submissionId });
     } catch (error) {
+        console.error('[Server] Error in submission endpoint:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -458,11 +465,13 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
         const reviews = db.query('SELECT * FROM reviews WHERE submission_id = ?', [submissionId]);
         const reviewsNeeded = 3; // All 3 other team members
 
-        // Send Discord notification
-        await discord.sendReviewCompleteNotification(submission[0].ticker, reviewerName,
+        // Send Discord notification (don't let it block the response)
+        discord.sendReviewCompleteNotification(submission[0].ticker, reviewerName,
             reviews.length,
             reviewsNeeded
-        );
+        ).catch(error => {
+            console.error('[Server] Failed to send review complete notification:', error);
+        });
 
         // If all reviews complete, send final notification
         if (reviews.length >= reviewsNeeded) {
@@ -475,14 +484,17 @@ app.post('/api/reviews', upload.array('attachments', 5), async (req, res) => {
             // Update submission status
             db.run('UPDATE submissions SET status = ? WHERE id = ?', ['under_review', submissionId]);
 
-            await discord.sendAllReviewsCompleteNotification(
+            discord.sendAllReviewsCompleteNotification(
                 submission[0].ticker,
                 avgFinalScore
-            );
+            ).catch(error => {
+                console.error('[Server] Failed to send all reviews complete notification:', error);
+            });
         }
 
         res.json({ success: true, reviewId });
     } catch (error) {
+        console.error('[Server] Error in review submission endpoint:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -638,7 +650,10 @@ async function check30DayWatchlistItems() {
 
         if (watchlist.length > 0) {
             console.log(`[30-Day Check] Found ${watchlist.length} item(s) that are 30+ days old`);
-            await discord.send30DayWatchlistNotification(watchlist);
+            discord.send30DayWatchlistNotification(watchlist)
+                .catch(error => {
+                    console.error('[30-Day Check] Failed to send Discord notification:', error);
+                });
         } else {
             console.log('[30-Day Check] No items are 30+ days old');
         }
@@ -696,6 +711,13 @@ async function startServer() {
             console.log(`\n📊 Default login credentials:`);
             console.log(`   Username: paxton | sam | alex | garett`);
             console.log(`   Password: OLCTeam2025\n`);
+
+            // Log Discord webhook status
+            if (process.env.DISCORD_WEBHOOK_URL) {
+                console.log('✅ Discord webhook configured');
+            } else {
+                console.log('⚠️  Discord webhook NOT configured - notifications will not be sent');
+            }
         });
 
         // Run 30-day check once on startup
