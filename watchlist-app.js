@@ -471,6 +471,11 @@ async function viewSubmission(id) {
                         </div>
                     </div>
                 </div>
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+                    <button class="btn btn-danger" onclick="deleteSubmission(${id})">
+                        🗑️ Delete Submission Permanently
+                    </button>
+                </div>
             `;
         }
 
