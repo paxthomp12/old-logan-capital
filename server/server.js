@@ -662,6 +662,38 @@ async function check30DayWatchlistItems() {
     }
 }
 
+// ===== DISCORD TEST ENDPOINT =====
+
+app.get('/api/test-discord', async (req, res) => {
+    try {
+        console.log('[Test] Testing Discord webhook...');
+        console.log('[Test] Webhook URL configured:', !!process.env.DISCORD_WEBHOOK_URL);
+
+        if (!process.env.DISCORD_WEBHOOK_URL) {
+            return res.json({
+                success: false,
+                error: 'DISCORD_WEBHOOK_URL not configured',
+                envVars: Object.keys(process.env).filter(k => k.includes('DISCORD'))
+            });
+        }
+
+        const result = await discord.sendNewSubmissionNotification('TEST', 'Test User');
+
+        res.json({
+            success: result !== false,
+            message: 'Check Discord for test notification',
+            webhookConfigured: true
+        });
+    } catch (error) {
+        console.error('[Test] Discord test failed:', error);
+        res.json({
+            success: false,
+            error: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 // ===== STOCK PRICE API =====
 
 const axios = require('axios');
