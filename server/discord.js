@@ -1,9 +1,18 @@
 const axios = require('axios');
 
-const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || 'https://discordapp.com/api/webhooks/1500951215226355872/QYoU0Xk0f4CvDATn1SAYl2qxaZK7wVx39SaDTwOuFqgywcfj5cszM00FTO76pNuQcfxP';
+const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+
+if (!WEBHOOK_URL) {
+    console.error('[Discord] ERROR: DISCORD_WEBHOOK_URL is not set in environment variables');
+}
 
 // Helper function: Send webhook with retry logic for rate limiting
 async function sendWebhookWithRetry(payload, maxRetries = 3) {
+    if (!WEBHOOK_URL) {
+        console.error('[Discord] Cannot send webhook - DISCORD_WEBHOOK_URL not configured');
+        return false;
+    }
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             await axios.post(WEBHOOK_URL, payload, {

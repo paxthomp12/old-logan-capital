@@ -1700,9 +1700,18 @@
     <section class="equity-ownership">
         <h2>Equity Ownership</h2>
         <div class="holdings-container">
-            <div class="holding-item" data-ticker="PL">
-                <a href="https://www.planet.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
+            <div class="holding-item" data-ticker="OSCR">
+                <a href="https://www.hioscar.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="./assets/images/oscar-logo.png" alt="Oscar Health (OSCR)" class="holding-logo">
+                </a>
+                <div class="stock-info">
+                    <div class="stock-price">--</div>
+                    <div class="stock-change">--</div>
+                </div>
+            </div>
+            <div class="holding-item" data-ticker="ASYS">
+                <a href="https://www.amtechsystems.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="./assets/images/amtech-logo.png" alt="Amtech Systems (ASYS)" class="holding-logo">
                 </a>
                 <div class="stock-info">
                     <div class="stock-price">--</div>
@@ -2105,7 +2114,7 @@
         }
 
         async function loadAllStockPrices() {
-            const tickers = ['PL', 'ATEX', 'DFTX'];
+            const tickers = ['OSCR', 'ASYS', 'ATEX', 'DFTX'];
 
             for (const ticker of tickers) {
                 const data = await fetchStockData(ticker);
