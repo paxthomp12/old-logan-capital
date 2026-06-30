@@ -1609,6 +1609,61 @@
             border-radius: 50%;
         }
 
+        .modal-blog-section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(26, 58, 46, 0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(26, 58, 46, 0.1);
+        }
+
+        .modal-blog-section h4 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--forest);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-blog-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .modal-blog-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid rgba(26, 26, 26, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .modal-blog-link:hover {
+            background: var(--forest);
+            color: white;
+            border-color: var(--forest);
+            transform: translateX(4px);
+        }
+
+        .modal-blog-link::before {
+            content: '→';
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .modal-blog-link:hover::before {
+            transform: translateX(3px);
+        }
+
         @media (max-width: 768px) {
             .modal-content {
                 padding: 3rem 2rem;
@@ -1703,15 +1758,6 @@
             <div class="holding-item" data-ticker="OSCR">
                 <a href="https://www.hioscar.com/" target="_blank" rel="noopener noreferrer">
                     <img src="./assets/images/oscar-logo.png" alt="Oscar Health (OSCR)" class="holding-logo">
-                </a>
-                <div class="stock-info">
-                    <div class="stock-price">--</div>
-                    <div class="stock-change">--</div>
-                </div>
-            </div>
-            <div class="holding-item" data-ticker="ASYS">
-                <a href="https://www.amtechsystems.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="./assets/images/amtech-logo.png" alt="Amtech Systems (ASYS)" class="holding-logo">
                 </a>
                 <div class="stock-info">
                     <div class="stock-price">--</div>
@@ -1893,6 +1939,12 @@
                 </div>
                 <a href="https://www.linkedin.com/in/paxton-thompson/" target="_blank" class="modal-linkedin-header">LinkedIn →</a>
             </div>
+            <div class="modal-blog-section">
+                <h4>Recent Writing</h4>
+                <div class="modal-blog-links">
+                    <a href="trail/thepursuit" class="modal-blog-link">The Pursuit</a>
+                </div>
+            </div>
             <div class="modal-bio">
                 <p>Paxton brings a unique perspective to investment management, shaped by years of competing at professional baseball's highest levels with the Texas Rangers and Philadelphia Phillies organizations. The mental discipline required to perform under pressure translates directly to his approach to capital allocation and portfolio construction at Old Logan Capital.</p>
                 <p>His experience in wealth management at Firm Foundation Family Wealth provided hands-on exposure to client service, financial planning, and investment strategy. This foundation drives Old Logan's commitment to identifying undervalued opportunities and building long-term partnerships. Paxton's competitive mindset and ability to excel in high-stakes environments inform the firm's resilient, performance-oriented investment philosophy.</p>
@@ -1910,6 +1962,12 @@
                     <div class="role">Co-Founder & Managing Partner</div>
                 </div>
                 <a href="https://www.linkedin.com/in/samthoresen/" target="_blank" class="modal-linkedin-header">LinkedIn →</a>
+            </div>
+            <div class="modal-blog-section">
+                <h4>Recent Writing</h4>
+                <div class="modal-blog-links">
+                    <a href="trail/tokenization-of-assets" class="modal-blog-link">The Tokenization of Assets</a>
+                </div>
             </div>
             <div class="modal-bio">
                 <p>Sam's analytical rigor stems from hands-on experience in fundamental equity research at Deepwater Asset Management, where he conducted deep-dive analysis on public companies alongside seasoned investment professionals. This foundation in evaluating businesses, scrutinizing financial statements, and identifying value drives Old Logan Capital's disciplined research process and commitment to fundamental analysis.</p>
@@ -2114,7 +2172,7 @@
         }
 
         async function loadAllStockPrices() {
-            const tickers = ['OSCR', 'ASYS', 'ATEX', 'DFTX'];
+            const tickers = ['OSCR', 'ATEX', 'DFTX'];
 
             for (const ticker of tickers) {
                 const data = await fetchStockData(ticker);

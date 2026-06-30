@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="description" content="Reflections on growth, learning, and the pursuit of excellence through baseball and beyond.">
+    <title>The Pursuit</title>
+
+    <link rel="canonical" href="https://oldlogancapital.com/trail/thepursuit">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Old Logan Capital">
+    <meta name="theme-color" content="#F5F1E8">
+
+    <meta property="og:title" content="The Pursuit - Old Logan Capital">
+    <meta property="og:image" content="https://oldlogancapital.com/assets/images/logo.png">
+    <meta property="og:url" content="https://oldlogancapital.com/trail/thepursuit">
+    <meta property="og:type" content="article">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #F5F1E8;
+            --cream-dark: #EBE5D6;
+            --dark: #1a1a1a;
+            --dark-alt: #2a2a2a;
+            --forest: #1A3A2E;
+            --forest-light: #2D5A4A;
+            --gold: #C9A962;
+            --text: #1a1a1a;
+            --text-muted: #5a5a5a;
+            --border: rgba(26, 26, 26, 0.1);
+            --border-light: rgba(26, 26, 26, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 1200px;
+            background-image: url('../assets/images/logo-icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        ::selection {
+            background: var(--dark);
+            color: var(--cream);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245, 241, 232, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 0.75rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-cta {
+            padding: 0.75rem 1.8rem;
+            background: var(--dark);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.15);
+        }
+
+        .nav-cta:hover {
+            background: var(--forest);
+            box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .nav-cta.secondary {
+            background: white;
+            color: var(--dark);
+            border: 1px solid rgba(26, 26, 26, 0.2);
+            box-shadow: 0 2px 6px rgba(26, 26, 26, 0.08);
+        }
+
+        .nav-cta.secondary:hover {
+            background: var(--dark);
+            color: white;
+            border-color: var(--dark);
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.2);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12rem 5% 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--dark);
+            gap: 0.3rem;
+        }
+
+        .article {
+            background: white;
+            border-radius: 12px;
+            padding: 4rem;
+            box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+        }
+
+        .article-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .article h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 3rem 0 1.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .article p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .article strong {
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        .article em {
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .article ul {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article li {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .article blockquote {
+            border-left: 4px solid var(--forest);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .article-signature {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .article-footnote {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        .article-footnote strong {
+            color: var(--text);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5%;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .footer-logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 5%;
+            }
+
+            .logo-text {
+                font-size: 1.1rem;
+            }
+
+            .nav-buttons {
+                gap: 0.5rem;
+            }
+
+            .nav-cta {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.75rem;
+            }
+
+            .article-container {
+                padding: 10rem 5% 6rem;
+            }
+
+            .article {
+                padding: 2.5rem 2rem;
+            }
+
+            .article h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .article h2 {
+                font-size: 1.6rem;
+                margin: 2.5rem 0 1.25rem;
+            }
+
+            .article p {
+                font-size: 1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .article li {
+                font-size: 1rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index" class="logo">
+            <span class="logo-text">Old Logan Capital</span>
+        </a>
+        <div class="nav-buttons">
+            <a href="../trail" class="nav-cta secondary">Back to Trail</a>
+            <a href="../index#contact" class="nav-cta">Get in Touch</a>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <a href="../trail" class="back-link">← Back to The Trail</a>
+
+        <article class="article">
+            <div class="article-meta">June 30, 2026</div>
+            <div class="article-author">Written by Paxton Thompson</div>
+
+            <h1>The Pursuit</h1>
+
+            <p>This past spring I signed with the Texas Rangers. I had just come off rehabbing an injury, a release by the Philadelphia Phillies, and what was genuinely the best offseason of my career. Poured everything into it. One week into the season, I had the worst week of my career and was released. That's professional baseball. That's life.</p>
+
+            <p>With the support of friends and family, I came to understand that what I do next is what matters. Keep chugging along. What happened doesn't define me or what I've built as an individual.</p>
+
+            <p>So I picked up two books: <em>Atomic Habits</em> by James Clear and <em>The Art of Learning</em> by Josh Waitzkin. The most consistent reading I've done. I went after both because I wanted a stronger foundation. I've done some real things in the pursuit of being a professional baseball player, but I know there is continued growth to be had. I wanted to use this bump in the road to level up further. How do I build better habits, even when I already have good ones? How do I get better at learning, and what does it actually take to be exceptional?</p>
+
+            <p>What followed has been one of the more clarifying stretches of thinking I've had, even in the thick of the unknown in my life. Between the two books, I found ideas and framework I will hold onto throughout my life. I'm excited to share how I've processed what I've learned as I continue to chug along.</p>
+
+            <h2>Atomic Habits: Frequency Matters</h2>
+
+            <p>James Clear has a simple point: stop focusing on what you want to achieve and start focusing on who you want to become.</p>
+
+            <p>Most people build habits outcome oriented. I want to lose weight. I want to read more. I want to be disciplined. The problem is when results don't come fast enough, the habit dies. Clear's alternative is identity-based habits. Instead of "I want to run a marathon," you say "I am a runner." Every run, no matter how short, is a vote cast for that identity and soon you will be in a marathon. Decide the type of person you want to be and then prove it to yourself with small wins.</p>
+
+            <p>I identify as an athlete. I don't think about working out, it's just what I do. It's who I am. That's automation and it's what every habit is capable of becoming with enough frequency.</p>
+
+            <p>Which brings me to: <strong>frequency over intensity</strong>.</p>
+
+            <p>Everyone starts a new habit thinking it has to be enormous. Read a whole book. Work out for two hours. Run five miles. Clear says start with 2 minutes. One page. One lesson. Do it every day. Let it compound. I recently started Spanish lessons with one three-minute session each day. Now I'm 37 days straight, 5-10 minute sessions and I don't think twice about it. The frequency built the foundation. "The amount of time you have been performing a habit is not as important as the number of times you have performed it." Show up when you don't feel good, even if it's less. Frequency is what matters in habit building and skill acquisition.</p>
+
+            <p>As I've built my morning routine of meditating, Spanish lessons, journaling, and reading before bed, I've started trusting myself more. "Each habit not only gets results but also teaches you something far more important: to trust yourself." I may not know what the future holds, but I trust what I'm doing and who I'm becoming. That alone has been powerful, especially in a moment in my life where life has knocked me down. Identity and trust in self is built through small habits, done frequently.</p>
+
+            <p>As I continue my pursuit and as we build Old Logan Capital this quote stands out, "The road less traveled is the road of delayed gratification. If you're willing to wait for the rewards, you'll face less competition and often get a bigger payoff. The last mile is always the least crowded."</p>
+
+            <p>Showing up every day, stacking days, building my identity and OLC. We are learning to trust ourselves and what we are building. The last mile is least crowded, and that's where we're heading.</p>
+
+            <h2>The Art of Learning: The Struggle is the Heart</h2>
+
+            <p>Josh Waitzkin became a chess prodigy, then a world champion martial artist. His pursuit of mastery is layered all throughout the book.</p>
+
+            <p><strong>Depth over breadth</strong>.</p>
+
+            <p>Everyone rushes to learn more. More techniques, more strategies, more information. Waitzkin argues the opposite. The great ones have a more deeply internalized skill set than the rest. It's rarely a mysterious technique that drives someone to the top, but a profound mastery of what may be a basic skill set. Go deep. Let the intangibles unlock from there.</p>
+
+            <p>This is something I haven't done an excellent job of in my own pursuit. As a pitcher, I've always been chasing the next thing rather than going deeper into what I already have. An adjustment I'm making not only as a pitcher, but in how we build Old Logan. Creating depth in what we do, being damn good at it, and doing it frequently.</p>
+
+            <p><strong>Investing in loss</strong> takes depth. The willingness to be bad, to get burned, to fail in front of people is the price of entry for becoming great. "Great ones are willing to get burned time and again as they sharpen their swords in the fire."</p>
+
+            <p>Waitzkin writes, "Moments of failure in my life were wracked with pain, but they were also defining gut-checks packed with potential. The setbacks taught me how to succeed." I love to learn and my gut-checks have been packed with potential. I'm going to buckle down, put my heart out there and go for the stars. The struggle is the heart. Lessons learned in the pursuit mean far more than immediate success.</p>
+
+            <p>I've sharpened my sword in the fire, I'll continue to do so. Being a professional pitcher when the odds are slim, putting Old Logan out there, putting this blog out there, is simply that. We believe it's the only way to grow. Take the heat and use it to mold. Put your heart out there, go for the stars, and embrace the struggle.</p>
+
+            <blockquote>
+                <p>"Let setbacks deepen your resolve."</p>
+                <p>"Adversity becomes a tremendous source of creative inspiration."</p>
+            </blockquote>
+
+            <p>When searching for the top, your path requires an engaged, searching mind. Obstacles spur creative new angles in the learning process. That's what pushes me right now and why I'm excited for what's ahead, as difficult as it may be.</p>
+
+            <h2>The Trail Continues</h2>
+
+            <p>I'm not writing this to summarize two books. I'm writing this because these ideas are now part of how I'm growing, how I'm learning, and how I'm thinking. The Trail is our breadcrumbs. A window into the names and faces behind Old Logan Capital, how we're thinking and what drives us.</p>
+
+            <p><strong>Frequency matters. Depth matters. The Trail matters.</strong></p>
+
+            <div class="article-signature">
+                <p>— Paxton Thompson</p>
+            </div>
+
+            <div class="article-footnote">
+                <p><strong>For the baseball enthusiasts:</strong> I've taken frequency seriously in my throwing program. Throwing hard is a big part of the game, but you only have so many bullets. Max intent throws, especially at significant volume, require days of recovery, which kills frequency. Light throws at low intent you barely feel the next day, even at significant volume (100+ throws, &lt;60mph). The key is taking pride in light days light and high days high, and taking pride in those high intent throws being limited. My max days are capped at 30 total throws, with only 6-8 at true max off the slope. Because of that discipline around volume and recovery, I've been more exposed to throwing hard than ever before and the feedback loop is compounding. Frequency is enhancing my feedback loop in ways I haven't experienced before. No more training the middle. Thanks to the Driveline Pulse and Pocket Radar, I've been able to monitor my workload and enhance my feedback loop better than ever.</p>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <a href="../index" class="footer-logo">
+            <span class="footer-logo-text">Old Logan Capital</span>
+        </a>
+        <p>&copy; 2024 Old Logan Capital. All rights reserved.</p>
+    </footer>
+</body>
+</html>
