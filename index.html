@@ -37,6 +37,18 @@
     <meta name="author" content="Old Logan Capital">
     <meta name="format-detection" content="telephone=no">
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEFBN4GBD8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MEFBN4GBD8', {
+            'send_page_view': true,
+            'anonymize_ip': true
+        });
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1764,6 +1776,15 @@
                     <div class="stock-change">--</div>
                 </div>
             </div>
+            <div class="holding-item" data-ticker="PL">
+                <a href="https://www.planet.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="./assets/images/planet-labs-logo.png" alt="Planet Labs (PL)" class="holding-logo">
+                </a>
+                <div class="stock-info">
+                    <div class="stock-price">--</div>
+                    <div class="stock-change">--</div>
+                </div>
+            </div>
             <div class="holding-item" data-ticker="ATEX">
                 <a href="https://www.anterix.com/" target="_blank" rel="noopener noreferrer">
                     <img src="./assets/images/anterior-logo.png" alt="Anterix (ATEX)" class="holding-logo">
@@ -2013,12 +2034,25 @@
     </div>
 
     <script>
+        // Google Analytics Event Tracking
+        function trackEvent(eventName, eventParams = {}) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, eventParams);
+            }
+        }
+
         // Modal functions
         function openModal(person) {
             const modal = document.getElementById('modal-' + person);
             if (modal) {
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                // Track team member view
+                trackEvent('view_team_member', {
+                    'member_name': person,
+                    'event_category': 'engagement',
+                    'event_label': person + ' bio'
+                });
             }
         }
 
@@ -2098,10 +2132,93 @@
             }
         }
 
+        // Setup Analytics Event Tracking
+        function setupAnalyticsTracking() {
+            // Track CTA button clicks
+            document.querySelectorAll('.nav-cta').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const buttonText = this.textContent.trim();
+                    trackEvent('cta_click', {
+                        'event_category': 'navigation',
+                        'event_label': buttonText,
+                        'button_location': 'navigation'
+                    });
+                });
+            });
+
+            // Track email clicks
+            document.querySelectorAll('.contact-email').forEach(link => {
+                link.addEventListener('click', function() {
+                    trackEvent('contact_email_click', {
+                        'event_category': 'engagement',
+                        'event_label': 'email_contact',
+                        'contact_method': 'email'
+                    });
+                });
+            });
+
+            // Track social media clicks
+            document.querySelectorAll('.social-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    const platform = this.textContent.trim();
+                    trackEvent('social_link_click', {
+                        'event_category': 'social',
+                        'event_label': platform,
+                        'link_url': this.href
+                    });
+                });
+            });
+
+            // Track investor letter clicks
+            document.querySelectorAll('.letter-item').forEach(letter => {
+                letter.addEventListener('click', function() {
+                    const letterTitle = this.querySelector('h4').textContent.trim();
+                    trackEvent('investor_letter_view', {
+                        'event_category': 'content',
+                        'event_label': letterTitle,
+                        'letter_type': this.querySelector('span').textContent.trim()
+                    });
+                });
+            });
+
+            // Track portfolio company clicks
+            document.querySelectorAll('.holding-item a').forEach(link => {
+                link.addEventListener('click', function() {
+                    const ticker = this.closest('.holding-item').dataset.ticker;
+                    trackEvent('portfolio_company_click', {
+                        'event_category': 'engagement',
+                        'event_label': ticker,
+                        'company_ticker': ticker
+                    });
+                });
+            });
+
+            // Track scroll depth
+            let maxScrollDepth = 0;
+            let scrollTracked = {25: false, 50: false, 75: false, 90: false};
+
+            window.addEventListener('scroll', function() {
+                const scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100;
+                maxScrollDepth = Math.max(maxScrollDepth, scrollPercent);
+
+                Object.keys(scrollTracked).forEach(depth => {
+                    if (maxScrollDepth >= depth && !scrollTracked[depth]) {
+                        scrollTracked[depth] = true;
+                        trackEvent('scroll_depth', {
+                            'event_category': 'engagement',
+                            'event_label': depth + '%',
+                            'scroll_depth': depth
+                        });
+                    }
+                });
+            });
+        }
+
         // Initialize on page load
         window.addEventListener('load', function() {
             animateTitle();
             handleScroll();
+            setupAnalyticsTracking();
         });
 
         // Listen for scroll events
@@ -2172,7 +2289,7 @@
         }
 
         async function loadAllStockPrices() {
-            const tickers = ['OSCR', 'ATEX', 'DFTX'];
+            const tickers = ['OSCR', 'PL', 'ATEX', 'DFTX'];
 
             for (const ticker of tickers) {
                 const data = await fetchStockData(ticker);
