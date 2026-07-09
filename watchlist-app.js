@@ -404,6 +404,16 @@ async function viewSubmission(id) {
                             <p style="margin-top: 0.5rem; line-height: 1.6; white-space: pre-wrap;">${review.reasoning}</p>
                         </div>
                         ` : ''}
+                        ${review.attachments && review.attachments.length > 0 ? `
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
+                            <strong>Supporting Documents:</strong>
+                            <ul class="attachment-list" style="margin-top: 0.5rem; list-style: none; padding: 0;">
+                                ${review.attachments.map(att => `
+                                    <li style="padding: 0.25rem 0;"><a href="${API_URL}/files/${att.filepath}" target="_blank" style="color: var(--forest); text-decoration: none;">📎 ${att.filename}</a></li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
                     </div>
                 `;
             });

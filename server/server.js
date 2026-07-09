@@ -288,10 +288,19 @@ app.get('/api/submissions/:id', (req, res) => {
         // Check if all reviews are complete (3 reviews needed)
         const reviewsComplete = reviews.length >= 3;
 
+        // Fetch attachments for each review
+        const reviewsWithAttachments = reviews.map(review => {
+            const reviewAttachments = db.query('SELECT * FROM attachments WHERE review_id = ?', [review.id]);
+            return {
+                ...review,
+                attachments: reviewAttachments
+            };
+        });
+
         res.json({
             ...submission[0],
             attachments,
-            reviews: reviewsComplete ? reviews : [],
+            reviews: reviewsComplete ? reviewsWithAttachments : [],
             reviewsComplete,
             review_count: reviews.length  // Always include the actual count
         });
