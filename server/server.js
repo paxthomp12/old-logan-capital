@@ -149,6 +149,10 @@ app.get('/api/me', (req, res) => {
 
 app.post('/api/submissions', upload.array('attachments', 5), async (req, res) => {
     try {
+        console.log('DEBUG: Files received:', req.files ? req.files.length : 0);
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(f => console.log('  File:', f.originalname, f.size, 'bytes'));
+        }
         const {
             ticker,
             companyName,
@@ -210,7 +214,10 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
                     file.mimetype,
                     file.size
                 ]);
+                console.log('  Saved:', file.originalname, '->', file.filename);
             });
+        } else {
+            console.log('DEBUG: No files in request');
         }
 
         // Send Discord notification (don't let it block the response)
