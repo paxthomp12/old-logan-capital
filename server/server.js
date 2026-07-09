@@ -27,6 +27,7 @@ if (!fs.existsSync(uploadsDir)) {
 // Middleware - Allow both production and local origins
 const allowedOrigins = [
     'https://oldlogancapital.com',
+    'https://www.oldlogancapital.com',  // Allow www subdomain
     'http://localhost:8081',
     'http://127.0.0.1:8081'
 ];
