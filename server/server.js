@@ -216,6 +216,13 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
                 ]);
                 console.log('  Saved:', file.originalname, '->', file.filename);
             });
+
+            // VERIFY: Check if attachments were actually saved
+            const savedAttachments = db.query('SELECT * FROM attachments WHERE submission_id = ?', [submissionId]);
+            console.log('  VERIFY: Attachments in DB for submission', submissionId, ':', savedAttachments.length);
+            if (savedAttachments.length > 0) {
+                savedAttachments.forEach(att => console.log('    -', att.filename));
+            }
         } else {
             console.log('DEBUG: No files in request');
         }
@@ -270,6 +277,12 @@ app.get('/api/submissions/:id', (req, res) => {
 
         const attachments = db.query('SELECT * FROM attachments WHERE submission_id = ?', [submissionId]);
         const reviews = db.query('SELECT * FROM reviews WHERE submission_id = ?', [submissionId]);
+
+        // DEBUG: Log what we're fetching
+        console.log('GET /api/submissions/' + submissionId + ' - Attachments found:', attachments.length);
+        if (attachments.length > 0) {
+            attachments.forEach(att => console.log('  -', att.filename, '(id:', att.id + ')'));
+        }
 
         // Check if all reviews are complete (3 reviews needed)
         const reviewsComplete = reviews.length >= 3;
