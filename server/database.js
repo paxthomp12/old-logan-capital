@@ -249,11 +249,16 @@ function query(sql, params = []) {
 // Run an insert/update/delete query
 function run(sql, params = []) {
     try {
-        db.run(sql, params);
+        const stmt = db.prepare(sql);
+        stmt.bind(params);
+        stmt.step();
+        stmt.free();
         saveDatabase();
         return { success: true };
     } catch (error) {
         console.error('Run error:', error);
+        console.error('SQL:', sql);
+        console.error('Params:', params);
         throw error;
     }
 }
