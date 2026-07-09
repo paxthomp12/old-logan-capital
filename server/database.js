@@ -246,12 +246,25 @@ function query(sql, params = []) {
     }
 }
 
+// Track last insert ID
+let lastInsertId = 0;
+
 // Run an insert/update/delete query
 function run(sql, params = []) {
     try {
         const stmt = db.prepare(sql);
         stmt.bind(params);
         stmt.step();
+
+        // Capture last insert ID before freeing statement
+        if (sql.trim().toUpperCase().startsWith('INSERT')) {
+            const idResult = db.exec('SELECT last_insert_rowid() as id');
+            if (idResult.length > 0 && idResult[0].values.length > 0) {
+                lastInsertId = idResult[0].values[0][0];
+                console.log('[DB] Captured last insert ID:', lastInsertId);
+            }
+        }
+
         stmt.free();
         saveDatabase();
         return { success: true };
@@ -265,8 +278,7 @@ function run(sql, params = []) {
 
 // Get last inserted ID
 function getLastInsertId() {
-    const result = query('SELECT last_insert_rowid() as id');
-    return result[0].id;
+    return lastInsertId;
 }
 
 module.exports = {

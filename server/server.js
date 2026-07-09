@@ -200,6 +200,7 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
         ]);
 
         const submissionId = db.getLastInsertId();
+        console.log('DEBUG: Submission created with ID:', submissionId);
 
         // Handle file attachments
         if (req.files && req.files.length > 0) {
