@@ -17,6 +17,9 @@ const discord = require('./discord');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust first proxy (Render/Cloudflare) - required for session cookies and rate limiting
+app.set('trust proxy', 1);
+
 // Use persistent disk path on Render, local path otherwise
 const dataDir = process.env.RENDER ? '/opt/render/project/src/data' : __dirname;
 const uploadsDir = path.join(dataDir, 'uploads');
