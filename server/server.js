@@ -863,6 +863,21 @@ app.get('/api/stock/:ticker', async (req, res) => {
     }
 });
 
+// ===== HTML PAGE ROUTES =====
+// Serve HTML pages for clean URLs (without .html extension)
+
+app.get('/employee', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'employee.html'));
+});
+
+app.get('/watchlist', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'watchlist.html'));
+});
+
+app.get('/index', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
+});
+
 // ===== START SERVER =====
 
 async function startServer() {
