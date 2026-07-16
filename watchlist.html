@@ -986,15 +986,35 @@
     </div>
 
     <script>
-        // Authentication check - redirect to employee portal if not logged in
+        // ============================================================================
+        // FORENSIC AUTHENTICATION DEBUGGING
+        // ============================================================================
+
         const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:3000/api'
             : 'https://api.oldlogancapital.com/api';
 
+        // Log page load information
+        console.log('═══════════════════════════════════════════════════════════════');
+        console.log('[WATCHLIST] Page loaded');
+        console.log('[WATCHLIST] Current URL:', window.location.href);
+        console.log('[WATCHLIST] Hostname:', window.location.hostname);
+        console.log('[WATCHLIST] Protocol:', window.location.protocol);
+        console.log('[WATCHLIST] API URL:', API_URL);
+        console.log('[WATCHLIST] Cookies:', document.cookie || '(none)');
+        console.log('[WATCHLIST] Referrer:', document.referrer);
+        console.log('[WATCHLIST] Ready state:', document.readyState);
+        console.log('═══════════════════════════════════════════════════════════════');
+
         async function checkAuth() {
-            console.log('[Watchlist Auth] Starting authentication check...');
+            console.log('\n[Watchlist Auth] ▶ Starting authentication check...');
+            console.log('[Watchlist Auth] Timestamp:', new Date().toISOString());
 
             try {
+                console.log('[Watchlist Auth] → Fetching:', `${API_URL}/me`);
+                console.log('[Watchlist Auth] → Credentials:', 'include');
+                console.log('[Watchlist Auth] → Cookies before fetch:', document.cookie || '(none)');
+
                 const response = await fetch(`${API_URL}/me`, {
                     credentials: 'include',
                     headers: {
@@ -1002,43 +1022,89 @@
                     }
                 });
 
-                console.log('[Watchlist Auth] Response status:', response.status);
+                console.log('[Watchlist Auth] ← Response received');
+                console.log('[Watchlist Auth] ← Status:', response.status, response.statusText);
+                console.log('[Watchlist Auth] ← Headers:', {
+                    'content-type': response.headers.get('content-type'),
+                    'set-cookie': response.headers.get('set-cookie'),
+                });
 
                 // Check if response is OK (200-299)
                 if (!response.ok) {
-                    console.error('[Watchlist Auth] Server returned error status:', response.status);
+                    console.error('╔════════════════════════════════════════════════════════════════╗');
+                    console.error('║ REDIRECT REASON: HTTP ERROR STATUS                             ║');
+                    console.error('╠════════════════════════════════════════════════════════════════╣');
+                    console.error('║ Status:', response.status, response.statusText);
+                    console.error('║ URL:', `${API_URL}/me`);
+                    console.error('║ Cookies sent:', document.cookie || '(none)');
+                    console.error('║ File: watchlist.html:1010');
+                    console.error('║ Redirecting to: employee');
+                    console.error('╚════════════════════════════════════════════════════════════════╝');
+
+                    console.log('[Watchlist Auth] ⚠ Initiating redirect in 2 seconds for debugging...');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                     window.location.href = 'employee';
                     return;
                 }
 
                 const user = await response.json();
-                console.log('[Watchlist Auth] User data received:', {
+                console.log('[Watchlist Auth] ← User data:', JSON.stringify(user, null, 2));
+                console.log('[Watchlist Auth] ← Validation:', {
                     hasUser: !!user,
                     hasId: !!user?.id,
-                    userId: user?.id
+                    userId: user?.id,
+                    username: user?.username
                 });
 
                 if (!user || !user.id) {
-                    // User is not authenticated, redirect to employee portal
-                    console.warn('[Watchlist Auth] User not authenticated, redirecting...');
+                    console.error('╔════════════════════════════════════════════════════════════════╗');
+                    console.error('║ REDIRECT REASON: USER DATA MISSING OR NO USER ID               ║');
+                    console.error('╠════════════════════════════════════════════════════════════════╣');
+                    console.error('║ User object:', JSON.stringify(user));
+                    console.error('║ user.id:', user?.id);
+                    console.error('║ File: watchlist.html:1024');
+                    console.error('║ Redirecting to: employee');
+                    console.error('╚════════════════════════════════════════════════════════════════╝');
+
+                    console.log('[Watchlist Auth] ⚠ Initiating redirect in 2 seconds for debugging...');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                     window.location.href = 'employee';
                     return;
                 }
 
-                console.log('[Watchlist Auth] ✓ Authentication successful for user:', user.username || user.id);
+                console.log('╔════════════════════════════════════════════════════════════════╗');
+                console.log('║ ✓ AUTHENTICATION SUCCESSFUL                                     ║');
+                console.log('╠════════════════════════════════════════════════════════════════╣');
+                console.log('║ User:', user.username || user.id);
+                console.log('║ User ID:', user.id);
+                console.log('║ No redirect will occur');
+                console.log('╚════════════════════════════════════════════════════════════════╝');
             } catch (error) {
-                console.error('[Watchlist Auth] Authentication check failed:', error);
-                // Redirect to employee portal on error
+                console.error('╔════════════════════════════════════════════════════════════════╗');
+                console.error('║ REDIRECT REASON: FETCH ERROR / EXCEPTION                        ║');
+                console.error('╠════════════════════════════════════════════════════════════════╣');
+                console.error('║ Error:', error.message);
+                console.error('║ Error type:', error.name);
+                console.error('║ Stack:', error.stack);
+                console.error('║ File: watchlist.html:1032');
+                console.error('║ Redirecting to: employee');
+                console.error('╚════════════════════════════════════════════════════════════════╝');
+
+                console.log('[Watchlist Auth] ⚠ Initiating redirect in 2 seconds for debugging...');
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 window.location.href = 'employee';
             }
         }
 
         // Wait for DOM to be ready before checking authentication
-        // This ensures the page navigation is complete and session cookies are properly set
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', checkAuth);
+            console.log('[Watchlist Auth] DOM still loading, waiting for DOMContentLoaded...');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('[Watchlist Auth] DOMContentLoaded event fired');
+                checkAuth();
+            });
         } else {
-            // DOM is already loaded, check auth immediately
+            console.log('[Watchlist Auth] DOM already loaded, checking auth immediately');
             checkAuth();
         }
     </script>

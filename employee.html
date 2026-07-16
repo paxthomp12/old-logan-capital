@@ -296,16 +296,34 @@
     </div>
 
     <script>
-        // Auto-detect API URL based on environment
+        // ============================================================================
+        // FORENSIC AUTHENTICATION DEBUGGING - EMPLOYEE PORTAL
+        // ============================================================================
+
         const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:3000/api'
             : 'https://api.oldlogancapital.com/api';
 
+        // Log page load information
+        console.log('═══════════════════════════════════════════════════════════════');
+        console.log('[EMPLOYEE] Page loaded');
+        console.log('[EMPLOYEE] Current URL:', window.location.href);
+        console.log('[EMPLOYEE] Hostname:', window.location.hostname);
+        console.log('[EMPLOYEE] Protocol:', window.location.protocol);
+        console.log('[EMPLOYEE] API URL:', API_URL);
+        console.log('[EMPLOYEE] Cookies:', document.cookie || '(none)');
+        console.log('[EMPLOYEE] Referrer:', document.referrer);
+        console.log('═══════════════════════════════════════════════════════════════');
+
         // Check authentication status on page load
         async function checkAuth() {
-            console.log('[Employee Portal] Checking authentication...');
+            console.log('[Employee Portal] ▶ Checking authentication...');
+            console.log('[Employee Portal] Timestamp:', new Date().toISOString());
 
             try {
+                console.log('[Employee Portal] → Fetching:', `${API_URL}/me`);
+                console.log('[Employee Portal] → Cookies before fetch:', document.cookie || '(none)');
+
                 const response = await fetch(`${API_URL}/me`, {
                     credentials: 'include',
                     headers: {
@@ -313,11 +331,12 @@
                     }
                 });
 
-                console.log('[Employee Portal] Response status:', response.status);
+                console.log('[Employee Portal] ← Response status:', response.status);
 
                 // If response is OK (200), user is authenticated
                 if (response.ok) {
                     const user = await response.json();
+                    console.log('[Employee Portal] ← User data:', JSON.stringify(user, null, 2));
                     console.log('[Employee Portal] ✓ User authenticated:', user.username || user.id);
 
                     if (user && user.id) {
@@ -357,6 +376,14 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
+            console.log('═══════════════════════════════════════════════════════════════');
+            console.log('[LOGIN] Attempting login...');
+            console.log('[LOGIN] Username:', username);
+            console.log('[LOGIN] API URL:', `${API_URL}/login`);
+            console.log('[LOGIN] Timestamp:', new Date().toISOString());
+            console.log('[LOGIN] Cookies before login:', document.cookie || '(none)');
+            console.log('═══════════════════════════════════════════════════════════════');
+
             // Disable button and show loading state
             loginBtn.disabled = true;
             loginBtn.textContent = 'Signing in...';
@@ -372,16 +399,32 @@
                     body: JSON.stringify({ username, password })
                 });
 
+                console.log('[LOGIN] ← Response received');
+                console.log('[LOGIN] ← Status:', response.status, response.statusText);
+                console.log('[LOGIN] ← Cookies after login:', document.cookie || '(none)');
+
                 if (response.ok) {
                     const user = await response.json();
+                    console.log('[LOGIN] ← User data:', JSON.stringify(user, null, 2));
+                    console.log('[LOGIN] ✓ Login successful!');
+                    console.log('[LOGIN] Session should now be established');
+                    console.log('═══════════════════════════════════════════════════════════════');
+
+                    // Wait a moment to ensure cookies are set before showing portal
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                    console.log('[LOGIN] Cookies after delay:', document.cookie || '(none)');
                     showPortal(user);
                 } else {
                     const error = await response.json();
+                    console.error('[LOGIN] ✗ Login failed:', error);
                     errorDiv.textContent = error.error || 'Invalid username or password';
                     errorDiv.classList.add('show');
                 }
             } catch (error) {
-                console.error('Login error:', error);
+                console.error('[LOGIN] ✗ Login error:', error);
+                console.error('[LOGIN] Error type:', error.name);
+                console.error('[LOGIN] Error message:', error.message);
                 errorDiv.textContent = 'Connection error. Please try again.';
                 errorDiv.classList.add('show');
             } finally {
