@@ -88,7 +88,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production (HTTPS), allow HTTP in development
-        sameSite: 'lax', // 'lax' works for same-site subdomains (api.oldlogancapital.com and oldlogancapital.com)
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' required for cross-origin subdomain requests in production
         domain: process.env.NODE_ENV === 'production' ? '.oldlogancapital.com' : undefined, // Share cookie across subdomains in production
         maxAge: 64 * 60 * 60 * 1000 // 64 hours
     }
