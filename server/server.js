@@ -151,6 +151,12 @@ app.post('/api/login', loginLimiter, async (req, res) => {
         req.session.username = user.username;
         req.session.fullName = user.full_name;
 
+        console.log('[Login] ✓ Session created:', {
+            sessionId: req.sessionID,
+            userId: user.id,
+            username: user.username
+        });
+
         res.json({
             id: user.id,
             username: user.username,
@@ -167,9 +173,19 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/api/me', (req, res) => {
+    // Debug logging
+    console.log('[/api/me] Session check:', {
+        hasSession: !!req.session,
+        sessionId: req.sessionID,
+        userId: req.session?.userId,
+        username: req.session?.username,
+        hasCookie: !!req.headers.cookie
+    });
+
     // Check if user is authenticated
-    if (req.session.userId) {
+    if (req.session && req.session.userId) {
         // User is authenticated, return user data
+        console.log('[/api/me] ✓ User authenticated:', req.session.username);
         res.json({
             id: req.session.userId,
             username: req.session.username,
@@ -177,6 +193,7 @@ app.get('/api/me', (req, res) => {
         });
     } else {
         // User is not authenticated, return 401 Unauthorized
+        console.log('[/api/me] ✗ User NOT authenticated - no valid session');
         res.status(401).json({
             error: 'Not authenticated',
             authenticated: false
