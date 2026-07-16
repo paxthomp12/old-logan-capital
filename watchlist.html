@@ -987,28 +987,60 @@
 
     <script>
         // Authentication check - redirect to employee portal if not logged in
-        (async function checkAuth() {
-            const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                ? 'http://localhost:3000/api'
-                : 'https://api.oldlogancapital.com/api';
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api'
+            : 'https://api.oldlogancapital.com/api';
+
+        async function checkAuth() {
+            console.log('[Watchlist Auth] Starting authentication check...');
 
             try {
                 const response = await fetch(`${API_URL}/me`, {
-                    credentials: 'include'
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
 
+                console.log('[Watchlist Auth] Response status:', response.status);
+
+                // Check if response is OK (200-299)
+                if (!response.ok) {
+                    console.error('[Watchlist Auth] Server returned error status:', response.status);
+                    window.location.href = 'employee';
+                    return;
+                }
+
                 const user = await response.json();
+                console.log('[Watchlist Auth] User data received:', {
+                    hasUser: !!user,
+                    hasId: !!user?.id,
+                    userId: user?.id
+                });
 
                 if (!user || !user.id) {
                     // User is not authenticated, redirect to employee portal
+                    console.warn('[Watchlist Auth] User not authenticated, redirecting...');
                     window.location.href = 'employee';
+                    return;
                 }
+
+                console.log('[Watchlist Auth] ✓ Authentication successful for user:', user.username || user.id);
             } catch (error) {
-                console.error('Auth check failed:', error);
+                console.error('[Watchlist Auth] Authentication check failed:', error);
                 // Redirect to employee portal on error
                 window.location.href = 'employee';
             }
-        })();
+        }
+
+        // Wait for DOM to be ready before checking authentication
+        // This ensures the page navigation is complete and session cookies are properly set
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkAuth);
+        } else {
+            // DOM is already loaded, check auth immediately
+            checkAuth();
+        }
     </script>
     <script src="watchlist-app.js"></script>
 </body>

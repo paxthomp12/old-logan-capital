@@ -303,22 +303,34 @@
 
         // Check authentication status on page load
         async function checkAuth() {
+            console.log('[Employee Portal] Checking authentication...');
+
             try {
                 const response = await fetch(`${API_URL}/me`, {
-                    credentials: 'include'
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
 
-                const user = await response.json();
+                console.log('[Employee Portal] Response status:', response.status);
 
-                if (user && user.id) {
-                    // User is authenticated
-                    showPortal(user);
-                } else {
-                    // User is not authenticated
-                    showLogin();
+                // If response is OK (200), user is authenticated
+                if (response.ok) {
+                    const user = await response.json();
+                    console.log('[Employee Portal] ✓ User authenticated:', user.username || user.id);
+
+                    if (user && user.id) {
+                        showPortal(user);
+                        return;
+                    }
                 }
+
+                // User is not authenticated (401) or response doesn't have valid user
+                console.log('[Employee Portal] User not authenticated, showing login');
+                showLogin();
             } catch (error) {
-                console.error('Auth check failed:', error);
+                console.error('[Employee Portal] Auth check failed:', error);
                 showLogin();
             }
         }

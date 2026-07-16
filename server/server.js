@@ -167,11 +167,21 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/api/me', (req, res) => {
-    res.json({
-        id: req.session.userId,
-        username: req.session.username,
-        fullName: req.session.fullName
-    });
+    // Check if user is authenticated
+    if (req.session.userId) {
+        // User is authenticated, return user data
+        res.json({
+            id: req.session.userId,
+            username: req.session.username,
+            fullName: req.session.fullName
+        });
+    } else {
+        // User is not authenticated, return 401 Unauthorized
+        res.status(401).json({
+            error: 'Not authenticated',
+            authenticated: false
+        });
+    }
 });
 
 // ===== SUBMISSION ROUTES =====
