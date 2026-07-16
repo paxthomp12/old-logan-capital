@@ -169,6 +169,14 @@ app.post('/api/login', loginLimiter, async (req, res) => {
                 username: user.username
             });
 
+            // Log the Set-Cookie header that will be sent
+            console.log('[Login] Set-Cookie header will be sent with these attributes:');
+            console.log('[Login] - secure:', req.sessionOptions?.cookie?.secure || req.session.cookie.secure);
+            console.log('[Login] - httpOnly:', req.sessionOptions?.cookie?.httpOnly || req.session.cookie.httpOnly);
+            console.log('[Login] - sameSite:', req.sessionOptions?.cookie?.sameSite || req.session.cookie.sameSite);
+            console.log('[Login] - domain:', req.sessionOptions?.cookie?.domain || req.session.cookie.domain);
+            console.log('[Login] - path:', req.sessionOptions?.cookie?.path || req.session.cookie.path);
+
             res.json({
                 id: user.id,
                 username: user.username,
