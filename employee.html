@@ -27,6 +27,7 @@
             --text: #1a1a1a;
             --text-muted: #5a5a5a;
             --border: rgba(26, 26, 26, 0.1);
+            --danger: #c94949;
         }
 
         body {
@@ -58,6 +59,12 @@
             transform: translateY(-1px);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         nav {
             position: fixed;
             top: 0;
@@ -79,6 +86,17 @@
             color: var(--dark);
             letter-spacing: -0.5px;
             text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         .container {
@@ -138,14 +156,125 @@
             margin-bottom: 2rem;
             font-size: 1.05rem;
         }
+
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: white;
+            padding: 3.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(26, 26, 26, 0.12);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .login-card .subtitle {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--forest);
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <!-- Login Page -->
+    <div id="loginPage" class="hidden">
+        <div class="login-container">
+            <div class="login-card">
+                <h1>Employee Portal</h1>
+                <p class="subtitle">Sign in to access internal tools</p>
+
+                <div id="loginError" class="error-message"></div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn login-btn" id="loginBtn">Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Portal Dashboard -->
-    <div id="portalPage">
+    <div id="portalPage" class="hidden">
         <nav>
             <a href="index" class="logo-text">Old Logan Capital</a>
-            <a href="index" class="btn" style="font-size: 0.85rem; padding: 0.75rem 1.5rem;">Back to Home</a>
+            <div class="nav-actions">
+                <span class="user-info">Welcome, <strong id="userFullName"></strong></span>
+                <button onclick="logout()" class="btn" style="font-size: 0.85rem; padding: 0.75rem 1.5rem;">Logout</button>
+            </div>
         </nav>
 
         <div class="container">
@@ -165,5 +294,106 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-detect API URL based on environment
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api'
+            : 'https://api.oldlogancapital.com/api';
+
+        // Check authentication status on page load
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_URL}/me`, {
+                    credentials: 'include'
+                });
+
+                const user = await response.json();
+
+                if (user && user.id) {
+                    // User is authenticated
+                    showPortal(user);
+                } else {
+                    // User is not authenticated
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                showLogin();
+            }
+        }
+
+        // Show login page
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('portalPage').classList.add('hidden');
+        }
+
+        // Show portal dashboard
+        function showPortal(user) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('portalPage').classList.remove('hidden');
+            document.getElementById('userFullName').textContent = user.fullName || user.username;
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Disable button and show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            errorDiv.classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    showPortal(user);
+                } else {
+                    const error = await response.json();
+                    errorDiv.textContent = error.error || 'Invalid username or password';
+                    errorDiv.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Connection error. Please try again.';
+                errorDiv.classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        // Handle logout
+        async function logout() {
+            try {
+                await fetch(`${API_URL}/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            showLogin();
+        }
+
+        // Initialize on page load
+        checkAuth();
+    </script>
 </body>
 </html>

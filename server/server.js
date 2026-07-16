@@ -8,6 +8,8 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const db = require('./database');
 const discord = require('./discord');
@@ -23,6 +25,32 @@ const uploadsDir = path.join(dataDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
+
+// Security Headers - Helmet middleware
+app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP since we're using inline scripts in HTML
+    crossOriginEmbedderPolicy: false // Allow loading external resources
+}));
+
+// Rate limiting for API routes - prevent brute force attacks
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login attempts per windowMs
+    message: 'Too many login attempts, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+// Apply rate limiting to API routes
+app.use('/api/', apiLimiter);
 
 // Middleware - Allow both production and local origins
 const allowedOrigins = [
@@ -62,7 +90,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production (HTTPS), allow HTTP in development
         sameSite: 'lax', // 'lax' works for same-site subdomains (api.oldlogancapital.com and oldlogancapital.com)
         domain: process.env.NODE_ENV === 'production' ? '.oldlogancapital.com' : undefined, // Share cookie across subdomains in production
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 64 * 60 * 60 * 1000 // 64 hours
     }
 }));
 
@@ -102,7 +130,7 @@ function requireAuth(req, res, next) {
 
 // ===== AUTHENTICATION ROUTES =====
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', loginLimiter, async (req, res) => {
     try {
         const { username, password } = req.body;
 

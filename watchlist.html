@@ -985,6 +985,31 @@
         </div>
     </div>
 
+    <script>
+        // Authentication check - redirect to employee portal if not logged in
+        (async function checkAuth() {
+            const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:3000/api'
+                : 'https://api.oldlogancapital.com/api';
+
+            try {
+                const response = await fetch(`${API_URL}/me`, {
+                    credentials: 'include'
+                });
+
+                const user = await response.json();
+
+                if (!user || !user.id) {
+                    // User is not authenticated, redirect to employee portal
+                    window.location.href = 'employee';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                // Redirect to employee portal on error
+                window.location.href = 'employee';
+            }
+        })();
+    </script>
     <script src="watchlist-app.js"></script>
 </body>
 </html>

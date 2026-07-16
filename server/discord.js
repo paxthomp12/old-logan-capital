@@ -2,8 +2,23 @@ const axios = require('axios');
 
 const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
+// Validate webhook URL format and security
 if (!WEBHOOK_URL) {
     console.error('[Discord] ERROR: DISCORD_WEBHOOK_URL is not set in environment variables');
+} else {
+    try {
+        const url = new URL(WEBHOOK_URL);
+        // Ensure it's a Discord webhook URL
+        if (!url.hostname.includes('discord.com') && !url.hostname.includes('discordapp.com')) {
+            console.error('[Discord] WARNING: DISCORD_WEBHOOK_URL does not appear to be a valid Discord webhook URL');
+        }
+        // Ensure it's HTTPS
+        if (url.protocol !== 'https:') {
+            console.error('[Discord] WARNING: DISCORD_WEBHOOK_URL should use HTTPS protocol');
+        }
+    } catch (error) {
+        console.error('[Discord] ERROR: DISCORD_WEBHOOK_URL is not a valid URL');
+    }
 }
 
 // Helper function: Send webhook with retry logic for rate limiting
@@ -51,12 +66,24 @@ async function sendWebhookWithRetry(payload, maxRetries = 3) {
     return false;
 }
 
+// Sanitize string input to prevent injection attacks
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+    // Remove any potential malicious content, limit length
+    return input.replace(/[<>]/g, '').substring(0, 100);
+}
+
 async function sendNewSubmissionNotification(ticker, submitterName) {
     console.log(`[Discord] Preparing to send new submission notification for ${ticker}`);
+
+    // Sanitize inputs
+    const safeTicker = sanitizeInput(ticker);
+    const safeName = sanitizeInput(submitterName);
+
     const payload = {
         embeds: [{
             title: '📊 New Watchlist Submission',
-            description: `**Team Member** has submitted **${ticker}** for review`,
+            description: `**Team Member** has submitted **${safeTicker}** for review`,
             color: 0x1A3A2E, // Forest green
             timestamp: new Date().toISOString(),
             footer: {
@@ -68,10 +95,16 @@ async function sendNewSubmissionNotification(ticker, submitterName) {
 }
 
 async function sendReviewCompleteNotification(ticker, reviewerName, reviewsCompleted, totalReviews) {
+    // Sanitize inputs
+    const safeTicker = sanitizeInput(ticker);
+    const safeName = sanitizeInput(reviewerName);
+    const safeReviewsCompleted = Math.max(0, parseInt(reviewsCompleted) || 0);
+    const safeTotalReviews = Math.max(0, parseInt(totalReviews) || 0);
+
     const payload = {
         embeds: [{
             title: '✅ Review Completed',
-            description: `**Team Member** has completed their review of **${ticker}**\n\nProgress: ${reviewsCompleted}/${totalReviews} reviews complete`,
+            description: `**Team Member** has completed their review of **${safeTicker}**\n\nProgress: ${safeReviewsCompleted}/${safeTotalReviews} reviews complete`,
             color: 0x2D5A4A, // Forest light
             timestamp: new Date().toISOString(),
             footer: {
@@ -83,10 +116,14 @@ async function sendReviewCompleteNotification(ticker, reviewerName, reviewsCompl
 }
 
 async function sendAllReviewsCompleteNotification(ticker, avgFinalScore) {
+    // Sanitize inputs
+    const safeTicker = sanitizeInput(ticker);
+    const safeScore = Math.max(0, Math.min(10, parseFloat(avgFinalScore) || 0));
+
     const payload = {
         embeds: [{
             title: '🎯 Ready for Review',
-            description: `All reviews for **${ticker}** are complete!\n\n**Team Avg Final Score:** ${avgFinalScore.toFixed(2)}/10\n\nResults are now visible to the team.`,
+            description: `All reviews for **${safeTicker}** are complete!\n\n**Team Avg Final Score:** ${safeScore.toFixed(2)}/10\n\nResults are now visible to the team.`,
             color: 0xC9A962, // Gold
             timestamp: new Date().toISOString(),
             footer: {
@@ -98,9 +135,17 @@ async function sendAllReviewsCompleteNotification(ticker, avgFinalScore) {
 }
 
 async function send30DayWatchlistNotification(items) {
-    if (items.length === 0) return;
+    if (!Array.isArray(items) || items.length === 0) return;
 
-    const tickerList = items.map(item => `• **${item.ticker}** (${item.company_name}) - Added ${item.days_old} days ago`).join('\n');
+    // Sanitize and limit items to prevent abuse
+    const safeItems = items.slice(0, 20).map(item => {
+        const safeTicker = sanitizeInput(item.ticker || '');
+        const safeCompanyName = sanitizeInput(item.company_name || '');
+        const safeDaysOld = Math.max(0, parseInt(item.days_old) || 0);
+        return `• **${safeTicker}** (${safeCompanyName}) - Added ${safeDaysOld} days ago`;
+    });
+
+    const tickerList = safeItems.join('\n');
 
     const payload = {
         embeds: [{
