@@ -92,7 +92,7 @@ function switchTab(tabName, event) {
 async function loadSubmissions() {
     try {
         const response = await fetch(`${API_URL}/submissions`, {
-            
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to load submissions');
@@ -163,7 +163,7 @@ function sortSubmissions(submissions, sortBy) {
 async function viewSubmission(id) {
     try {
         const response = await fetch(`${API_URL}/submissions/${id}`, {
-
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to load submission details');
@@ -518,7 +518,9 @@ async function autoPopulateSector() {
 
         console.log(`Fetching sector for ticker: ${ticker} from ${API_URL}/ticker-info/${ticker}`);
 
-        const response = await fetch(`${API_URL}/ticker-info/${ticker}`);
+        const response = await fetch(`${API_URL}/ticker-info/${ticker}`, {
+            credentials: 'include'
+        });
 
         if (response.status === 404) {
             // Endpoint doesn't exist or ticker not found
@@ -641,7 +643,7 @@ async function handleSubmit(e) {
     try {
         const response = await fetch(`${API_URL}/submissions`, {
             method: 'POST',
-            
+            credentials: 'include',
             body: formData
         });
 
@@ -689,7 +691,7 @@ function displayFileList() {
 async function loadPendingReviews() {
     try {
         const response = await fetch(`${API_URL}/pending-reviews`, {
-
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to load pending reviews');
@@ -1000,7 +1002,7 @@ async function submitReview(e, submissionId) {
 
         const response = await fetch(`${API_URL}/reviews`, {
             method: 'POST',
-
+            credentials: 'include',
             body: formData
         });
 
@@ -1041,7 +1043,7 @@ function closeReviewModal() {
 async function loadWatchlist() {
     try {
         const response = await fetch(`${API_URL}/watchlist`, {
-            
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to load watchlist');
@@ -1093,7 +1095,7 @@ async function approveForWatchlist(submissionId) {
     try {
         const response = await fetch(`${API_URL}/watchlist/approve/${submissionId}`, {
             method: 'POST',
-
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Approval failed');
@@ -1115,7 +1117,7 @@ async function denySubmission(submissionId) {
     try {
         const response = await fetch(`${API_URL}/submissions/${submissionId}/deny`, {
             method: 'POST',
-
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Denial failed');
@@ -1136,7 +1138,7 @@ async function deleteSubmission(submissionId) {
     try {
         const response = await fetch(`${API_URL}/submissions/${submissionId}`, {
             method: 'DELETE',
-
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Delete failed');
@@ -1165,6 +1167,7 @@ async function removeFromWatchlist(submissionId) {
     try {
         const response = await fetch(`${API_URL}/watchlist/remove/${submissionId}`, {
             method: 'POST',
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to remove from watchlist');
