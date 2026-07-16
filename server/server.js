@@ -151,16 +151,26 @@ app.post('/api/login', loginLimiter, async (req, res) => {
         req.session.username = user.username;
         req.session.fullName = user.full_name;
 
-        console.log('[Login] ✓ Session created:', {
-            sessionId: req.sessionID,
-            userId: user.id,
-            username: user.username
-        });
+        console.log('[Login] Session data set, saving session...');
 
-        res.json({
-            id: user.id,
-            username: user.username,
-            fullName: user.full_name
+        // Explicitly save the session to ensure Set-Cookie header is sent
+        req.session.save((err) => {
+            if (err) {
+                console.error('[Login] ✗ Session save failed:', err);
+                return res.status(500).json({ error: 'Session creation failed' });
+            }
+
+            console.log('[Login] ✓ Session saved successfully:', {
+                sessionId: req.sessionID,
+                userId: user.id,
+                username: user.username
+            });
+
+            res.json({
+                id: user.id,
+                username: user.username,
+                fullName: user.full_name
+            });
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
