@@ -1,0 +1,1511 @@
+/* ===================================
+   Old Logan Capital - Main Stylesheet
+   =================================== */
+
+/* === CSS Variables === */
+:root {
+    --cream: #F5F1E8;
+    --cream-dark: #EBE5D6;
+    --dark: #1a1a1a;
+    --dark-alt: #2a2a2a;
+    --forest: #1A3A2E;
+    --forest-light: #2D5A4A;
+    --gold: #C9A962;
+    --text: #1a1a1a;
+    --text-muted: #5a5a5a;
+    --border: rgba(26, 26, 26, 0.1);
+    --border-light: rgba(26, 26, 26, 0.05);
+}
+
+/* === Base Styles === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.7;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px;
+    height: 1200px;
+    background-image: url('../images/logo-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.03;
+    z-index: 0;
+    pointer-events: none;
+}
+
+::selection {
+    background: var(--dark);
+    color: var(--cream);
+}
+
+/* === Animations === */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes letterFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* === Navigation === */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 2rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(245, 241, 232, 0.98);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+nav.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* iOS Safe Area Support */
+@supports (padding: max(0px)) {
+    nav {
+        padding-left: max(5%, env(safe-area-inset-left));
+        padding-right: max(5%, env(safe-area-inset-right));
+        padding-top: env(safe-area-inset-top);
+    }
+
+    section, .contact-section, footer {
+        padding-left: max(5%, env(safe-area-inset-left));
+        padding-right: max(5%, env(safe-area-inset-right));
+    }
+
+    footer {
+        padding-bottom: max(4rem, env(safe-area-inset-bottom));
+    }
+
+    .hero-content {
+        padding-left: max(2rem, env(safe-area-inset-left));
+        padding-right: max(2rem, env(safe-area-inset-right));
+    }
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.75rem;
+}
+
+.logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: var(--dark);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-cta {
+    padding: 0.75rem 1.8rem;
+    background: var(--dark);
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: all 0.2s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.15);
+}
+
+.nav-cta:hover {
+    background: var(--forest);
+    box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+    transform: translateY(-1px);
+}
+
+.nav-cta.secondary {
+    background: white;
+    color: var(--dark);
+    border: 1px solid rgba(26, 26, 26, 0.2);
+    box-shadow: 0 2px 6px rgba(26, 26, 26, 0.08);
+}
+
+.nav-cta.secondary:hover {
+    background: var(--dark);
+    color: white;
+    border-color: var(--dark);
+    box-shadow: 0 4px 12px rgba(26, 26, 26, 0.2);
+}
+
+/* === Hero Section === */
+.hero {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.hero-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(26, 26, 26, 0.5) 0%,
+        rgba(26, 26, 26, 0.4) 50%,
+        rgba(26, 26, 26, 0.6) 100%
+    );
+    z-index: 1;
+}
+
+.hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.animated-title {
+    font-family: 'Fraunces', serif;
+    font-size: 4rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: rgba(245, 241, 232, 0.98);
+    text-shadow:
+        0 0 30px rgba(201, 169, 98, 0.2),
+        0 4px 20px rgba(0, 0, 0, 0.6),
+        0 2px 8px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.2em;
+    position: relative;
+}
+
+.animated-title .letter {
+    opacity: 0;
+    display: inline-block;
+}
+
+.animated-title .space {
+    width: 0.5em;
+}
+
+.animated-title .mobile-break {
+    display: none;
+    width: 100%;
+    height: 0;
+}
+
+.hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 4.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -2px;
+    margin-bottom: 3rem;
+    color: rgba(245, 241, 232, 0.95);
+    font-optical-sizing: auto;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hero h1 .highlight {
+    display: block;
+    color: rgba(245, 241, 232, 0.7);
+    font-style: italic;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.4rem;
+    color: rgba(245, 241, 232, 0.85);
+    max-width: 650px;
+    margin-bottom: 3.5rem;
+    line-height: 1.75;
+    font-weight: 400;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-stats {
+    display: inline-block;
+    padding: 2rem 3rem;
+    background: rgba(245, 241, 232, 0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(245, 241, 232, 0.15);
+    border-radius: 12px;
+    animation: fadeInUp 1s ease 0.4s both;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.stat-label {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: rgba(245, 241, 232, 0.9);
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+}
+
+/* === Holdings Logos === */
+.holdings-logos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    justify-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.logo-wrapper {
+    padding: 1.25rem 1.5rem;
+    background: rgba(245, 241, 232, 0.98);
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-decoration: none;
+}
+
+.logo-wrapper a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-wrapper:hover {
+    background: rgba(245, 241, 232, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.holding-logo {
+    height: 60px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    opacity: 1;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.logo-wrapper:hover .holding-logo {
+    opacity: 1;
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+.stock-info {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    width: 100%;
+}
+
+.stock-price {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.25rem;
+}
+
+.stock-change {
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.stock-change.positive { color: #16a34a; }
+.stock-change.negative { color: #dc2626; }
+.stock-change.neutral { color: var(--text-muted); }
+
+.holding-ticker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(245, 241, 232, 0.75);
+    padding: 0.75rem 1.25rem;
+    border: 1.5px solid rgba(245, 241, 232, 0.3);
+    border-radius: 8px;
+    background: rgba(245, 241, 232, 0.05);
+    letter-spacing: 1px;
+    transition: all 0.4s ease;
+}
+
+.holding-ticker:hover {
+    color: rgba(245, 241, 232, 1);
+    border-color: rgba(245, 241, 232, 0.6);
+    background: rgba(245, 241, 232, 0.1);
+    transform: translateY(-2px);
+}
+
+/* === Equity Ownership Section === */
+.equity-ownership {
+    padding: 6rem 5%;
+    max-width: 1600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.equity-ownership h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 4.5rem;
+    color: var(--dark);
+    max-width: 800px;
+    line-height: 1.1;
+}
+
+.holdings-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.holding-item {
+    flex: 1;
+    min-width: 260px;
+    max-width: 320px;
+    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    border: 1px solid rgba(26, 26, 26, 0.06);
+    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.holding-item:hover {
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 12px rgba(26, 26, 26, 0.08);
+    transform: translateY(-2px);
+}
+
+.holding-item a {
+    text-decoration: none;
+    display: block;
+}
+
+.holding-item .holding-logo {
+    height: 60px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s ease;
+    opacity: 0.85;
+}
+
+.holding-item:hover .holding-logo {
+    transform: scale(1.03);
+    opacity: 1;
+}
+
+.holding-item .stock-info {
+    margin-top: 1.25rem;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.holding-item .stock-price {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.4rem;
+    opacity: 0.8;
+}
+
+.holding-item .stock-change {
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    opacity: 0.7;
+}
+
+/* === Sections === */
+section {
+    padding: 8rem 5%;
+    max-width: 1600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    display: inline-block;
+}
+
+section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 4.5rem;
+    color: var(--dark);
+    max-width: 800px;
+    line-height: 1.1;
+}
+
+/* === Portfolio Grid === */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.portfolio-card {
+    padding: 3rem;
+    background: white;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(26, 26, 26, 0.08);
+}
+
+.portfolio-card:hover {
+    box-shadow: 0 8px 24px rgba(26, 26, 26, 0.15);
+    transform: translateY(-4px);
+}
+
+.portfolio-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+}
+
+.portfolio-card p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* === Team Grid === */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+}
+
+.team-member {
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.team-photo {
+    width: 200px;
+    height: 200px;
+    background: white;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    margin: 0 auto 2rem;
+    border: 4px solid white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(26, 26, 26, 0.1);
+}
+
+.team-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-member:hover .team-photo {
+    box-shadow: 0 8px 24px rgba(26, 26, 26, 0.18);
+    transform: translateY(-4px);
+    border-color: var(--forest);
+}
+
+.team-member h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+}
+
+.team-member p {
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.7rem;
+    font-weight: 400;
+}
+
+/* === Investor Letters === */
+.letters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.letter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2.5rem;
+    background: white;
+    border: none;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
+}
+
+.letter-item:hover {
+    box-shadow: 0 6px 20px rgba(26, 26, 26, 0.12);
+    transform: translateY(-2px);
+}
+
+.letter-item h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+}
+
+.letter-item span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+}
+
+/* === Contact Section === */
+.contact-section {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 10rem 5%;
+    margin: 0;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    left: 5%;
+    bottom: 10%;
+    width: 500px;
+    height: 500px;
+    background-image: url('../images/logo-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.03;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.contact-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.contact-info h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 4.5rem;
+    margin-bottom: 2rem;
+    color: var(--cream);
+    letter-spacing: -2px;
+    line-height: 1.1;
+    max-width: 900px;
+}
+
+.contact-info p {
+    color: rgba(245, 241, 232, 0.6);
+    margin-bottom: 3rem;
+    font-size: 1.2rem;
+    line-height: 1.7;
+    max-width: 700px;
+}
+
+.contact-email {
+    display: inline-block;
+    font-size: 1.3rem;
+    color: var(--cream);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 2px solid rgba(245, 241, 232, 0.3);
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+    letter-spacing: -0.3px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.contact-email:hover {
+    border-bottom-color: var(--cream);
+    transform: translateY(-2px);
+}
+
+.social-links {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.social-links a {
+    color: rgba(245, 241, 232, 0.5);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+}
+
+.social-links a:hover {
+    color: var(--cream);
+    border-bottom-color: rgba(245, 241, 232, 0.5);
+    transform: translateY(-2px);
+}
+
+/* === Footer === */
+footer {
+    padding: 4rem 5%;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+}
+
+.footer-logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+}
+
+footer p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+}
+
+/* === Decorative Corner Elements === */
+.corner-decoration {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-style: solid;
+    border-color: var(--border);
+}
+
+.corner-decoration.top-left {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.corner-decoration.top-right {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+.corner-decoration.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.corner-decoration.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+/* === Bio Modal Styles === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.94);
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+    padding: 4.5rem;
+    max-width: 850px;
+    width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    border-radius: 20px;
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 1.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: rgba(26, 26, 26, 0.06);
+    border: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.modal-close:hover {
+    background: var(--dark);
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 16px rgba(26, 26, 26, 0.25);
+}
+
+.modal-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 2px solid rgba(26, 26, 26, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    position: relative;
+}
+
+.modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--forest);
+}
+
+.modal-photo {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    flex-shrink: 0;
+    box-shadow:
+        0 8px 24px rgba(26, 26, 26, 0.15),
+        0 0 0 1px rgba(26, 58, 46, 0.1);
+    transition: all 0.4s ease;
+}
+
+.modal-photo:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 12px 32px rgba(26, 26, 26, 0.2),
+        0 0 0 2px rgba(26, 58, 46, 0.2);
+}
+
+.modal-header-content {
+    flex: 1;
+}
+
+.modal-header h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--dark);
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+}
+
+.modal-header .role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--text-muted);
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.modal-linkedin-header {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: white;
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-light) 100%);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    padding: 0.85rem 1.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-linkedin-header:hover {
+    background: linear-gradient(135deg, var(--forest-light) 0%, var(--forest) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 58, 46, 0.35);
+}
+
+.modal-linkedin-header:active {
+    transform: translateY(0);
+}
+
+.modal-bio {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text);
+    margin-bottom: 0;
+}
+
+.modal-bio p {
+    margin-bottom: 1.8rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.modal-bio p:last-child {
+    margin-bottom: 0;
+}
+
+.modal-bio p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+}
+
+.modal-blog-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: rgba(26, 58, 46, 0.04);
+    border-radius: 12px;
+    border: 1px solid rgba(26, 58, 46, 0.1);
+}
+
+.modal-blog-section h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--forest);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.modal-blog-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.modal-blog-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(26, 26, 26, 0.1);
+    transition: all 0.2s ease;
+}
+
+.modal-blog-link:hover {
+    background: var(--forest);
+    color: white;
+    border-color: var(--forest);
+    transform: translateX(4px);
+}
+
+.modal-blog-link::before {
+    content: '→';
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.modal-blog-link:hover::before {
+    transform: translateX(3px);
+}
+
+/* === RESPONSIVE DESIGN === */
+
+/* Tablets and smaller */
+@media (max-width: 1024px) {
+    body::after {
+        width: 800px;
+        height: 800px;
+        opacity: 0.02;
+    }
+
+    nav { padding: 1rem 5%; }
+    .logo-text { font-size: 1.1rem; }
+    .logo-icon { height: 26px; }
+    .nav-links { display: none; }
+    .nav-buttons { gap: 0.5rem; }
+    .nav-cta {
+        padding: 0.65rem 1rem;
+        font-size: 0.7rem;
+    }
+
+    .hero {
+        margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+        margin-bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+        padding-top: calc(env(safe-area-inset-top, 0px));
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px));
+        height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+        height: calc(100dvh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+    }
+
+    .hero-video-container,
+    .hero-overlay {
+        top: 0;
+        bottom: 0;
+        height: 100%;
+    }
+
+    .animated-title {
+        font-size: 3.2rem;
+        letter-spacing: 0.15em;
+        gap: 0.15em;
+        padding: 0 2rem;
+    }
+
+    .animated-title .mobile-break {
+        display: block;
+    }
+
+    .equity-ownership {
+        padding: 4rem 5%;
+    }
+
+    .equity-ownership h2 {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+        letter-spacing: -1px;
+    }
+
+    .holdings-container {
+        gap: 1.25rem;
+        flex-direction: column;
+    }
+
+    .holding-item {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 1.75rem 1.5rem;
+    }
+
+    .holding-item .holding-logo { height: 55px; }
+    .holding-item .stock-price { font-size: 0.9rem; }
+    .holding-item .stock-change { font-size: 0.7rem; }
+
+    section { padding: 4rem 5%; }
+    .section-label {
+        font-size: 0.65rem;
+        margin-bottom: 1rem;
+    }
+
+    section h2 {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+        letter-spacing: -1px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    #values .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .portfolio-card {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid var(--border);
+        text-align: center;
+    }
+
+    .portfolio-card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .portfolio-card p {
+        display: block;
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .team-photo {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 1rem;
+    }
+
+    .team-member h3 { font-size: 1.1rem; }
+    .team-member p { font-size: 0.65rem; }
+
+    .letter-item {
+        padding: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .letter-item h4 { font-size: 1.1rem; }
+    .letter-item span { font-size: 0.65rem; }
+
+    .contact-section { padding: 4rem 5%; }
+    .contact-section::before {
+        width: 300px;
+        height: 300px;
+        opacity: 0.02;
+    }
+
+    .contact-info h2 {
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-info p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .contact-email { font-size: 1.1rem; }
+
+    .social-links {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .social-links a { font-size: 0.75rem; }
+
+    footer {
+        padding: 2.5rem 5%;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    footer p { font-size: 0.7rem; }
+
+    .corner-decoration {
+        width: 40px;
+        height: 40px;
+    }
+
+    #who-we-are {
+        padding: 5rem 5% !important;
+    }
+
+    #who-we-are h3 {
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem 0;
+    }
+
+    #who-we-are div[style*="font-size: 1.05rem"] {
+        font-size: 0.95rem !important;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 768px) {
+    nav { padding: 0.9rem 5%; }
+    .nav-cta {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.65rem;
+    }
+
+    .animated-title {
+        font-size: 2.8rem;
+        letter-spacing: 0.12em;
+        gap: 0.12em;
+        padding: 0 1.5rem;
+    }
+
+    .equity-ownership { padding: 3.5rem 5%; }
+    .equity-ownership h2 {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .holdings-container { gap: 1.25rem; }
+    .holding-item {
+        padding: 1.75rem 1.5rem;
+        min-width: 240px;
+    }
+
+    .holding-item .holding-logo { height: 52px; }
+    .holding-item .stock-price { font-size: 0.9rem; }
+    .holding-item .stock-change { font-size: 0.7rem; }
+
+    section { padding: 3.5rem 5%; }
+    section h2 {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .contact-info h2 { font-size: 1.9rem; }
+    .contact-info p { font-size: 0.95rem; }
+    .contact-email { font-size: 1rem; }
+
+    #who-we-are {
+        padding: 4rem 5% !important;
+    }
+
+    #who-we-are h2 { font-size: 1.75rem; }
+    #who-we-are h3 {
+        font-size: 1.3rem;
+        margin: 1.5rem 0 1rem 0;
+    }
+
+    #who-we-are div[style*="font-size: 1.05rem"] {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+    }
+
+    #who-we-are p {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .modal-content {
+        padding: 3rem 2rem;
+        max-height: 88vh;
+        border-radius: 16px;
+    }
+
+    .modal-header {
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        padding-bottom: 2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .modal-photo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .modal-header h3 {
+        font-size: 2.2rem;
+        letter-spacing: -1px;
+    }
+
+    .modal-linkedin-header {
+        width: 100%;
+        justify-content: center;
+        padding: 0.65rem 1.2rem;
+        font-size: 0.65rem;
+        background: transparent;
+        color: var(--text-muted);
+        border: 1px solid rgba(26, 26, 26, 0.15);
+        box-shadow: none;
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
+
+    .modal-linkedin-header:hover {
+        background: rgba(26, 26, 26, 0.04);
+        color: var(--dark);
+        border-color: rgba(26, 26, 26, 0.25);
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    .modal-bio {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .modal-bio p {
+        margin-bottom: 1.5rem;
+        padding-left: 1.2rem;
+    }
+
+    .modal-close {
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    nav { padding: 0.85rem 5%; }
+    .logo-text { font-size: 1rem; }
+    .nav-buttons { gap: 0.4rem; }
+    .nav-cta {
+        padding: 0.55rem 0.75rem;
+        font-size: 0.6rem;
+    }
+
+    .animated-title {
+        font-size: 2.2rem;
+        letter-spacing: 0.08em;
+        gap: 0.08em;
+        padding: 0 1rem;
+    }
+
+    .equity-ownership { padding: 3rem 5%; }
+    .equity-ownership h2 {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
+
+    .holdings-container { gap: 1rem; }
+    .holding-item {
+        padding: 1.5rem 1.25rem;
+        min-width: 100%;
+        max-width: 100%;
+    }
+
+    .holding-item .holding-logo { height: 48px; }
+    .holding-item .stock-price { font-size: 0.85rem; }
+    .holding-item .stock-change { font-size: 0.68rem; }
+
+    section { padding: 3rem 5%; }
+    section h2 { font-size: 1.6rem; }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .portfolio-card {
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .portfolio-card h3 {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .portfolio-card p {
+        display: block;
+        font-size: 0.7rem;
+        line-height: 1.5;
+    }
+
+    .contact-info h2 { font-size: 1.7rem; }
+    .social-links { gap: 1.25rem; }
+}

@@ -154,28 +154,11 @@ app.post('/api/login', loginLimiter, async (req, res) => {
         req.session.username = user.username;
         req.session.fullName = user.full_name;
 
-        console.log('[Login] Session data set, saving session...');
-
-        // Explicitly save the session to ensure Set-Cookie header is sent
         req.session.save((err) => {
             if (err) {
-                console.error('[Login] ✗ Session save failed:', err);
+                console.error('[Login] Session save failed:', err);
                 return res.status(500).json({ error: 'Session creation failed' });
             }
-
-            console.log('[Login] ✓ Session saved successfully:', {
-                sessionId: req.sessionID,
-                userId: user.id,
-                username: user.username
-            });
-
-            // Log the Set-Cookie header that will be sent
-            console.log('[Login] Set-Cookie header will be sent with these attributes:');
-            console.log('[Login] - secure:', req.sessionOptions?.cookie?.secure || req.session.cookie.secure);
-            console.log('[Login] - httpOnly:', req.sessionOptions?.cookie?.httpOnly || req.session.cookie.httpOnly);
-            console.log('[Login] - sameSite:', req.sessionOptions?.cookie?.sameSite || req.session.cookie.sameSite);
-            console.log('[Login] - domain:', req.sessionOptions?.cookie?.domain || req.session.cookie.domain);
-            console.log('[Login] - path:', req.sessionOptions?.cookie?.path || req.session.cookie.path);
 
             res.json({
                 id: user.id,
@@ -195,18 +178,10 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/me', (req, res) => {
     // Debug logging
-    console.log('[/api/me] Session check:', {
-        hasSession: !!req.session,
-        sessionId: req.sessionID,
-        userId: req.session?.userId,
-        username: req.session?.username,
-        hasCookie: !!req.headers.cookie
-    });
 
     // Check if user is authenticated
     if (req.session && req.session.userId) {
         // User is authenticated, return user data
-        console.log('[/api/me] ✓ User authenticated:', req.session.username);
         res.json({
             id: req.session.userId,
             username: req.session.username,
@@ -214,7 +189,6 @@ app.get('/api/me', (req, res) => {
         });
     } else {
         // User is not authenticated, return 401 Unauthorized
-        console.log('[/api/me] ✗ User NOT authenticated - no valid session');
         res.status(401).json({
             error: 'Not authenticated',
             authenticated: false
@@ -226,10 +200,6 @@ app.get('/api/me', (req, res) => {
 
 app.post('/api/submissions', upload.array('attachments', 5), async (req, res) => {
     try {
-        console.log('DEBUG: Files received:', req.files ? req.files.length : 0);
-        if (req.files && req.files.length > 0) {
-            req.files.forEach(f => console.log('  File:', f.originalname, f.size, 'bytes'));
-        }
         const {
             ticker,
             companyName,
@@ -277,7 +247,6 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
         ]);
 
         const submissionId = db.getLastInsertId();
-        console.log('DEBUG: Submission created with ID:', submissionId);
 
         // Handle file attachments
         if (req.files && req.files.length > 0) {
@@ -292,15 +261,10 @@ app.post('/api/submissions', upload.array('attachments', 5), async (req, res) =>
                     file.mimetype,
                     file.size
                 ]);
-                console.log('  Saved:', file.originalname, '->', file.filename);
             });
 
             // VERIFY: Check if attachments were actually saved
             const savedAttachments = db.query('SELECT * FROM attachments WHERE submission_id = ?', [submissionId]);
-            console.log('  VERIFY: Attachments in DB for submission', submissionId, ':', savedAttachments.length);
-            if (savedAttachments.length > 0) {
-                savedAttachments.forEach(att => console.log('    -', att.filename));
-            }
         } else {
             console.log('DEBUG: No files in request');
         }
@@ -357,7 +321,6 @@ app.get('/api/submissions/:id', (req, res) => {
         const reviews = db.query('SELECT * FROM reviews WHERE submission_id = ?', [submissionId]);
 
         // DEBUG: Log what we're fetching
-        console.log('GET /api/submissions/' + submissionId + ' - Attachments found:', attachments.length);
         if (attachments.length > 0) {
             attachments.forEach(att => console.log('  -', att.filename, '(id:', att.id + ')'));
         }
