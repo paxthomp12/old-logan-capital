@@ -22,6 +22,8 @@ async function initDatabase() {
         db = new SQL.Database(buffer);
         // Run migration to add scoring columns if they don't exist
         migrateAddScoringColumns();
+        // Run migration to add portfolio tracking columns
+        migrateAddPortfolioColumns();
     } else {
         db = new SQL.Database();
         createTables();
@@ -279,6 +281,37 @@ function run(sql, params = []) {
 // Get last inserted ID
 function getLastInsertId() {
     return lastInsertId;
+}
+
+function migrateAddPortfolioColumns() {
+    console.log('\n=== Running Portfolio Columns Migration ===');
+
+    try {
+        // Add in_portfolio and last_timer_reset columns to watchlist table
+        const watchlistColumns = [
+            'in_portfolio INTEGER DEFAULT 0',
+            'last_timer_reset DATETIME'
+        ];
+
+        watchlistColumns.forEach(column => {
+            const columnName = column.split(' ')[0];
+            try {
+                db.run(`ALTER TABLE watchlist ADD COLUMN ${column}`);
+                console.log(`✓ Added ${columnName} to watchlist`);
+            } catch (error) {
+                if (!error.message.includes('duplicate column')) {
+                    console.error(`✗ Error adding ${columnName}:`, error.message);
+                }
+            }
+        });
+
+        // Save the updated database
+        saveDatabase();
+
+        console.log('✓ Portfolio columns migration complete\n');
+    } catch (error) {
+        console.error('✗ Portfolio migration failed:', error);
+    }
 }
 
 module.exports = {

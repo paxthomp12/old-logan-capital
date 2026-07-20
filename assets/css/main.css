@@ -554,9 +554,22 @@ nav.visible {
 
 /* Fix RRX logo sizing to match other logos */
 .holding-item[data-ticker="RRX"] .holding-logo {
-    height: 60px;
-    max-width: 180px;
-    object-fit: contain;
+    height: 60px !important;
+    max-width: 180px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+
+.holding-item[data-ticker="RRX"] a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.holding-item[data-ticker="RRX"] a img {
+    height: 60px !important;
+    max-width: 180px !important;
+    width: auto !important;
 }
 
 /* === Sections === */

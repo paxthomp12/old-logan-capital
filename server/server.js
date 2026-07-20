@@ -629,9 +629,9 @@ app.post('/api/watchlist/remove/:id', (req, res) => {
         // Remove from watchlist
         db.run('DELETE FROM watchlist WHERE submission_id = ?', [submissionId]);
 
-        // Update submission status back to under_review
+        // Update submission status to removed_from_watchlist
         db.run(`
-            UPDATE submissions SET status = 'under_review'
+            UPDATE submissions SET status = 'removed_from_watchlist'
             WHERE id = ?
         `, [submissionId]);
 
@@ -642,11 +642,50 @@ app.post('/api/watchlist/remove/:id', (req, res) => {
     }
 });
 
+app.post('/api/watchlist/mark-portfolio/:id', (req, res) => {
+    try {
+        const submissionId = req.params.id;
+
+        // Mark as in portfolio in watchlist table
+        db.run('UPDATE watchlist SET in_portfolio = 1 WHERE submission_id = ?', [submissionId]);
+
+        // Update submission status to in_portfolio
+        db.run(`
+            UPDATE submissions SET status = 'in_portfolio'
+            WHERE id = ?
+        `, [submissionId]);
+
+        res.json({ success: true, message: 'Marked as in portfolio successfully' });
+    } catch (error) {
+        console.error('Mark as portfolio error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/watchlist/reset-timer/:id', (req, res) => {
+    try {
+        const submissionId = req.params.id;
+
+        // Reset the timer by updating last_timer_reset to current time
+        db.run(`
+            UPDATE watchlist
+            SET last_timer_reset = datetime('now')
+            WHERE submission_id = ?
+        `, [submissionId]);
+
+        res.json({ success: true, message: 'Timer reset successfully' });
+    } catch (error) {
+        console.error('Reset timer error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/api/watchlist', (req, res) => {
     try {
         const watchlist = db.query(`
             SELECT
                 w.*,
+                w.in_portfolio,
                 s.ticker,
                 s.company_name,
                 s.submitter_name,
@@ -654,7 +693,7 @@ app.get('/api/watchlist', (req, res) => {
                 s.time_horizon,
                 s.created_at,
                 s.final_score,
-                CAST((julianday('now') - julianday(w.added_at)) AS INTEGER) as days_old,
+                CAST((julianday('now') - julianday(COALESCE(w.last_timer_reset, w.added_at))) AS INTEGER) as days_old,
                 (
                     SELECT AVG(r.final_score)
                     FROM reviews r
