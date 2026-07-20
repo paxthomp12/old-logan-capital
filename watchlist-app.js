@@ -354,11 +354,21 @@ function buildActionButtons(submission) {
                 </div>
             </div>
         `;
-    } else if (submission.status === 'approved' || submission.status === 'denied') {
+    } else if (submission.status === 'approved' || submission.status === 'denied' || submission.status === 'removed_from_watchlist' || submission.status === 'in_portfolio') {
         return `
             <div style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(26, 26, 26, 0.1);">
                 ${currentTab === 'watchlistTab' && submission.status === 'approved' ? `
-                    <button class="btn btn-secondary" onclick="removeFromWatchlist(${submission.id})" style="margin-right: 1rem;">Remove from Watchlist</button>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <button class="btn" onclick="markAsInPortfolio(${submission.id})" style="background: rgba(45, 90, 74, 0.9); color: white; border: none;">📊 Mark as In Portfolio</button>
+                        <button class="btn" onclick="keepOnWatchlist(${submission.id})" style="background: rgba(201, 169, 98, 0.9); color: white; border: none;">⏰ Reset 30-Day Timer</button>
+                        <button class="btn btn-secondary" onclick="removeFromWatchlist(${submission.id})">Remove from Watchlist</button>
+                    </div>
+                ` : ''}
+                ${submission.status === 'in_portfolio' ? `
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <button class="btn" onclick="keepOnWatchlist(${submission.id})" style="background: rgba(201, 169, 98, 0.9); color: white; border: none;">⏰ Reset 30-Day Timer</button>
+                        <button class="btn btn-secondary" onclick="removeFromWatchlist(${submission.id})">Remove from Watchlist</button>
+                    </div>
                 ` : ''}
                 <button class="btn btn-danger" onclick="deleteSubmission(${submission.id})">🗑️ Delete Submission Permanently</button>
             </div>
@@ -763,8 +773,12 @@ async function loadWatchlist() {
                 ? `<span style="display: inline-block; margin-left: 0.5rem; padding: 0.25rem 0.6rem; background: rgba(230, 126, 34, 0.15); color: #d97520; border: 1px solid rgba(230, 126, 34, 0.3); border-radius: 12px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;">⏰ ${daysOld}d</span>`
                 : '';
 
+            const portfolioBadge = item.in_portfolio
+                ? `<span style="display: inline-block; margin-left: 0.5rem; padding: 0.25rem 0.6rem; background: rgba(45, 90, 74, 0.15); color: #1A3A2E; border: 1px solid rgba(45, 90, 74, 0.3); border-radius: 12px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;">📊 In Portfolio</span>`
+                : '';
+
             row.innerHTML = `
-                <td><strong>${item.ticker}</strong>${ageBadge}</td>
+                <td><strong>${item.ticker}</strong>${portfolioBadge}${ageBadge}</td>
                 <td>${item.company_name}</td>
                 <td>${item.submitter_name}</td>
                 <td><strong>${finalScore}/10</strong></td>
@@ -857,5 +871,45 @@ async function removeFromWatchlist(submissionId) {
         loadSubmissions();
     } catch (error) {
         alert('Failed to remove from watchlist: ' + error.message);
+    }
+}
+
+async function markAsInPortfolio(submissionId) {
+    if (!confirm('Mark this ticker as "In Portfolio"? It will stay on the watchlist but show a portfolio badge.')) return;
+
+    try {
+        const response = await fetch(`${API_URL}/watchlist/mark-portfolio/${submissionId}`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        if (!response.ok) throw new Error('Failed to mark as in portfolio');
+
+        alert('Marked as In Portfolio!');
+        closeSubmissionModal();
+        loadWatchlist();
+        loadSubmissions();
+    } catch (error) {
+        alert('Failed to mark as in portfolio: ' + error.message);
+    }
+}
+
+async function keepOnWatchlist(submissionId) {
+    if (!confirm('Reset the 30-day timer for this ticker? The day count will reset to 0.')) return;
+
+    try {
+        const response = await fetch(`${API_URL}/watchlist/reset-timer/${submissionId}`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        if (!response.ok) throw new Error('Failed to reset timer');
+
+        alert('Timer reset! The 30-day alarm will appear again in 30 days.');
+        closeSubmissionModal();
+        loadWatchlist();
+        loadSubmissions();
+    } catch (error) {
+        alert('Failed to reset timer: ' + error.message);
     }
 }

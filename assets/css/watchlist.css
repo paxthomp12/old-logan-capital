@@ -306,6 +306,18 @@ textarea {
     border: 1px solid rgba(201, 73, 73, 0.3);
 }
 
+.status-removed_from_watchlist {
+    background: rgba(149, 117, 205, 0.12);
+    color: #8e44ad;
+    border: 1px solid rgba(149, 117, 205, 0.3);
+}
+
+.status-in_portfolio {
+    background: rgba(45, 90, 74, 0.12);
+    color: #1A3A2E;
+    border: 1px solid rgba(45, 90, 74, 0.3);
+}
+
 .confidence-stars {
     color: var(--gold);
     font-size: 1.2rem;
