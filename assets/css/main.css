@@ -559,13 +559,13 @@ nav.visible {
     max-height: 25px !important;
     width: auto !important;
     object-fit: contain !important;
+    margin-bottom: calc(1.25rem + 35px) !important;
 }
 
 .holding-item[data-ticker="RRX"] a {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60px;
 }
 
 .holding-item[data-ticker="RRX"] a img {
@@ -573,10 +573,6 @@ nav.visible {
     max-width: 90px !important;
     max-height: 25px !important;
     width: auto !important;
-}
-
-.holding-item[data-ticker="RRX"] .stock-info {
-    margin-top: 1.25rem !important;
 }
 
 /* === Sections === */
