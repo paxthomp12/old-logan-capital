@@ -554,9 +554,9 @@ nav.visible {
 
 /* Fix RRX logo sizing - make it much smaller */
 .holding-item[data-ticker="RRX"] .holding-logo {
-    height: 35px !important;
-    max-width: 120px !important;
-    max-height: 35px !important;
+    height: 25px !important;
+    max-width: 90px !important;
+    max-height: 25px !important;
     width: auto !important;
     object-fit: contain !important;
 }
@@ -568,9 +568,9 @@ nav.visible {
 }
 
 .holding-item[data-ticker="RRX"] a img {
-    height: 35px !important;
-    max-width: 120px !important;
-    max-height: 35px !important;
+    height: 25px !important;
+    max-width: 90px !important;
+    max-height: 25px !important;
     width: auto !important;
 }
 
