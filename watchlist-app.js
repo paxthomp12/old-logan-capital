@@ -78,7 +78,16 @@ function sortSubmissions(submissions, sortBy) {
         'status': (a, b) => a.status.localeCompare(b.status),
         'ticker': (a, b) => a.ticker.localeCompare(b.ticker)
     };
-    return sortFunctions[sortBy] ? submissions.sort(sortFunctions[sortBy]) : submissions;
+
+    // Sort by the selected criteria first
+    const sorted = sortFunctions[sortBy] ? submissions.sort(sortFunctions[sortBy]) : submissions;
+
+    // Always move "submitted" status to the top
+    return sorted.sort((a, b) => {
+        if (a.status === 'submitted' && b.status !== 'submitted') return -1;
+        if (a.status !== 'submitted' && b.status === 'submitted') return 1;
+        return 0;
+    });
 }
 
 // === TAB SWITCHING ===
@@ -143,7 +152,7 @@ async function loadSubmissions() {
                 <td>${sub.company_name}</td>
                 <td>${sub.review_count}/3</td>
                 <td><strong>${scoreDisplay}</strong></td>
-                <td><span class="status-badge status-${sub.status}">${sub.status.replace('_', ' ')}</span></td>
+                <td><span class="status-badge status-${sub.status}">${sub.status.replace(/_/g, ' ')}</span></td>
                 <td>${new Date(sub.created_at).toLocaleDateString()}</td>
             `;
             tbody.appendChild(row);
@@ -177,7 +186,7 @@ function buildSubmissionHTML(submission) {
             <div style="display: flex; gap: 1.5rem; align-items: center;">
                 <div>
                     <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 0.5rem;">Status</span>
-                    <span class="status-badge status-${submission.status}">${submission.status.replace('_', ' ')}</span>
+                    <span class="status-badge status-${submission.status}">${submission.status.replace(/_/g, ' ')}</span>
                 </div>
                 ${submission.reviewsComplete && submission.status !== 'submitted' ? `
                 <div>
