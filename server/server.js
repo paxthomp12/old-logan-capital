@@ -754,7 +754,7 @@ async function check30DayWatchlistItems() {
                 CAST((julianday('now') - julianday(w.added_at)) AS INTEGER) as days_old
             FROM watchlist w
             JOIN submissions s ON w.submission_id = s.id
-            WHERE days_old >= 30
+            WHERE days_old >= 30 AND (w.in_portfolio IS NULL OR w.in_portfolio = 0)
         `);
 
         if (watchlist.length > 0) {
