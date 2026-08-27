@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="description" content="Analysis of how Fed communications under Kevin Warsh have shifted market dynamics from FOMC decisions to data releases.">
+    <title>When the Fed Speaks, Markets Listen, Except When It Won't Talk</title>
+
+    <link rel="canonical" href="https://oldlogancapital.com/trail/when-the-fed-speaks">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Old Logan Capital">
+    <meta name="theme-color" content="#F5F1E8">
+
+    <meta property="og:title" content="When the Fed Speaks, Markets Listen, Except When It Won't Talk - Old Logan Capital">
+    <meta property="og:image" content="https://oldlogancapital.com/assets/images/logo.png">
+    <meta property="og:url" content="https://oldlogancapital.com/trail/when-the-fed-speaks">
+    <meta property="og:type" content="article">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #F5F1E8;
+            --cream-dark: #EBE5D6;
+            --dark: #1a1a1a;
+            --dark-alt: #2a2a2a;
+            --forest: #1A3A2E;
+            --forest-light: #2D5A4A;
+            --gold: #C9A962;
+            --text: #1a1a1a;
+            --text-muted: #5a5a5a;
+            --border: rgba(26, 26, 26, 0.1);
+            --border-light: rgba(26, 26, 26, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 1200px;
+            background-image: url('../assets/images/logo-icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        ::selection {
+            background: var(--dark);
+            color: var(--cream);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245, 241, 232, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 0.75rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-cta {
+            padding: 0.75rem 1.8rem;
+            background: var(--dark);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.15);
+        }
+
+        .nav-cta:hover {
+            background: var(--forest);
+            box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .nav-cta.secondary {
+            background: white;
+            color: var(--dark);
+            border: 1px solid rgba(26, 26, 26, 0.2);
+            box-shadow: 0 2px 6px rgba(26, 26, 26, 0.08);
+        }
+
+        .nav-cta.secondary:hover {
+            background: var(--dark);
+            color: white;
+            border-color: var(--dark);
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.2);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12rem 5% 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--dark);
+            gap: 0.3rem;
+        }
+
+        .article {
+            background: white;
+            border-radius: 12px;
+            padding: 4rem;
+            box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+        }
+
+        .article-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .article h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 3rem 0 1.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .article p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .article strong {
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        .article em {
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .article ul {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article li {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .article blockquote {
+            border-left: 4px solid var(--forest);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .article sup {
+            font-size: 0.7em;
+            vertical-align: super;
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        .article a {
+            color: var(--forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--forest-light);
+            transition: all 0.2s ease;
+        }
+
+        .article a:hover {
+            color: var(--forest-light);
+            border-bottom-color: var(--forest);
+        }
+
+        .data-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .data-table th {
+            background: var(--cream);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+            color: var(--dark);
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            line-height: 1.6;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sources {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .sources h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .sources ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .sources li {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .sources li a {
+            color: var(--forest);
+            word-break: break-all;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5%;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .footer-logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 5%;
+            }
+
+            .logo-text {
+                font-size: 1.1rem;
+            }
+
+            .nav-buttons {
+                gap: 0.5rem;
+            }
+
+            .nav-cta {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.75rem;
+            }
+
+            .article-container {
+                padding: 10rem 5% 6rem;
+            }
+
+            .article {
+                padding: 2.5rem 2rem;
+            }
+
+            .article h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .article h2 {
+                font-size: 1.6rem;
+                margin: 2.5rem 0 1.25rem;
+            }
+
+            .article p {
+                font-size: 1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .article li {
+                font-size: 1rem;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index" class="logo">
+            <span class="logo-text">Old Logan Capital</span>
+        </a>
+        <div class="nav-buttons">
+            <a href="../trail" class="nav-cta secondary">Back to Trail</a>
+            <a href="../index#contact" class="nav-cta">Get in Touch</a>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <a href="../trail" class="back-link">← Back to The Trail</a>
+
+        <article class="article">
+            <div class="article-meta">August 27, 2026</div>
+            <div class="article-author">Written by Garett Lake</div>
+
+            <h1>When the Fed Speaks, Markets Listen, Except When It Won't Talk</h1>
+
+            <p>Markets don't just price what the Fed does. They price what the Fed says it's going to do next. The tone of a statement, the wording of a press conference, even which words get cut from one meeting to the next all matter.</p>
+
+            <p>That's why Fed decision days have historically been some of the most volatile sessions on the calendar. Federal Reserve research on FOMC communications has found that major asset prices, including the 10-year yield, the S&P 500, and even the dollar, can trade at least eight times more volatile around a Fed release than on an ordinary day<sup>1</sup>.</p>
+
+            <p>That relationship just changed. With Kevin Warsh as Fed Chair, the FOMC has stayed silent, leaving the data to speak for itself.</p>
+
+            <h2>What changed under Warsh</h2>
+
+            <p>At his first meeting as chair on June 17, 2026, Warsh stripped forward guidance out of the policy statement, shrank it to roughly 132 words from 341 in April, and was the only one of 19 FOMC participants who didn't submit a dot-plot projection that round<sup>2,3</sup>.</p>
+
+            <p>His reasoning, from the press conference: the dot plot "for me, it's not helpful in the conduct of policy," and on forward guidance more broadly, "when all financial markets are doing is reflecting back at us what we've said, then we're taking the most important source of information and we're being blind to it"<sup>4,5</sup>.</p>
+
+            <p>He's since floated trimming the number of FOMC meetings and pulling back the Summary of Economic Projections at alternating meetings. That would further thin out the signal, rather than making this a one-time event<sup>6</sup>.</p>
+
+            <p>Not everyone's a fan. Economist Claudia Sahm has argued that "reading the Fed will now mean listening to every official and stitching their comments together over time, a noisier and less precise process than we are used to," and that "less public sunlight means more business done in the dark"<sup>7</sup>. Goldman's Jan Hatzius has made a similar case: less Fed information means more error-prone market pricing<sup>8</sup>.</p>
+
+            <p>What does this mean in plain English? Markets may experience more volatility as investors try to interpret a less prescriptive Fed. Since Warsh made clear that the Fed would offer less forward guidance, major economic releases, especially inflation and employment data, have increasingly become the market's primary catalysts.</p>
+
+            <h2>The evidence: data days are beating decision days</h2>
+
+            <p>Look at the run-up to the July 29th meeting, and the pattern is obvious. Nearly every big swing in rate odds traced back to a data release, not a Fed official:</p>
+
+            <ul>
+                <li><strong>May 12:</strong> A hot April CPI print pushed hike-by-year-end odds to ~37%.</li>
+                <li><strong>June 5:</strong> May payrolls beat estimates (+172,000 vs. ~80,000 expected), and December hike odds jumped from 52% to 68% in a day<sup>9</sup>.</li>
+                <li><strong>June 25:</strong> A hot May PCE reading (4.1% y/y, a three-year high) actually pulled July hike odds down, from roughly 34% to 30%, as traders pushed the expected hike to September instead<sup>10</sup>.</li>
+                <li><strong>July 2:</strong> A soft June payrolls report (57,000 vs. ~110,000 to 115,000 expected) triggered a same-day repricing across yields, the dollar, gold, and bitcoin, with zero Fed commentary that day<sup>11</sup>.</li>
+                <li><strong>July 14-15:</strong> Cooling June CPI (core down to 2.6% y/y from 2.9%) crushed July hike odds to ~10%<sup>12</sup>.</li>
+                <li><strong>July 23-24:</strong> An oil spike on Middle East tensions plus soft jobless claims sent hike odds for the July meeting from under 12% to nearly 38% in about a week<sup>13</sup>.</li>
+            </ul>
+
+            <p>Meanwhile, the actual June 17 hold decision was already priced at roughly 97% before Warsh said a word<sup>14</sup>. In other words, the "event" everyone was watching was a non-event, and the real volatility happened on the data release dates around it.</p>
+
+            <h2>The live test: July 29</h2>
+
+            <p>The July meeting was the first real stress test of the new regime. The Fed held rates at 3.50% to 3.75% for a fifth straight meeting, but this time by a 9-3 vote, the most dissents on a Fed decision since September 2016.</p>
+
+            <p>Cleveland's Beth Hammack, Minneapolis's Neel Kashkari, and Dallas's Lorie Logan all wanted a 25 bps hike, arguing inflation had run above target for more than five years<sup>15</sup>.</p>
+
+            <p>The 2-year yield fell about 3.5 bps to 4.242%, while the 10-year rose over 7 bps to 4.679%. The result was a curve-steepening move that reflected both near-term caution and long-run inflation worry. Stocks and the dollar slipped, while oil jumped on renewed Middle East strikes<sup>16</sup>.</p>
+
+            <p>Warsh, for his part, didn't soften anything: "There is no soft inflation target; there is no soft implicit target, not on this Committee's watch. There's only a target, and it's 2 percent."</p>
+
+            <p>On the hold itself: "Did the Fed take an explicit change in its policy rate today? No. But I think that's the beginning of the story, not the end of the story"<sup>17</sup>.</p>
+
+            <p>September hike odds briefly spiked to roughly 77% on the hawkish vote alone, then settled back to the 53% to 60% range once the press conference wrapped<sup>18</sup>. Rhetoric moved markets, for once, but only around the edges of a decision the data had already mostly priced.</p>
+
+            <h2>The three-week whiplash</h2>
+
+            <p>If you want the cleanest proof of the new paradigm, look at what's happened to September hike odds since. Almost all of the movement came from data, with barely any new Fed commentary in between:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>September hike odds</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Jul 31</td>
+                        <td>Post-meeting baseline</td>
+                        <td>~67%<sup>19</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Jul 27</td>
+                        <td>Peak hawkish pricing</td>
+                        <td>~82% (CME FedWatch)<sup>20</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Aug 7</td>
+                        <td>Weak July jobs report (-23,000, first decline since Feb 2026)</td>
+                        <td>Fell to ~44% (CME), ~35% (Kalshi)<sup>21</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Aug 11</td>
+                        <td>Described as a "coin flip"</td>
+                        <td>~50% (CME FedWatch)<sup>22</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Aug 12</td>
+                        <td>Soft July CPI (2nd straight month cooling)</td>
+                        <td>~33-44%, depending on venue<sup>23</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Aug 16-17</td>
+                        <td>Two soft CPI prints compound</td>
+                        <td>Crashed to ~25-31%<sup>24</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Aug 18-20</td>
+                        <td>Latest reading, Kalshi/Polymarket/CME</td>
+                        <td>~27-30% hike, ~70% hold<sup>25,26,27</sup></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>September hike odds swung from roughly 82% to 25%, then back to ~28% in under three weeks. Almost all of that movement came on jobs and CPI prints, while Warsh said almost nothing new in between.</p>
+
+            <h2>What's next</h2>
+
+            <p>A rate cut is barely on the table. Prediction markets put a September cut near 1%, and Polymarket assigns an ~86% chance of zero Fed cuts for all of 2026<sup>28</sup>.</p>
+
+            <p>The July FOMC minutes, released August 19, showed the internal debate ran broader than the 9-3 vote suggested. Several non-dissenting officials flagged that rates might still need to rise if inflation doesn't cool<sup>29</sup>.</p>
+
+            <p>Wall Street is split on where this lands. Bank of America and PGIM both see hikes at each of the three remaining 2026 meetings, while Barclays, Morgan Stanley, and UBS all expect the Fed to hold through year-end<sup>30,31</sup>.</p>
+
+            <p>To be clear about what this is and isn't, one chair and three meetings aren't enough to declare a permanent regime change at the Fed. It's a live experiment, and Warsh himself has said the tools of communication are still under review. But the early read-through is consistent enough that it's worth having a framework for.</p>
+
+            <p>That framework gives you a clean way to track this thesis going forward. Jackson Hole, August 27-29, is the next real test. It is the first chance to see whether Warsh uses a speech to clarify anything or stays quiet by design<sup>32</sup>.</p>
+
+            <p>After that, the September 15-16, October 27-28, and December 8-9 FOMC meetings will show whether decision days keep behaving like non-events or start reclaiming some of the volatility that data days have taken from them<sup>33</sup>.</p>
+
+            <p>If Warsh's approach holds, the lesson for OLC is simple: stop circling FOMC dates on the calendar like they're the main event, and start circling the jobs report and CPI print instead.</p>
+
+            <p>Under this Fed, the data isn't just an input to policy anymore. It is the policy signal.</p>
+
+            <div class="sources">
+                <h2>Sources</h2>
+                <ol>
+                    <li>New York Fed, "The Financial Market Effect of FOMC Minutes," 2013, <a href="https://www.newyorkfed.org/medialibrary/media/research/epr/2013/0913rosa.pdf" target="_blank">https://www.newyorkfed.org/medialibrary/media/research/epr/2013/0913rosa.pdf</a></li>
+                    <li>Fortune, June 20, 2026, <a href="https://fortune.com/2026/06/20/fed-chair-kevin-warsh-forward-guidance-other-policymakers/" target="_blank">https://fortune.com/2026/06/20/fed-chair-kevin-warsh-forward-guidance-other-policymakers/</a></li>
+                    <li>Reuters, June 17, 2026, <a href="https://www.reuters.com/business/finance/fed-chief-warsh-appears-forgo-dot-indicating-his-rate-path-view-2026-06-17/" target="_blank">https://www.reuters.com/business/finance/fed-chief-warsh-appears-forgo-dot-indicating-his-rate-path-view-2026-06-17/</a></li>
+                    <li>Federal Reserve, June 17, 2026 press conference transcript, <a href="https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20260617.pdf" target="_blank">https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20260617.pdf</a></li>
+                    <li>Reuters Breakingviews, July 23, 2026, <a href="https://www.reuters.com/commentary/breakingviews/fed-guidance-retreat-risks-communication-own-goal-2026-07-23/" target="_blank">https://www.reuters.com/commentary/breakingviews/fed-guidance-retreat-risks-communication-own-goal-2026-07-23/</a></li>
+                    <li>Reuters, August 12, 2026, <a href="https://www.reuters.com/business/finance/investors-worry-leaner-fed-guidance-may-come-price-2026-08-12/" target="_blank">https://www.reuters.com/business/finance/investors-worry-leaner-fed-guidance-may-come-price-2026-08-12/</a></li>
+                    <li>Benzinga, June 23, 2026, <a href="https://www.benzinga.com/markets/economic-data/26/06/60034798/claudia-sahm-says-kevin-warshs-silence-could-leave-markets-guessing-about-the-shadow-fed-chair" target="_blank">https://www.benzinga.com/markets/economic-data/26/06/60034798/claudia-sahm-says-kevin-warshs-silence-could-leave-markets-guessing-about-the-shadow-fed-chair</a></li>
+                    <li>Axios, August 4, 2026, <a href="https://www.axios.com/2026/08/04/fed-warsh-volatile-markets" target="_blank">https://www.axios.com/2026/08/04/fed-warsh-volatile-markets</a></li>
+                    <li>Reuters, June 5, 2026, <a href="https://www.reuters.com/business/us-rate-futures-raise-rate-hike-odds-december-after-jobs-data-2026-06-05/" target="_blank">https://www.reuters.com/business/us-rate-futures-raise-rate-hike-odds-december-after-jobs-data-2026-06-05/</a></li>
+                    <li>Reuters, June 25, 2026, <a href="https://www.reuters.com/business/traders-trim-bets-july-fed-rate-hike-after-data-2026-06-25/" target="_blank">https://www.reuters.com/business/traders-trim-bets-july-fed-rate-hike-after-data-2026-06-25/</a></li>
+                    <li>Reuters, July 2, 2026, <a href="https://www.reuters.com/world/us/us-job-growth-misses-expectations-june-unemployment-rate-falls-42-2026-07-02/" target="_blank">https://www.reuters.com/world/us/us-job-growth-misses-expectations-june-unemployment-rate-falls-42-2026-07-02/</a></li>
+                    <li>Reuters, July 14, 2026, <a href="https://www.reuters.com/markets/us/traders-expect-fed-skip-july-rate-hike-inflation-cools-2026-07-14/" target="_blank">https://www.reuters.com/markets/us/traders-expect-fed-skip-july-rate-hike-inflation-cools-2026-07-14/</a></li>
+                    <li>CNBC, July 23, 2026, <a href="https://www.cnbc.com/2026/07/23/fed-interest-rate-odds-oil-jobless-claims.html" target="_blank">https://www.cnbc.com/2026/07/23/fed-interest-rate-odds-oil-jobless-claims.html</a></li>
+                    <li>Investing.com, June 16, 2026, <a href="https://www.investing.com/analysis/kevin-warshs-first-fed-test-qe-without-calling-it-qe-200682241" target="_blank">https://www.investing.com/analysis/kevin-warshs-first-fed-test-qe-without-calling-it-qe-200682241</a></li>
+                    <li>Federal Reserve, FOMC statement, July 29, 2026, <a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20260729a.htm" target="_blank">https://www.federalreserve.gov/newsevents/pressreleases/monetary20260729a.htm</a></li>
+                    <li>Reuters, global markets wrap, July 29, 2026, <a href="https://www.reuters.com/world/china/global-markets-wrapup-1-2026-07-29/" target="_blank">https://www.reuters.com/world/china/global-markets-wrapup-1-2026-07-29/</a></li>
+                    <li>Federal Reserve, July 29, 2026 press conference transcript, <a href="https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20260729.pdf" target="_blank">https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20260729.pdf</a></li>
+                    <li>Reuters, July 30, 2026, <a href="https://www.reuters.com/business/feds-hawkish-hold-muddies-path-stocks-bonds-2026-07-30/" target="_blank">https://www.reuters.com/business/feds-hawkish-hold-muddies-path-stocks-bonds-2026-07-30/</a></li>
+                    <li>Yahoo Finance, August 12, 2026, <a href="https://finance.yahoo.com/economy/policy/articles/odds-september-rate-hike-plunged-082600591.html" target="_blank">https://finance.yahoo.com/economy/policy/articles/odds-september-rate-hike-plunged-082600591.html</a></li>
+                    <li>Yahoo Finance, July 27, 2026, <a href="https://finance.yahoo.com/economy/policy/articles/theres-now-82-chance-fed-082600953.html" target="_blank">https://finance.yahoo.com/economy/policy/articles/theres-now-82-chance-fed-082600953.html</a></li>
+                    <li>CNBC, August 7, 2026, <a href="https://www.cnbc.com/2026/08/07/odds-the-fed-hikes-in-september-tumble-following-big-july-jobs-miss.html" target="_blank">https://www.cnbc.com/2026/08/07/odds-the-fed-hikes-in-september-tumble-following-big-july-jobs-miss.html</a></li>
+                    <li>Yahoo Finance, August 11, 2026, <a href="https://finance.yahoo.com/economy/policy/articles/july-cpi-reset-fed-bitcoin-123146512.html" target="_blank">https://finance.yahoo.com/economy/policy/articles/july-cpi-reset-fed-bitcoin-123146512.html</a></li>
+                    <li>Reuters, August 12, 2026, <a href="https://www.reuters.com/business/traders-stick-narrow-bets-september-fed-hold-after-inflation-data-2026-08-12/" target="_blank">https://www.reuters.com/business/traders-stick-narrow-bets-september-fed-hold-after-inflation-data-2026-08-12/</a></li>
+                    <li>24/7 Wall St., August 16, 2026, <a href="https://247wallst.com/investing/2026/08/16/the-odds-for-a-september-fed-rate-hike-plunged-to-25-heres-why-the-betting-markets-might-be-wrong/" target="_blank">https://247wallst.com/investing/2026/08/16/the-odds-for-a-september-fed-rate-hike-plunged-to-25-heres-why-the-betting-markets-might-be-wrong/</a></li>
+                    <li>DeFi Rate, August 20, 2026, <a href="https://defirate.com/prediction-markets/fed-decision-odds/" target="_blank">https://defirate.com/prediction-markets/fed-decision-odds/</a></li>
+                    <li>Kalshi, September FOMC market, <a href="https://kalshi.com/markets/kxfeddecision/fed-meeting/kxfeddecision-26sep" target="_blank">https://kalshi.com/markets/kxfeddecision/fed-meeting/kxfeddecision-26sep</a></li>
+                    <li>Polymarket, Fed rates dashboard, <a href="https://polymarket.com/dashboards/fed-rates" target="_blank">https://polymarket.com/dashboards/fed-rates</a></li>
+                    <li>Polymarket, "How many Fed rate cuts in 2026?", <a href="https://polymarket.com/event/how-many-fed-rate-cuts-in-2026" target="_blank">https://polymarket.com/event/how-many-fed-rate-cuts-in-2026</a></li>
+                    <li>Federal Reserve, Minutes of the FOMC, July 28-29, 2026, <a href="https://www.federalreserve.gov/monetarypolicy/fomcminutes20260729.htm" target="_blank">https://www.federalreserve.gov/monetarypolicy/fomcminutes20260729.htm</a></li>
+                    <li>CNBC, June 22, 2026, <a href="https://www.cnbc.com/2026/06/22/bank-of-america-sees-3-fed-hikes-in-2026-inflation-unambiguously-worse.html" target="_blank">https://www.cnbc.com/2026/06/22/bank-of-america-sees-3-fed-hikes-in-2026-inflation-unambiguously-worse.html</a></li>
+                    <li>Reuters, June 16, 2026, <a href="https://www.reuters.com/business/ubs-expects-no-fed-easing-this-year-sees-hawkish-tone-june-meeting-2026-06-16/" target="_blank">https://www.reuters.com/business/ubs-expects-no-fed-easing-this-year-sees-hawkish-tone-june-meeting-2026-06-16/</a></li>
+                    <li>Kansas City Fed, Jackson Hole Economic Policy Symposium, <a href="https://www.kansascityfed.org/research/jackson-hole-economic-symposium/" target="_blank">https://www.kansascityfed.org/research/jackson-hole-economic-symposium/</a></li>
+                    <li>Federal Reserve, FOMC Calendars, Statements, and Minutes, <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank">https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm</a></li>
+                </ol>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <a href="../index" class="footer-logo">
+            <span class="footer-logo-text">Old Logan Capital</span>
+        </a>
+        <p>&copy; 2024 Old Logan Capital. All rights reserved.</p>
+    </footer>
+</body>
+</html>
