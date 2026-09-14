@@ -572,7 +572,16 @@ nav.visible {
     height: 25px !important;
     max-width: 90px !important;
     max-height: 25px !important;
+}
+
+/* Fix INTC logo sizing - make it smaller to match other logos */
+.holding-item[data-ticker="INTC"] .holding-logo {
+    height: 35px !important;
+    max-width: 120px !important;
+    max-height: 35px !important;
     width: auto !important;
+    object-fit: contain !important;
+    margin-bottom: calc(1.25rem + 25px) !important;
 }
 
 /* === Sections === */
