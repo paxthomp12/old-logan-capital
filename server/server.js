@@ -918,6 +918,75 @@ app.get('/index', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
+// ===== SUNDAY 4PM EST SCHEDULER =====
+
+function getNextSunday4pmEST() {
+    const now = new Date();
+
+    // Convert current time to EST (UTC-5, or UTC-4 during DST)
+    const estOffset = -5 * 60; // EST is UTC-5 in minutes
+    const localOffset = now.getTimezoneOffset(); // Local offset from UTC in minutes
+    const estTime = new Date(now.getTime() + (estOffset - localOffset) * 60 * 1000);
+
+    // Get current day of week (0 = Sunday, 6 = Saturday)
+    const currentDay = estTime.getDay();
+    const currentHour = estTime.getHours();
+    const currentMinute = estTime.getMinutes();
+
+    // Calculate days until next Sunday
+    let daysUntilSunday;
+    if (currentDay === 0) {
+        // It's Sunday - check if it's before or after 4pm
+        if (currentHour < 16) {
+            // Before 4pm today, run today
+            daysUntilSunday = 0;
+        } else {
+            // After 4pm today, run next Sunday
+            daysUntilSunday = 7;
+        }
+    } else {
+        // Not Sunday - calculate days until next Sunday
+        daysUntilSunday = 7 - currentDay;
+    }
+
+    // Create next Sunday at 4pm EST
+    const nextSunday = new Date(estTime);
+    nextSunday.setDate(estTime.getDate() + daysUntilSunday);
+    nextSunday.setHours(16, 0, 0, 0); // 4pm, 0 minutes, 0 seconds, 0 ms
+
+    // Convert back to local time
+    const nextSundayLocal = new Date(nextSunday.getTime() - (estOffset - localOffset) * 60 * 1000);
+
+    return nextSundayLocal;
+}
+
+function scheduleSunday4pmCheck() {
+    const nextRun = getNextSunday4pmEST();
+    const now = new Date();
+    const msUntilNextRun = nextRun.getTime() - now.getTime();
+
+    console.log(`\n⏰ Next 30-day watchlist check scheduled for: ${nextRun.toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+    })}`);
+
+    // Schedule the next run
+    setTimeout(() => {
+        console.log(`\n[${new Date().toLocaleString()}] Running scheduled 30-day watchlist check (Sunday 4pm EST)`);
+        check30DayWatchlistItems();
+
+        // Schedule the next Sunday check (7 days from now)
+        scheduleSunday4pmCheck();
+    }, msUntilNextRun);
+}
+
 // ===== START SERVER =====
 
 async function startServer() {
@@ -939,12 +1008,9 @@ async function startServer() {
             }
         });
 
-        // Run 30-day check once on startup
-        setTimeout(() => check30DayWatchlistItems(), 5000); // 5 seconds after startup
-
-        // Run 30-day check daily at 9:00 AM (in milliseconds: 24 hours)
-        setInterval(() => check30DayWatchlistItems(), 24 * 60 * 60 * 1000);
-        console.log('✅ 30-day watchlist checker scheduled (runs daily)');
+        // Schedule 30-day check for Sundays at 4pm EST only
+        scheduleSunday4pmCheck();
+        console.log('✅ 30-day watchlist checker scheduled (Sundays at 4pm EST only)');
     } catch (error) {
         console.error('Failed to start server:', error);
         process.exit(1);
