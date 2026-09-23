@@ -762,10 +762,10 @@ section h2 {
 
 /* === The Trail === */
 #trail {
-    background: white;
+    background: rgba(245, 241, 232, 0.6);
     padding: 8rem 5%;
-    margin: 0;
-    max-width: 100%;
+    margin: 0 auto;
+    max-width: 1600px;
     position: relative;
     z-index: 1;
 }
