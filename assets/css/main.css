@@ -100,7 +100,7 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 1.5rem 5%;
+    padding: 0 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -111,7 +111,7 @@ nav {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
-    min-height: 80px;
+    height: 80px;
 }
 
 nav.visible {
@@ -147,7 +147,6 @@ nav.visible {
     align-items: center;
     text-decoration: none;
     gap: 0.75rem;
-    height: 100%;
 }
 
 .logo-text {
@@ -156,9 +155,7 @@ nav.visible {
     font-weight: 700;
     color: var(--dark);
     letter-spacing: -0.5px;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
+    line-height: 1;
 }
 
 .nav-links {
@@ -185,7 +182,6 @@ nav.visible {
     display: flex;
     gap: 1rem;
     align-items: center;
-    height: 100%;
 }
 
 .nav-cta {
