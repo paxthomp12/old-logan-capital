@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="description" content="What 2026's sector rotations taught us about where returns actually come from. Through semiconductors, software, and biotech, the same lesson repeated twice.">
+    <title>The Money Never Left - Old Logan Capital</title>
+
+    <link rel="canonical" href="https://oldlogancapital.com/trail/the-money-never-left">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Old Logan Capital">
+    <meta name="theme-color" content="#F5F1E8">
+
+    <meta property="og:title" content="The Money Never Left - Old Logan Capital">
+    <meta property="og:image" content="https://oldlogancapital.com/assets/images/logo.png">
+    <meta property="og:url" content="https://oldlogancapital.com/trail/the-money-never-left">
+    <meta property="og:type" content="article">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #F5F1E8;
+            --cream-dark: #EBE5D6;
+            --dark: #1a1a1a;
+            --dark-alt: #2a2a2a;
+            --forest: #1A3A2E;
+            --forest-light: #2D5A4A;
+            --gold: #C9A962;
+            --text: #1a1a1a;
+            --text-muted: #5a5a5a;
+            --border: rgba(26, 26, 26, 0.1);
+            --border-light: rgba(26, 26, 26, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 1200px;
+            background-image: url('../assets/images/logo-icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        ::selection {
+            background: var(--dark);
+            color: var(--cream);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245, 241, 232, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 0.75rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-cta {
+            padding: 0.75rem 1.8rem;
+            background: var(--dark);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.15);
+        }
+
+        .nav-cta:hover {
+            background: var(--forest);
+            box-shadow: 0 4px 12px rgba(26, 58, 46, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .nav-cta.secondary {
+            background: white;
+            color: var(--dark);
+            border: 1px solid rgba(26, 26, 26, 0.2);
+            box-shadow: 0 2px 6px rgba(26, 26, 26, 0.08);
+        }
+
+        .nav-cta.secondary:hover {
+            background: var(--dark);
+            color: white;
+            border-color: var(--dark);
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.2);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12rem 5% 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--dark);
+            gap: 0.3rem;
+        }
+
+        .article {
+            background: white;
+            border-radius: 12px;
+            padding: 4rem;
+            box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+        }
+
+        .article-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .article h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 3rem 0 1.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .article p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .article strong {
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        .article em {
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .article ul {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article li {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .footnote {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .article {
+                padding: 2.5rem 2rem;
+            }
+
+            .article h1 {
+                font-size: 2.2rem;
+            }
+
+            .article h2 {
+                font-size: 1.6rem;
+            }
+
+            .article p,
+            .article li {
+                font-size: 1rem;
+            }
+
+            .nav-cta {
+                padding: 0.6rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index" class="logo">
+            <span class="logo-text">Old Logan Capital</span>
+        </a>
+        <div class="nav-buttons">
+            <a href="../trail" class="nav-cta secondary">Back to Trail</a>
+            <a href="../index#contact" class="nav-cta">Get in Touch</a>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <a href="../trail" class="back-link">← Back to The Trail</a>
+
+        <article class="article">
+            <div class="article-meta">September 30, 2026</div>
+            <div class="article-author">Written by Alex Evenson</div>
+
+            <h1>The Money Never Left</h1>
+            <p><em>What 2026's sector rotations taught us about where returns actually come from</em></p>
+
+            <p>There is a version of 2026 in which technology investing has been a disaster, and a version in which it has been the trade of a decade. Both are true. They were happening at the same time, in the same sector, to the same investors.</p>
+
+            <p>Through late August, the iShares Expanded Tech-Software Sector ETF (IGV) was down 14.29% for the year and down 17.32% over the trailing twelve months. Over roughly the same stretch, the VanEck Semiconductor ETF (SMH) was up 50.03% year to date through July 31, and that was after giving back a third of its gains. At the June 30 mark, SMH was up 82.30% for the year and the iShares Semiconductor ETF (SOXX) was up 113.00%.</p>
+
+            <p>Software and semiconductors are both technology. One was among the worst places in the market to have capital. The other was among the best. The difference between those two outcomes was not stock selection. It was theme selection.</p>
+
+            <p>Which brings me to the uncomfortable part of this piece. I spent most of the first half of this year watching those moves happen without being in them.</p>
+
+            <h2>Software was re-rated, not disappointed</h2>
+
+            <p>The software selloff was not an earnings event. That is the part most investors got backwards.</p>
+
+            <p>AllianceBernstein, writing in early March, put it well: the market had "pushed up the discount rate applied to software stocks across the board," producing sharp declines despite "little sign of operational stress" in actual customer behavior or financials. By the end of February, the MSCI World Software & Services Index had already fallen more than 20% on the year.</p>
+
+            <p>The bear case was structural rather than cyclical. If capable AI agents drive the cost of building software toward zero, barriers to entry fall with it, and any business model priced per seat becomes a melting ice cube. Fewer seats, fewer dollars, permanently lower terminal multiples. Whether that thesis proves correct is still an open question, and thoughtful investors sit on both sides of it.</p>
+
+            <p>What isn't debatable is that the market priced it as though it were, in AB's words, "universal and immediate." Durable franchises and fragile ones sold off together. Correlation inside the group went to one, and company-specific fundamentals stopped mattering for a while. A software business that beat its numbers in February got paid almost nothing for it.</p>
+
+            <p>Software did stage a real rally off its April lows, enough that the sector spent the summer being written up as a comeback story. But as of August 27, IGV was still down 14.29% for the year. A violent bounce inside a downtrend isn't the same thing as a change in leadership, and telling those apart is most of the job.</p>
+
+            <h2>Semiconductors, and the lie inside the sector label</h2>
+
+            <p>Semiconductors are a subset of technology. Software is a subset of technology. Through June 30, one of those subsets was up 113.00% and the other was deeply negative.</p>
+
+            <p>An investor who expressed a bullish "technology" view through a broad sector fund got a blend of the two. A blend of a doubling and a drawdown is a mediocre outcome that describes nobody's actual thesis.</p>
+
+            <p>Rotation doesn't happen at the level of the eleven headline sectors. It happens one or two levels down, at the industry group and the theme. The sector label is an accounting convention. The theme is where the capital actually moves.</p>
+
+            <p>The internal composition of the semiconductor advance is as instructive as its size. Look at the 30-point spread between SOXX (+113.00%) and SMH (+82.30%) over the same six months. Two funds, same industry, very different construction and weighting. A gap that wide is diagnostic. It tells you the gains weren't concentrated in the two or three largest names everyone already owned. They were spread across the supply chain: memory manufacturers benefiting from NAND and DRAM scarcity, processor makers pulled in by the shift from training workloads to inference, and capital equipment suppliers riding accelerated fab spending.</p>
+
+            <p>When a theme broadens from its original protagonist to an entire supply chain, the market is telling you the thesis has been accepted. That's usually a mid-cycle signal rather than a top. It's also the point where the easy money has been made and dispersion starts to matter more than direction.</p>
+
+            <h2>Biotech, and the same lesson a second time</h2>
+
+            <p>Now watch the identical dynamic play out in healthcare, in the opposite direction.</p>
+
+            <p>Through July 31, the Health Care Select Sector SPDR (XLV) was up 5.89% year to date. The S&P 500, via SPY, was up 10.06%. On the sector scoreboard, healthcare was a laggard. Uninspiring, market-trailing, easy to skip.</p>
+
+            <p>The SPDR S&P Biotech ETF (XBI) was up 20.68% over the same period, and 72.46% over the trailing twelve months.</p>
+
+            <p>Same sector. One fund doubled the market's return and the other trailed it. If you had made a top-down "healthcare is working" call and expressed it through the sector ETF, you would have been right about the rotation and still underperformed the index. The move was in biotech, not healthcare broadly, and the sector label hid it the same way it hid semiconductors inside technology.</p>
+
+            <p>The drivers of the biotech turn were mostly knowable in advance:</p>
+
+            <p><strong>Rate relief.</strong> The Federal Reserve cut three times in the fall of 2025, on September 18, October 30, and December 11, taking the target range to 3.50% to 3.75%, where it has been held since. Clinical-stage biotech is the longest-duration asset class in the equity market. Its discount rate is close to its entire valuation.</p>
+
+            <p><strong>M&A.</strong> Large-cap pharma is facing a wall of patent expirations and has been buying pipeline to fill it. Pfizer's acquisition of Metsera, worth up to $10 billion and completed after a public bidding war with Novo Nordisk, was the emblematic transaction.</p>
+
+            <p><strong>Reopened capital markets.</strong> Follow-on issuance returned in size. When a sector that has been starved of financing can suddenly raise billions, the market has already decided it's investable again, and that decision shows up in prices before it shows up in anyone's outlook piece.</p>
+
+            <p><strong>A dated policy catalyst.</strong> Medicare coverage for obesity drugs, both oral and injectable, began July 1, 2026. Goldman Sachs Research raised its 2030 global obesity drug forecast by 15% to $114 billion, with orals projected to be 40% of the market.</p>
+
+            <p>None of that was secret. All of it was sitting on a calendar.</p>
+
+            <h2>What I got wrong</h2>
+
+            <p>I want to be direct about this, because it's the reason I've spent the year on the subject.</p>
+
+            <p>I saw all three of these rotations while they were happening. I was reading about the software de-rating in February. I had semiconductor names on my screen in the spring. I was looking at biotech before the summer. Three specific names I watched and didn't own: Twist Bioscience, MaxLinear, and ServiceNow. One from each of the three groups in this piece. All three made moves this year that would have mattered to our portfolio.</p>
+
+            <p>The problem wasn't the research. The research was fine. I could tell you the business model, the competitive position, and the catalyst calendar for all three.</p>
+
+            <p>The problem was that I had no plan for what to do with the observation.</p>
+
+            <p>Seeing a group start to work is not a trade. It's an input. Without a written rule for what evidence justifies a starter position, what confirms it, and what invalidates it, an observation just sits there while the stock runs. Then it runs far enough that buying feels reckless, and I'd talk myself out of it. Then it kept running. That cycle repeated three times before I accepted it was a process failure rather than bad luck.</p>
+
+            <p>The second problem was patience, in a direction I didn't expect. I assumed impatience meant buying too early. Mine ran the other way. I wanted more confirmation than the setup was ever going to give me, and I kept moving the bar. Waiting for certainty in a rotation is just a slower way of missing it.</p>
+
+            <p>None of that was a stock-picking failure. Every one of those names was on the list. It was a failure to connect group-level evidence to an actual decision, on a deadline.</p>
+
+            <h2>Why the group is most of the move</h2>
+
+            <p>We spend real time on individual businesses at Old Logan. Business model, competitive moat, upcoming catalysts, and an honest read on downside floor against upside ceiling. We would be doing our partners a disservice if we implied that work explains most of the return.</p>
+
+            <p>The academic evidence here is uncomfortable and it's clear. Moskowitz and Grinblatt, in "Do Industries Explain Momentum?" (<em>The Journal of Finance</em>, 1999), found that industry momentum "captures these profits almost entirely" for the six- to twelve-month momentum strategies on which a great many careers have been built. Their finding survived controls for microstructure effects, individual stock selection, and cross-sectional variation in returns. Put plainly: a large share of what looks like skill at picking winning stocks is exposure to winning industries.</p>
+
+            <p>2026 has been a live demonstration. It mattered relatively little which enterprise software company you owned in the first quarter. It mattered enormously that you owned enterprise software.</p>
+
+            <p>The translation isn't "stop analyzing companies." It's this: being right about the business and wrong about the group is a losing position for uncomfortably long stretches. Company work tells you what to own within a theme. Rotation work tells you whether to be in that theme at all. Two different disciplines, and most investors only run the first one.</p>
+
+            <h2>How theme and sector enter our watchlist</h2>
+
+            <p>This is the part we changed this year, and it's worth describing plainly because it's the whole point of the piece.</p>
+
+            <p>Our watchlist has always been built names first. Candidates come in the way they come in for most people: screens, earnings calls, reading, something a partner brings to the weekly review. The business work happens the way it always has.</p>
+
+            <p>What's different now is that no name gets sized until its group clears a separate bar. Sector isn't where our ideas come from. It's a gate they have to pass through.</p>
+
+            <p>In practice, a candidate carries four questions alongside the business write-up:</p>
+
+            <p><strong>Where is the group in its own trend?</strong> We chart the industry group against the S&P 500 and read that ratio line on its own terms. A group making higher lows on a relative basis is a green light even when the absolute chart still looks ugly. A great business in a group whose relative line is rolling over is a watch, not a buy. We size down or wait.</p>
+
+            <p><strong>Is the move broadening or narrowing?</strong> We track how many names in the group are participating rather than just the one or two leaders. A rotation with staying power pulls in laggards. A narrowing advance, where the index is held up by a shrinking handful of names, gets treated as late rather than early.</p>
+
+            <p><strong>What's funding it?</strong> Rotations have two sides, and the sold side is usually more informative than the bought side. In the first quarter, technology investors were funding semiconductors by selling software. Same allocators, same sleeve, reallocating internally. Knowing which crowded position is the source of funds tells you how durable the flow is.</p>
+
+            <p><strong>What's on the calendar?</strong> Dated catalysts get logged by group, not by ticker. Medicare obesity coverage starting July 1 was public months ahead. Patent cliffs are public. FOMC dates are public. Price frequently moves a full quarter before the event, so a known date is a reason to have a position established beforehand, not a reason to react afterward.</p>
+
+            <p>The forcing function is the part that actually fixed my problem. Each name on the list carries a written trigger and a written invalidation before we own anything. What has to be true for a starter position. What confirms it and justifies adding. What tells us we're wrong and ends it. Those are decided in advance, at the weekly review, when nobody is watching a green candle and feeling something about it.</p>
+
+            <p>That's not a sophisticated system. It's mostly just writing the decision down before the decision is emotionally expensive. But it's the difference between the three names above being research notes and being positions.</p>
+
+            <h2>Two honest caveats</h2>
+
+            <p>Rotations are not straight lines. SMH went from +82.30% year to date at the end of June to +50.03% at the end of July. Roughly a third of the year's gain evaporated in a single month, inside what was still one of the strongest sector advances in years. If your process can't distinguish a violent shakeout within a trend from the end of that trend, you'll be shaken out of every good position you ever hold. The reverse is just as costly. If you can't tell a sharp bounce inside a downtrend (software, off its April lows, still down 14% for the year) from a genuine change in leadership, you'll keep buying the thing that's still going down.</p>
+
+            <p>"Capital rotates, it doesn't leave" describes bull markets specifically. It's what happens when the aggregate equity allocation is stable and leadership changes hands. In a true bear market, correlations converge, relative strength lines roll over together, and money genuinely does leave for cash and duration. The tell isn't that one group is falling. That's rotation, and it's a sign of health. The tell is that nothing is taking the baton. When no ratio line anywhere is making new highs, you aren't watching rotation. You're watching distribution.</p>
+
+            <h2>The takeaway</h2>
+
+            <p>2026 handed us a nearly perfect teaching case, and it delivered the same lesson twice.</p>
+
+            <p>A beloved industry de-rated on a thesis about the future rather than a deterioration in the present, and stayed down even after a powerful bounce. The capital that left it moved one layer down the technology stack and roughly doubled by mid-year. A separate pool moved into the corner of the market that had been ignored longest. In both cases, technology and healthcare, the headline sector return concealed the move instead of revealing it.</p>
+
+            <p>The money never left. It just kept changing address.</p>
+
+            <p>Reading that forwarding address slightly earlier than the crowd is the job. For us that means running company analysis and group analysis as two separate disciplines, doing both, and being honest that the second one probably explains more of the outcome than our egos would prefer.</p>
+
+            <p>I learned that the expensive way this year. Writing it down is how I'm making sure the tuition only gets paid once.</p>
+
+            <div class="footnote">
+                <p><em>Old Logan Capital. Individual securities and funds named in this piece are referenced solely to illustrate market behavior and are not recommendations to buy or sell any security. Fund returns cited are historical, are stated on a net asset value basis, and are calculated over the specific periods noted; performance over other periods will differ materially, and past performance does not indicate future results. This material is for informational and educational purposes only. It does not constitute investment advice, nor an offer to sell or a solicitation of an offer to buy any interest in any fund.</em></p>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

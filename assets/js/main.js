@@ -86,6 +86,37 @@ function animateTitle() {
     });
 }
 
+// === Animated Subtitle ===
+function animateSubtitle() {
+    const subtitle = 'transparent investing. honest outcomes. integrity always.';
+    const subtitleContainer = document.getElementById('hero-subtitle');
+
+    subtitleContainer.innerHTML = '';
+
+    for (let i = 0; i < subtitle.length; i++) {
+        const char = subtitle[i];
+        const span = document.createElement('span');
+
+        if (char === ' ') {
+            span.className = 'space';
+        } else {
+            span.className = 'letter';
+            span.textContent = char;
+        }
+
+        subtitleContainer.appendChild(span);
+    }
+
+    const letters = subtitleContainer.querySelectorAll('.letter');
+    // Start subtitle animation after title finishes (title has ~17 letters * 150ms delay = ~2.5s)
+    const titleDelay = 2500;
+    letters.forEach((letter, index) => {
+        setTimeout(() => {
+            letter.style.animation = 'letterFadeIn 0.8s ease forwards';
+        }, titleDelay + (index * 40));
+    });
+}
+
 // === Navigation Scroll Handler ===
 function handleScroll() {
     const nav = document.querySelector('nav');
@@ -239,6 +270,7 @@ async function loadAllStockPrices() {
 // === Page Initialization ===
 window.addEventListener('load', function() {
     animateTitle();
+    animateSubtitle();
     handleScroll();
     setupAnalyticsTracking();
     loadAllStockPrices();

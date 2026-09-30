@@ -311,18 +311,30 @@ nav.visible {
 }
 
 .hero-subtitle {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
     font-weight: 400;
-    color: rgba(245, 241, 232, 0.8);
+    color: rgba(245, 241, 232, 0.75);
     text-align: center;
     margin-top: 2rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.1em;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    animation: fadeInUp 1s ease 1.5s both;
-    max-width: 600px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.15em;
+}
+
+.hero-subtitle .letter {
+    opacity: 0;
+    display: inline-block;
+}
+
+.hero-subtitle .space {
+    width: 0.3em;
 }
 
 .hero h1 {
@@ -812,11 +824,31 @@ section h2 {
 }
 
 .trail-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
     gap: 2rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 1.5rem;
+    margin-top: 2rem;
+}
+
+.trail-grid::-webkit-scrollbar {
+    height: 10px;
+}
+
+.trail-grid::-webkit-scrollbar-track {
+    background: rgba(26, 26, 26, 0.05);
+    border-radius: 5px;
+}
+
+.trail-grid::-webkit-scrollbar-thumb {
+    background: rgba(26, 58, 46, 0.3);
+    border-radius: 5px;
+    transition: background 0.2s ease;
+}
+
+.trail-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(26, 58, 46, 0.5);
 }
 
 .trail-card {
@@ -832,6 +864,9 @@ section h2 {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     border: 1px solid rgba(26, 26, 26, 0.05);
+    min-width: 400px;
+    max-width: 400px;
+    flex-shrink: 0;
 }
 
 .trail-card:hover {
@@ -1351,9 +1386,10 @@ footer p {
     }
 
     .hero-subtitle {
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         margin-top: 1.5rem;
-        padding: 0 1rem;
+        padding: 0 2rem;
+        gap: 0.12em;
     }
 
     .equity-ownership {
@@ -1448,11 +1484,12 @@ footer p {
     #trail { padding: 4rem 5%; }
     #trail h2 { font-size: 2rem; }
     .trail-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
     }
     .trail-card {
-        padding: 1.5rem;
+        padding: 1.75rem;
+        min-width: 320px;
+        max-width: 320px;
     }
     .trail-card h4 { font-size: 1.2rem; }
     .trail-meta { font-size: 0.65rem; }
@@ -1529,9 +1566,10 @@ footer p {
     }
 
     .hero-subtitle {
-        font-size: 0.88rem;
+        font-size: 0.95rem;
         margin-top: 1.25rem;
         padding: 0 1.5rem;
+        gap: 0.1em;
     }
 
     .equity-ownership { padding: 3.5rem 5%; }
@@ -1659,9 +1697,10 @@ footer p {
     }
 
     .hero-subtitle {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         margin-top: 1rem;
         padding: 0 1rem;
+        gap: 0.08em;
     }
 
     .equity-ownership { padding: 3rem 5%; }
