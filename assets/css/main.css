@@ -310,6 +310,21 @@ nav.visible {
     height: 0;
 }
 
+.hero-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: rgba(245, 241, 232, 0.8);
+    text-align: center;
+    margin-top: 2rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    animation: fadeInUp 1s ease 1.5s both;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .hero h1 {
     font-family: 'Fraunces', serif;
     font-size: 4.5rem;
@@ -464,11 +479,12 @@ nav.visible {
 
 /* === Equity Ownership Section === */
 .equity-ownership {
-    padding: 6rem 5%;
+    padding: 7rem 5%;
     max-width: 1600px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
+    background: var(--cream);
 }
 
 .equity-ownership h2 {
@@ -616,6 +632,10 @@ section h2 {
 }
 
 /* === Portfolio Grid === */
+#values {
+    background: var(--cream);
+}
+
 .portfolio-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -623,19 +643,20 @@ section h2 {
 }
 
 .portfolio-card {
-    padding: 3rem;
+    padding: 2.75rem;
     background: white;
-    border: none;
+    border: 1px solid rgba(26, 26, 26, 0.06);
     transition: all 0.3s ease;
     position: relative;
     -webkit-tap-highlight-color: transparent;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(26, 26, 26, 0.08);
+    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.06);
 }
 
 .portfolio-card:hover {
-    box-shadow: 0 8px 24px rgba(26, 26, 26, 0.15);
+    box-shadow: 0 8px 28px rgba(26, 26, 26, 0.12);
     transform: translateY(-4px);
+    border-color: rgba(26, 58, 46, 0.15);
 }
 
 .portfolio-card h3 {
@@ -657,6 +678,10 @@ section h2 {
 }
 
 /* === Team Grid === */
+#team {
+    background: white;
+}
+
 .team-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -715,10 +740,15 @@ section h2 {
 }
 
 /* === Investor Letters === */
+#letters {
+    background: var(--cream);
+}
+
 .letters-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
+    max-width: 1000px;
 }
 
 .letter-item {
@@ -762,10 +792,10 @@ section h2 {
 
 /* === The Trail === */
 #trail {
-    background: rgba(245, 241, 232, 0.6);
+    background: white;
     padding: 8rem 5%;
     margin: 0 auto;
-    max-width: 1600px;
+    max-width: 100%;
     position: relative;
     z-index: 1;
 }
@@ -775,7 +805,6 @@ section h2 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 4.5rem;
-    margin-left: 200px;
     color: var(--dark);
     letter-spacing: -2px;
     max-width: 800px;
@@ -792,21 +821,23 @@ section h2 {
 
 .trail-card {
     background: var(--cream);
-    border-radius: 10px;
-    padding: 2rem;
+    border-radius: 12px;
+    padding: 2.25rem;
     text-decoration: none;
     color: var(--text);
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
+    box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
     display: flex;
     flex-direction: column;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    border: 1px solid rgba(26, 26, 26, 0.05);
 }
 
 .trail-card:hover {
-    box-shadow: 0 6px 20px rgba(26, 26, 26, 0.12);
-    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(26, 26, 26, 0.14);
+    transform: translateY(-4px);
+    border-color: rgba(26, 58, 46, 0.1);
 }
 
 .trail-card-header {
@@ -1319,6 +1350,12 @@ footer p {
         display: block;
     }
 
+    .hero-subtitle {
+        font-size: 0.95rem;
+        margin-top: 1.5rem;
+        padding: 0 1rem;
+    }
+
     .equity-ownership {
         padding: 4rem 5%;
     }
@@ -1491,6 +1528,12 @@ footer p {
         padding: 0 1.5rem;
     }
 
+    .hero-subtitle {
+        font-size: 0.88rem;
+        margin-top: 1.25rem;
+        padding: 0 1.5rem;
+    }
+
     .equity-ownership { padding: 3.5rem 5%; }
     .equity-ownership h2 {
         font-size: 1.75rem;
@@ -1612,6 +1655,12 @@ footer p {
         font-size: 2.2rem;
         letter-spacing: 0.08em;
         gap: 0.08em;
+        padding: 0 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.8rem;
+        margin-top: 1rem;
         padding: 0 1rem;
     }
 
