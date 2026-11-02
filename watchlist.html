@@ -36,8 +36,8 @@
                 <div class="sort-controls">
                     <label>Sort by:</label>
                     <select id="sortSelect" onchange="loadSubmissions()">
-                        <option value="score">Avg Score (High to Low)</option>
                         <option value="date">Date (Newest First)</option>
+                        <option value="score">Avg Score (High to Low)</option>
                         <option value="status">Status</option>
                         <option value="ticker">Ticker (A-Z)</option>
                     </select>
@@ -52,9 +52,9 @@
                                     <th>Ticker</th>
                                     <th>Company</th>
                                     <th>Reviews</th>
-                                    <th>Avg Score</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
+                                    <th onclick="sortByColumn('score')" style="cursor: pointer; user-select: none;">Avg Score <span id="sortIndicatorScore"></span></th>
+                                    <th onclick="sortByColumn('status')" style="cursor: pointer; user-select: none;">Status <span id="sortIndicatorStatus"></span></th>
+                                    <th onclick="sortByColumn('date')" style="cursor: pointer; user-select: none;">Date <span id="sortIndicatorDate"></span></th>
                                 </tr>
                             </thead>
                             <tbody id="submissionsTableBody">

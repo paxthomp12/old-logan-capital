@@ -257,7 +257,7 @@ function updateStockDisplay(ticker, data) {
 }
 
 async function loadAllStockPrices() {
-    const tickers = ['OSCR', 'ATEX', 'DFTX', 'PLTR', 'INTC'];
+    const tickers = ['OSCR', 'ATEX', 'DFTX', 'PLTR', 'INTC', 'RSKD'];
 
     for (const ticker of tickers) {
         const data = await fetchStockData(ticker);

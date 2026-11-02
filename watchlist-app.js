@@ -116,6 +116,33 @@ function switchTab(tabName, event) {
 }
 
 // === SUBMISSIONS ===
+function sortByColumn(column) {
+    // Update the dropdown to match
+    document.getElementById('sortSelect').value = column;
+
+    // Update sort indicators
+    updateSortIndicators(column);
+
+    // Reload submissions with new sort
+    loadSubmissions();
+}
+
+function updateSortIndicators(activeColumn) {
+    const indicators = {
+        'score': document.getElementById('sortIndicatorScore'),
+        'status': document.getElementById('sortIndicatorStatus'),
+        'date': document.getElementById('sortIndicatorDate')
+    };
+
+    // Clear all indicators
+    Object.values(indicators).forEach(el => el.textContent = '');
+
+    // Set active indicator
+    if (indicators[activeColumn]) {
+        indicators[activeColumn].textContent = '▼';
+    }
+}
+
 async function loadSubmissions() {
     try {
         const response = await fetch(`${API_URL}/submissions`, { credentials: 'include' });
@@ -124,6 +151,9 @@ async function loadSubmissions() {
         let submissions = await response.json();
         const sortBy = document.getElementById('sortSelect').value;
         submissions = sortSubmissions(submissions, sortBy);
+
+        // Update sort indicators
+        updateSortIndicators(sortBy);
 
         const tbody = document.getElementById('submissionsTableBody');
         tbody.innerHTML = '';
